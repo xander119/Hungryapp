@@ -14,14 +14,36 @@ public class ManagerDAO {
 	@PersistenceContext
 	EntityManager em;
 
-	public List<Restaurant> getRestaurantById(int managerid) {
+	public List<RestaurantLocation> getRestaurantByManagerId(int managerid) {
 		// TODO Auto-generated method stub
-		List<Restaurant> restaurants = em.create
-		return null;
+		Manager m = em.find(Manager.class, managerid);
+		List<RestaurantLocation> restaurants = em
+				.createNamedQuery("Manager.findRestaurantOwnedById")
+				.setParameter("manager", m).getResultList();
+		return restaurants;
+
 	}
 
 	public Manager registerAdmin(Manager m) {
 		// TODO Auto-generated method stub
+		if (!isExist(m)) {
+			em.persist(m);
+			return m;
+		}
+
 		return null;
+	}
+
+	private boolean isExist(Manager m) {
+		List<Manager> managers = em.createNamedQuery("Manager.allManagers")
+				.getResultList();
+		for (Manager manager : managers) {
+			if (manager.getName().equals(m.getName())) {
+				return true;
+			}
+		}
+
+		return false;
+
 	}
 }

@@ -1,7 +1,6 @@
 package webService;
 
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,25 +23,26 @@ public class MenusServices {
 
 	@POST
 	@Path("/createMenu")
-	public void createNewMenu(Menu m) {
-
+	public Menu createNewMenu(Menu m) {
+		return menuDao.createMenu(m);
 	}
 
 	@PUT
-	@Path("/updateMenu/{menuid}")
-	public void updateMenu(@PathParam("menuid") int menuid) {
-
+	@Path("/updateMenu")
+	public Menu updateMenu(Menu menu) {
+		//the new menu object should contain reference ID
+		return menuDao.updateMenu(menu);
 	}
 
 	@GET
 	@Path("/{menuid}")
 	public Menu getMenuById(@PathParam("menuid") int menuid) {
-		return null;
+		return menuDao.getMenuById(menuid);
 
 	}
 	@DELETE
 	@Path("/delete/{menuid}")
 	public void deleteMenu(@PathParam("menuid") int menuid){
-		
+		menuDao.deleteMenu(menuid);
 	}
 }

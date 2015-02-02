@@ -12,30 +12,45 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Orders_Items
  *
  */
-@Entity
-@IdClass(Orders_ItemsPK.class)
+@Entity 
+@Table(name="Orders_Items")
 public class Orders_Items implements Serializable {
 
-	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer id;
+	@ManyToOne
+	@JoinColumn(name="order_id",referencedColumnName="id")
 	private Orders order;
-	@Id
-	private Item item;   
+	
+	@ManyToOne
+	@JoinColumn(name="item_id",referencedColumnName="id")
+	private Item item;
 	
 	private static final long serialVersionUID = 1L;
 
 	public Orders_Items() {
 		super();
-	}   
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Orders getOrder() {
-		return this.order;
+		return order;
 	}
 
 	public void setOrder(Orders order) {
 		this.order = order;
-	}   
+	}
+
 	public Item getItem() {
-		return this.item;
+		return item;
 	}
 
 	public void setItem(Item item) {

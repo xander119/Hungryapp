@@ -72,7 +72,22 @@ public class CustomerDAO {
 
 	public List<Orders> getCustomerOrdersById(int userid) {
 		// TODO Auto-generated method stub
-		//List<Orders> orders = em.createNamedQuery("");
+		List<Orders> orders = em.createNamedQuery("Customer.findOrdersByUserid").setParameter("id", userid).getResultList();
+		if(!orders.isEmpty()){
+			return orders;
+		}
 		return null;
+	}
+
+	public boolean deleteCustomer(int userid) {
+		// TODO Auto-generated method stub
+		Customer removeCus = em.find(Customer.class, userid);
+		if(removeCus!=null){
+			em.remove(removeCus);
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

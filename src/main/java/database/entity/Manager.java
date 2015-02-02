@@ -11,13 +11,13 @@ import javax.persistence.*;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "Manager.findRestaurantOwnedById", query = "Select e from Restaurant e where e.manager = :manager ") })
+	@NamedQuery(name = "Manager.findRestaurantOwnedById", query = "Select e from Restaurant e where e.generalManager = :manager "),
+	@NamedQuery(name = "Manager.allManagers", query = "select e from Manager e ")
+	})
 @Entity
 
 public class Manager implements Serializable {
 
-	
-	  
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;

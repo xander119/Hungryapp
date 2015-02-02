@@ -1,28 +1,26 @@
 package database.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 
 /**
- * Entity implementation class for Entity: Order
+ * Entity implementation class for Entity: Orders
  *
  */
+@NamedQuery(name="Orders.getAllOrders",query="select o from Orders o")
+
 @Entity
 
 public class Orders implements Serializable {
@@ -37,12 +35,18 @@ public class Orders implements Serializable {
 	private boolean isComplete;
 	private String completeTime;
 	@ManyToOne
-	private RestaurantLocation restaurant;
+	private RestaurantLocation restaurantLocation;
 	@ManyToOne
 	private Customer customer;
 	
-	@OneToMany(mappedBy="order")
-	private List<Orders_Items> orderItems = new ArrayList<Orders_Items>();
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
+	private List<Orders_Items> orderItems ;
+//	@ManyToMany(targetEntity=Item.class)
+//	@JoinTable(name="Order_Item",
+//			joinColumns = { @JoinColumn(name = "Order_ID") }, 
+//		       inverseJoinColumns = { @JoinColumn(name = "Item_ID") }
+//	)
+//	private List<Item> items;
 	private static final long serialVersionUID = 1L;
 
 	public Orders() {
@@ -88,13 +92,7 @@ public class Orders implements Serializable {
 		this.completeTime = completeTime;
 	}
 
-	public RestaurantLocation getRestaurant() {
-		return restaurant;
-	}
-
-	public void setRestaurant(RestaurantLocation restaurant) {
-		this.restaurant = restaurant;
-	}
+	
 
 	public Customer getCustomer() {
 		return customer;
@@ -112,12 +110,30 @@ public class Orders implements Serializable {
 		this.isComplete = isComplete;
 	}
 
-	public List<Orders_Items> getItems() {
+//	public List<Item> getItems() {
+//		return items;
+//	}
+//
+//	public void setItems(List<Item> items) {
+//		this.items = items;
+//	}
+
+	
+
+	public List<Orders_Items> getOrderItems() {
 		return orderItems;
 	}
 
-	public void setItems(List<Orders_Items> items) {
-		this.orderItems = items;
+	public void setOrderItems(List<Orders_Items> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public RestaurantLocation getRestaurantLocation() {
+		return restaurantLocation;
+	}
+
+	public void setRestaurantLocation(RestaurantLocation restaurantLocation) {
+		this.restaurantLocation = restaurantLocation;
 	}
 
 	

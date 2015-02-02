@@ -20,4 +20,31 @@ public class MenuDAO {
 		return m;
 	}
 
+	public Menu createMenu(Menu m) {
+		// TODO Auto-generated method stub
+		if(m!=null){
+			em.persist(m);
+			return m;
+		}
+		return null;
+	}
+
+	public Menu updateMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		return em.merge(menu);
+	}
+
+	public Menu getMenuById(int menuid) {
+		// TODO Auto-generated method stub
+		return em.find(Menu.class, menuid);
+	}
+
+	public void deleteMenu(int menuid) {
+		// TODO Auto-generated method stub
+		Menu removeMenu =getMenuById(menuid);
+		if(removeMenu!=null){
+			em.remove(removeMenu);
+		}
+	}
+
 }

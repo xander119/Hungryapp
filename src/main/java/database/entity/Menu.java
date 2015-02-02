@@ -27,6 +27,8 @@ public class Menu implements Serializable {
 	private String note;
 	@OneToMany(mappedBy="menu")
 	private Set<Item> items;
+	@ManyToOne
+	private Restaurant restaurant;
 	private static final long serialVersionUID = 1L;
 
 	public Menu() {
@@ -59,6 +61,12 @@ public class Menu implements Serializable {
 
 	public void setItems(Set<Item> items) {
 		this.items = items;
+	}
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
 	}
    
 }

@@ -5,7 +5,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,7 +12,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -39,7 +37,7 @@ public class MembersService {
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	
 	public Customer registerCustomer(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		//register and log in (log in in AngularJS)
 		//return null if customer already exist validate existing email and userName
@@ -56,7 +54,7 @@ public class MembersService {
 	}
 	
 	@GET
-	@Path("/orders/")
+	@Path("/orders")
 	public List<Orders> getCustomerOrderHistory(int userid) {
 		return customerDao.getCustomerOrdersById(userid);
 	}
@@ -64,8 +62,9 @@ public class MembersService {
 	
 	@PUT
 	@Path("/updateInfo")
-	public void updateCustomerDetails(Customer c){
-		 customerDao.updateCustomer(c);
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Customer updateCustomerDetails(Customer c){
+		return customerDao.updateCustomer(c);
 	}
 	@DELETE
 	@Path("/delete")

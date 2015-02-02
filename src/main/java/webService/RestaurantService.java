@@ -1,8 +1,11 @@
 package webService;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import database.entity.Manager;
+import database.entity.Menu;
+import database.entity.Orders;
 import database.entity.Restaurant;
 import database.entity.RestaurantDAO;
 import database.entity.RestaurantLocation;
@@ -26,42 +31,49 @@ public class RestaurantService {
 	
 	@POST
 	@Path("/createRestaurant")
-	public void createRestaurant(Restaurant r){
-		
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Restaurant createRestaurant(Restaurant r){
+		return restaurantDao.createRestaurant(r);
 	}
 	
 	@PUT
 	@Path("/updateRestaurant")
-	public void updateRestaurantInfo(Restaurant r){
-		
+	public Restaurant updateRestaurantInfo(Restaurant r){
+		return restaurantDao.update(r);
 	}
 	@GET
 	@Path("/{id}")
 	public Restaurant getRestaurantById(@PathParam("id")int id){
-		return null;
+		return restaurantDao.getRestaurantById(id);
 		
 	}
 	@GET
-	@Path("/{id}/orders/{orderid}")
-	public Restaurant getRestaurantOrdersById(@PathParam("id")int id,@PathParam("orderid")int orderid){
-		return null;
+	@Path("/{id}/orders")
+	public List<Orders> getRestaurantOrdersById(@PathParam("id")int id){
+		return restaurantDao.getRestaurantOrdersById(id);
 		
 	}
 	@GET
-	@Path("/{id}/menus/{menuid}")
-	public Restaurant getRestaurantMenusById(@PathParam("id")int id,@PathParam("menuid")int menuid){
-		return null;
+	@Path("/{id}/menus")
+	public List<Menu> getRestaurantMenusById(@PathParam("id")int id){
+		return restaurantDao.getRestaurantMenusById(id);
 		
 	}
 	@GET
-	@Path("/{id}/locations/{locationid}")
-	public Restaurant getBranchRestaurantsById(@PathParam("id")int id,@PathParam("locationid")int locationid){
-		return null;
+	@Path("/restaurant/locations/{locationid}")
+	public RestaurantLocation getBranchRestaurantInfoById(@PathParam("locationid")int locationid){
+		return restaurantDao.getBranchRestaurantInfoById(locationid);
+		
+	}
+	@GET
+	@Path("/{id}/locations")
+	public List<RestaurantLocation> getBranchRestaurantsById(@PathParam("id")int id){
+		return restaurantDao.getBranchRestaurantsById(id);
 		
 	}
 	@DELETE
 	@Path("/delete/{restaurantid}")
 	public void deleteARestaurant(@PathParam("restaurantid")int restaurantid){
-		
+		restaurantDao.deleteARestaurant(restaurantid);
 	}
 }

@@ -12,13 +12,13 @@ import javax.persistence.*;
  */
 
 @NamedQueries({
-		@NamedQuery(name = "Customer.findByRealName", query = "Select e from customer e where e.surname = :surname and e.lastname=:lastname"),
-		@NamedQuery(name = "Customer.findByEmail", query = "Select e from customer e where e.email =:email"),
-		@NamedQuery(name = "Customer.findById", query = "Select e from customer e where e.userid =:id"),
-		//@NamedQuery(name = "Customer.findOrdersByUserid", query = "Select o from order o,customer e where o.customer.userid = e.userid and e.userid= :id"),
-		@NamedQuery(name = "Customer.validateEmailAndUsername", query = "Select e from customer e where e.email =:email or e.username = :username"),
-		@NamedQuery(name = "Customer.findPassordByEmailOrUsername", query = "Select e.password from customer e where e.username = :credential or e.email=:credential") })
-@Entity(name="customer")
+		@NamedQuery(name = "Customer.findByRealName", query = "select e from Customer e where e.surname = :surname and e.lastname=:lastname"),
+		@NamedQuery(name = "Customer.findByEmail", query = "Select e from Customer e where e.email =:email"),
+		@NamedQuery(name = "Customer.findById", query = "Select e from Customer e where e.userid = :id"),
+		@NamedQuery(name = "Customer.findOrdersByUserid", query = "Select o from Orders as o where o.customer.userid = :id "),
+		@NamedQuery(name = "Customer.validateEmailAndUsername", query = "Select e from Customer e where e.email =:email or e.username = :username"),
+		@NamedQuery(name = "Customer.findPassordByEmailOrUsername", query = "Select e.password from Customer e where e.username = :credential or e.email=:credential") })
+@Entity
 public class Customer implements Serializable {
 
 	@Id
@@ -44,7 +44,7 @@ public class Customer implements Serializable {
 	@Column(nullable=false)
 	private String secureAnswer;
 	@Column(nullable=true)
-	@OneToMany(mappedBy="customer",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="customer",fetch=FetchType.LAZY,cascade = CascadeType.REFRESH)
 	private Set<Orders> orders;
 	private static final long serialVersionUID = 1L;
 

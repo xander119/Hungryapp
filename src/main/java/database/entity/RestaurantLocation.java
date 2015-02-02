@@ -14,9 +14,10 @@ import javax.persistence.*;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "RestaurantLocation.findByRealName", query = "Select e from customer e where e.surname = :surname and e.lastname=:lastname")})
-@Entity
+	@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id")	
+	})
 
+@Entity
 public class RestaurantLocation implements Serializable {
 
 	   
@@ -25,12 +26,11 @@ public class RestaurantLocation implements Serializable {
 	private Integer id;
 	private Double latitude;
 	private Double longtitude;
-	@OneToOne@MapsId
-	private Manager generalManager;
+	
 	@ManyToOne
 	private Restaurant restaurant;
-	@OneToMany(mappedBy="restaurant")
-	private Set<Orders> orders;
+	@OneToMany(mappedBy="restaurantLocation",cascade=CascadeType.ALL)
+	private Set<Orders> orders ;
 	
 	private static final long serialVersionUID = 1L;
 	public RestaurantLocation() {
@@ -57,13 +57,7 @@ public class RestaurantLocation implements Serializable {
 	public void setLongtitude(Double longtitude) {
 		this.longtitude = longtitude;
 	}   
-	public Manager getGeneralManager() {
-		return this.generalManager;
-	}
-
-	public void setGeneralManager(Manager generalManager) {
-		this.generalManager = generalManager;
-	}   
+	
 	public Restaurant getRestaurant() {
 		return this.restaurant;
 	}
