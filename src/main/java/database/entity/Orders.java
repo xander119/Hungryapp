@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -22,7 +23,7 @@ import javax.persistence.OneToMany;
 @NamedQuery(name="Orders.getAllOrders",query="select o from Orders o")
 
 @Entity
-
+@XmlRootElement
 public class Orders implements Serializable {
 
 	@Id

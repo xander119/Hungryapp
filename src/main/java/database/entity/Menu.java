@@ -8,6 +8,7 @@ import java.lang.String;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: Menu
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name = "Menu.findById", query = "Select e from Menu e ") })
 @Entity
-
+@XmlRootElement
 public class Menu implements Serializable {
 
 	   

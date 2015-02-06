@@ -21,7 +21,7 @@ public class CustomerDAO {
 			String unHshedpassword = c.getPassword();
 			c.setPassword(PasswordHash.createHash(unHshedpassword));
 			
-			if(isCustomerExist(c.getUserName(),c.getEmail())){
+			if(isCustomerExist(c.getUsername(),c.getEmail())){
 				em.persist(c);
 				return true;
 			}else{
@@ -48,12 +48,14 @@ public class CustomerDAO {
 	public String validateLoginUser(String credential, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		// TODO Auto-generated method stub
 		String imputPassword;
-		List<Customer> customers = em.createNamedQuery("Customer.findPassordByEmailOrUsername").setParameter("credential", credential).getResultList();
-		if(customers.isEmpty()){
+		
+		List<String> passwords = (List<String>) em.createNamedQuery("Customer.findPassordByEmailOrUsername").setParameter("credential", credential).getResultList();
+		if(passwords.isEmpty()){
 			return "{\"result\":\"You are not in our database.\"}";
 		}
-		imputPassword = customers.get(0).getPassword();
-		boolean correctPass = PasswordHash.validatePassword(password, imputPassword);
+		imputPassword = passwords.get(0);
+		
+		boolean correctPass = PasswordHash.validatePassword(password,imputPassword);
 		if(!correctPass){
 			return "{\"result\":\"The password you entered is incorrct.\"}";
 		}

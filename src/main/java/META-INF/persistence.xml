@@ -2,14 +2,14 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="Hungryapp">
 	    <jta-data-source>java:/HungryDS</jta-data-source>
-		<class>database.entity.Customer</class>
-		<class>database.entity.Item</class>
-		<class>database.entity.Manager</class>
-		<class>database.entity.Menu</class>
-		<class>database.entity.Orders</class>
-		<class>database.entity.Restaurant</class>
-		<class>database.entity.RestaurantLocation</class>
-		<class>database.entity.Orders_Items</class>
+	    <class>database.entity.Customer</class>
+	    <class>database.entity.Item</class>
+	    <class>database.entity.Manager</class>
+	    <class>database.entity.Menu</class>
+	    <class>database.entity.Orders</class>
+	    <class>database.entity.Orders_Items</class>
+	    <class>database.entity.Restaurant</class>
+	    <class>database.entity.RestaurantLocation</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />

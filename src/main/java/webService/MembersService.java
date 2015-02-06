@@ -12,12 +12,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import database.entity.Customer;
 import database.entity.CustomerDAO;
 import database.entity.Orders;
+import database.entity.RegisterCustomer;
 
 @Path("/members")
 @Stateless
@@ -37,8 +39,7 @@ public class MembersService {
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
-	
-	public Customer registerCustomer(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
+	public Customer register(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		//register and log in (log in in AngularJS)
 		//return null if customer already exist validate existing email and userName
 		if(customerDao.createCustomer(c)){
@@ -48,8 +49,8 @@ public class MembersService {
 	}
 	
 	@GET
-	@Path("/myInfo")
-	public Customer getCustomerByID(int userid) {
+	@Path("/myInfo/{id}")
+	public Customer getCustomerByID(@PathParam("id")int userid) {
 		return customerDao.getCustomerByID(userid);
 	}
 	

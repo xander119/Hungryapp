@@ -30,6 +30,7 @@ public class LoginService {
 	public String login(@PathParam("credential")String credential,@PathParam("password")String password){
 		String result ;
 		try {
+			
 			result = customerDao.validateLoginUser(credential,password);
 			return result;
 		} catch (NoSuchAlgorithmException e) {

@@ -7,12 +7,14 @@ import java.io.Serializable;
 import java.lang.Integer;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: Orders_Items
  *
  */
 @Entity 
+@XmlRootElement
 @Table(name="Orders_Items")
 public class Orders_Items implements Serializable {
 

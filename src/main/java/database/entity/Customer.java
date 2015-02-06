@@ -5,6 +5,9 @@ import java.lang.String;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
 
 /**
  * Entity implementation class for Entity: Customer
@@ -12,13 +15,14 @@ import javax.persistence.*;
  */
 
 @NamedQueries({
-		@NamedQuery(name = "Customer.findByRealName", query = "select e from Customer e where e.surname = :surname and e.lastname=:lastname"),
+		@NamedQuery(name = "Customer.findByRealName", query = "select e from Customer e where e.surname = :surname and e.firstname=:firstname"),
 		@NamedQuery(name = "Customer.findByEmail", query = "Select e from Customer e where e.email =:email"),
 		@NamedQuery(name = "Customer.findById", query = "Select e from Customer e where e.userid = :id"),
 		@NamedQuery(name = "Customer.findOrdersByUserid", query = "Select o from Orders as o where o.customer.userid = :id "),
 		@NamedQuery(name = "Customer.validateEmailAndUsername", query = "Select e from Customer e where e.email =:email or e.username = :username"),
 		@NamedQuery(name = "Customer.findPassordByEmailOrUsername", query = "Select e.password from Customer e where e.username = :credential or e.email=:credential") })
 @Entity
+@XmlRootElement
 public class Customer implements Serializable {
 
 	@Id
@@ -27,22 +31,25 @@ public class Customer implements Serializable {
 	@Column(nullable=false)
 	private String surname;
 	@Column(nullable=false)
-	private String lastname;
+	private String firstname;
 	@Column(unique=true,nullable=false)
 	private String username;
 	@Column(unique=true,nullable=false)
 	private String email;
+	@Column(nullable=true)
 	private int mobile;
 	@Column(nullable=false)
 	private String password;
 	private String joinedDate;
 	private String address;
 	private String dateOfBrith;
+	@Column(nullable=true)
 	private int telephone;
-	@Column(nullable=false)
+	@Column(nullable=true)
 	private String secureQuestion;
-	@Column(nullable=false)
+	@Column(nullable=true)
 	private String secureAnswer;
+	
 	@Column(nullable=true)
 	@OneToMany(mappedBy="customer",fetch=FetchType.LAZY,cascade = CascadeType.REFRESH)
 	private Set<Orders> orders;
@@ -66,13 +73,7 @@ public class Customer implements Serializable {
 	public void setSurname(String Surname) {
 		this.surname = Surname;
 	}   
-	public String getLastname() {
-		return this.lastname;
-	}
-
-	public void setLastname(String Lastname) {
-		this.lastname = Lastname;
-	}   
+	
 	public String getEmail() {
 		return this.email;
 	}
@@ -159,12 +160,25 @@ public class Customer implements Serializable {
 		this.secureAnswer = secureAnswer;
 	}
 
-	public String getUserName() {
-		return username;
+	
+
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public void setUserName(String userName) {
-		this.username = userName;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [userid=" + userid + ", surname=" + surname
+				+ ", lastname=" + firstname + ", username=" + username
+				+ ", email=" + email + ", mobile=" + mobile + ", password="
+				+ password + ", joinedDate=" + joinedDate + ", address="
+				+ address + ", dateOfBrith=" + dateOfBrith + ", telephone="
+				+ telephone + ", secureQuestion=" + secureQuestion
+				+ ", secureAnswer=" + secureAnswer + ", orders=" + orders + "]";
 	}
    
 }

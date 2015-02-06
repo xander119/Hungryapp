@@ -8,6 +8,7 @@ import java.lang.String;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: Restaurant
@@ -17,6 +18,7 @@ import javax.persistence.*;
 		@NamedQuery(name = "Restaurant.findMenus", query = "Select o from Menu o where o.restaurant.id = :id"),
 		@NamedQuery(name = "Restaurant.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id") })
 @Entity
+@XmlRootElement
 public class Restaurant implements Serializable {
 
 	@Id

@@ -5,6 +5,7 @@ import java.lang.Integer;
 import java.lang.String;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: Administrator
@@ -15,7 +16,7 @@ import javax.persistence.*;
 	@NamedQuery(name = "Manager.allManagers", query = "select e from Manager e ")
 	})
 @Entity
-
+@XmlRootElement
 public class Manager implements Serializable {
 
 	@Id
