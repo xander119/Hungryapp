@@ -8,6 +8,11 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import com.google.gson.Gson;
+
+
+
 @Stateless
 @LocalBean
 @SuppressWarnings("unchecked")
@@ -59,7 +64,11 @@ public class CustomerDAO {
 		if(!correctPass){
 			return "{\"result\":\"The password you entered is incorrct.\"}";
 		}
-		return "{\"result\":\"success\"}";
+		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", credential).getResultList();
+		
+		Gson gson = new Gson();		
+		
+		return "{\"result\":\"success\"," + gson.toJson(customers.get(0)).substring(1);
 		
 	}
 	

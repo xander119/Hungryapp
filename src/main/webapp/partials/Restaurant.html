@@ -1,0 +1,52 @@
+<div class="row">
+
+<div class="row clearfix" >
+
+		<form class="col-md-12 form-inline" editable-form name="editableForm">
+			<div class="form-group">
+				<h3>
+					<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name
+						||'name'}}</span>
+				</h3>
+				<span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
+			</div>
+			<div class="Info-section">
+				<div class="Info list-inline" ng-repeat="item as currentMenu.items">
+					<span class="list-group-item-text text-left"
+						editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span>
+					<span class="text-left" editable-text="item.description"
+						e-name="description" e-required>{{item.description}}</span> <span
+						class="text-right" editable-text="item.price" e-name="itemPrice"
+						e-required>{{item.price}}</span>
+					<!-- show button if user is a customer 
+							ng-show= "if customer is true"-->
+					<div>
+						<button type="button" class="btn btn-default">Add to cart.</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+
+
+		<!-- show button if user is a manager 
+				ng-show= "if manager is true"-->
+				<div align="right">
+					<!-- button to show form -->
+					<button type="button" class="btn btn-default"
+						data-ng-click="editableForm.$show()"
+						data-ng-show="!editableForm.$visible">Edit</button>
+					<!-- buttons to submit / cancel form -->
+					<span ng-show="editableForm.$visible">
+						<button type="submit" class="btn btn-primary"
+							ng-disabled="editableForm.$waiting">Save</button>
+						<button type="button" class="btn btn-default"
+							ng-disabled="editableForm.$waiting"
+							ng-click="editableForm.$cancel()">Cancel</button>
+					</span>
+				</div>
+				
+			</div>
+
+
+</div>

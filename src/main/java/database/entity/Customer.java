@@ -20,7 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 		@NamedQuery(name = "Customer.findById", query = "Select e from Customer e where e.userid = :id"),
 		@NamedQuery(name = "Customer.findOrdersByUserid", query = "Select o from Orders as o where o.customer.userid = :id "),
 		@NamedQuery(name = "Customer.validateEmailAndUsername", query = "Select e from Customer e where e.email =:email or e.username = :username"),
-		@NamedQuery(name = "Customer.findPassordByEmailOrUsername", query = "Select e.password from Customer e where e.username = :credential or e.email=:credential") })
+		@NamedQuery(name = "Customer.findPassordByEmailOrUsername", query = "Select e.password from Customer e where e.username = :credential or e.email=:credential") ,
+		@NamedQuery(name = "Customer.findCustomerByEmailOrUsername", query = "Select e from Customer e where e.username = :credential or e.email=:credential") })
 @Entity
 @XmlRootElement
 public class Customer implements Serializable {
@@ -41,7 +42,6 @@ public class Customer implements Serializable {
 	@Column(nullable=false)
 	private String password;
 	private String joinedDate;
-	private String address;
 	private String dateOfBrith;
 	@Column(nullable=true)
 	private int telephone;
@@ -51,8 +51,11 @@ public class Customer implements Serializable {
 	private String secureAnswer;
 	
 	@Column(nullable=true)
-	@OneToMany(mappedBy="customer",fetch=FetchType.LAZY,cascade = CascadeType.REFRESH)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
 	private Set<Orders> orders;
+	@Column(nullable=true)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
+	private Set<Address> addresses;
 	private static final long serialVersionUID = 1L;
 
 	public Customer() {
@@ -104,10 +107,7 @@ public class Customer implements Serializable {
 		this.joinedDate = joinedDate;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
+	
 	public String getUsername() {
 		return username;
 	}
@@ -116,10 +116,7 @@ public class Customer implements Serializable {
 		this.username = username;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
+	
 	public Set<Orders> getOrders() {
 		return orders;
 	}
@@ -166,6 +163,14 @@ public class Customer implements Serializable {
 		return firstname;
 	}
 
+	public Set<Address> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(Set<Address> addresses) {
+		this.addresses = addresses;
+	}
+
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
@@ -175,8 +180,7 @@ public class Customer implements Serializable {
 		return "Customer [userid=" + userid + ", surname=" + surname
 				+ ", lastname=" + firstname + ", username=" + username
 				+ ", email=" + email + ", mobile=" + mobile + ", password="
-				+ password + ", joinedDate=" + joinedDate + ", address="
-				+ address + ", dateOfBrith=" + dateOfBrith + ", telephone="
+				+ password + ", joinedDate=" + joinedDate  + ", dateOfBrith=" + dateOfBrith + ", telephone="
 				+ telephone + ", secureQuestion=" + secureQuestion
 				+ ", secureAnswer=" + secureAnswer + ", orders=" + orders + "]";
 	}

@@ -1,10 +1,67 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<ul class="nav nav-pills">
 
-</body>
-</html>
+				<li data-ng-class="{active:isActiveTab(1)}"
+					data-ng-init="onClickTab(1)"><a href
+					data-ng-click="onClickTab(1)">Profiles</a></li>
+				<li data-ng-class="{active:isActiveTab(2)}"><a href
+					data-ng-click="onClickTab(2)">Restaurants</a></li>
+			</ul>
+
+
+			<div class="row clearfix" data-ng-show="isActiveTab(1)" align="justify">
+
+				<form class="col-md-12 form-inline" editable-form
+					name="editableForm">
+					<div class="form-group">
+						<h3>
+							<span editable-text="currentManager.name" e-name="username"
+								e-required>{{currentManager.username || 'Name'}}</span>
+						</h3>
+					</div>
+					<div class="Info-section">
+						<div class="Info">
+							<span class="list-group-item-text">Email :</span> <span
+								editable-text="currentManager.email" e-name="email" e-required>{{currentManager.email}}</span>
+						</div>
+					</div>
+				</form>
+				<div  align="right">
+					<!-- button to show form -->
+					<button type="button" class="btn btn-default"
+						data-ng-click="editableForm.$show()"
+						data-ng-show="!editableForm.$visible">Edit</button>
+					<!-- buttons to submit / cancel form -->
+					<span ng-show="editableForm.$visible">
+						<button type="submit" class="btn btn-primary"
+							ng-disabled="editableForm.$waiting">Save</button>
+						<button type="button" class="btn btn-default"
+							ng-disabled="editableForm.$waiting"
+							ng-click="editableForm.$cancel()">Cancel</button>
+					</span>
+				</div>
+			</div>
+
+
+			<div class="list-group" data-ng-show="isActiveTab(2)">
+			<div class="list-group-item" data-ng-hide="restaurantOwn = null">
+						You have no restaurant yet.<a href = "#newRestaurant" style="margin-left: 8px;">    Start new ?</a>
+					</div>
+				<div data-ng-repeat="Restaurant in Restaurants" class="list-inline">
+					<div class="list-group-item">{{Restaurant.name}}
+					<div >
+						<button type="button" class="btn btn-primary" ng-click="editRestaurant(Restaurant.id)">Edit</button>
+					</div>
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+		</div>
+	</div>
+</div>

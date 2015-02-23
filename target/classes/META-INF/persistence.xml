@@ -10,6 +10,8 @@
 	    <class>database.entity.Orders_Items</class>
 	    <class>database.entity.Restaurant</class>
 	    <class>database.entity.RestaurantLocation</class>
+	    <class>database.entity.Address</class>
+	    <class>database.entity.OpenHour</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />

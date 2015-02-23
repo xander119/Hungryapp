@@ -1,7 +1,10 @@
 package webService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
@@ -25,12 +28,18 @@ public class AdminServices {
 	
 	@POST
 	@Path("/registerAsOwner")
-	public Manager registerAdmin(Manager m){
+	public Manager registerAdmin(Manager m) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		return managerDao.registerAdmin(m);
 	}
+	@RolesAllowed("Admin")
 	@GET
 	@Path("/myRestaurant/{managerid}")
 	public List<RestaurantLocation> getRestaurantOwnedById(@PathParam("managerid")int managerid){
 		return managerDao.getRestaurantByManagerId(managerid);
+	}
+	@GET
+	@Path("/{managerid}")
+	public Manager getManagerById(@PathParam("managerid")int managerid){
+		return managerDao.getManagerById(managerid);
 	}
 }

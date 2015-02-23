@@ -24,15 +24,18 @@ public class Restaurant implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private String openHour;
-	private String deliveryHour;
 	private String name;
+	private String deliveryHour;
+	private String deliveryNote;
+	
 	private String type;
-	@OneToOne(cascade = CascadeType.ALL)
-	@MapsId
+	@ManyToOne
 	private Manager generalManager;
 	@Lob
 	private byte[] logo;
+	
+	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	private OpenHour openHour;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
 	private Set<RestaurantLocation> locations;
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
@@ -52,13 +55,7 @@ public class Restaurant implements Serializable {
 		this.id = id;
 	}
 
-	public String getOpenHour() {
-		return this.openHour;
-	}
-
-	public void setOpenHour(String openHour) {
-		this.openHour = openHour;
-	}
+	
 
 	public String getDeliveryHour() {
 		return this.deliveryHour;
@@ -114,6 +111,22 @@ public class Restaurant implements Serializable {
 
 	public void setMenus(Set<Menu> menus) {
 		this.menus = menus;
+	}
+
+	public OpenHour getOpenHour() {
+		return openHour;
+	}
+
+	public void setOpenHour(OpenHour openHour) {
+		this.openHour = openHour;
+	}
+
+	public String getDeliveryNote() {
+		return deliveryNote;
+	}
+
+	public void setDeliveryNote(String deliveryNote) {
+		this.deliveryNote = deliveryNote;
 	}
 
 }

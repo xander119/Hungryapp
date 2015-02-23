@@ -13,10 +13,12 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import database.entity.Customer;
 import database.entity.Orders;
 
-public class RestEasyClient {
+public class RestEasyClientTest {
+	
 	public static void main(String[] args) {
+		
 		Customer customer = new Customer();
-		customer.setEmail("wang");
+		customer.setEmail("wang@yaoo.com");
 		customer.setUsername("Xnader119");
 		customer.setFirstname("wang");
 		customer.setSurname("Zechen");
@@ -27,16 +29,26 @@ public class RestEasyClient {
 		customer.setOrders(orders);
 			try {
 				ResteasyClient client = new ResteasyClientBuilder().build();
-				ResteasyWebTarget target = client
-						.target("http://localhost:8080/Hungryapp/rest/members/register");
-				Response response = target.request().post(
-						Entity.entity(customer, "application/json"));
+//				ResteasyWebTarget target = client
+//						.target("http://localhost:8080/Hungryapp/rest/members/register");
+//				Response response = target.request().post(
+//						Entity.entity(customer, "application/json"));
+//				if (response.getStatus() != 200) {
+//					throw new RuntimeException("Failed : HTTP error code : "
+//							+ response.getStatus());
+//				}
+//				
+//				System.out.println("Server response : \n");
+//				System.out.println(response.readEntity(String.class));
+//				response.close();
+				ResteasyWebTarget target = client.target("http://localhost:8080/Hungryapp/rest/Login/Xnader119/111");
+				Response response = target.request().get();
 				if (response.getStatus() != 200) {
 					throw new RuntimeException("Failed : HTTP error code : "
 							+ response.getStatus());
 				}
 				System.out.println("Server response : \n");
-				System.out.println(response.readEntity(String.class));
+				System.out.println(response);
 				response.close();
 			} catch (Exception e) {
 				e.printStackTrace();
