@@ -7,6 +7,9 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 
 /**
@@ -39,6 +42,11 @@ public class Customer implements Serializable {
 	private String email;
 	@Column(nullable=true)
 	private int mobile;
+	@Lob	
+	@Column(nullable=true)
+	private byte[] profilePic;
+	
+
 	@Column(nullable=false)
 	private String password;
 	private String joinedDate;
@@ -135,6 +143,14 @@ public class Customer implements Serializable {
 
 	public int getTelephone() {
 		return telephone;
+	}
+
+	public byte[] getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = profilePic;
 	}
 
 	public void setTelephone(int telephone) {

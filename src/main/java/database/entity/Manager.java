@@ -3,10 +3,14 @@ package database.entity;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  * Entity implementation class for Entity: Administrator
@@ -14,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @NamedQueries({
 	@NamedQuery(name = "Manager.findRestaurantOwnedById", query = "Select e from Restaurant e where e.generalManager = :manager "),
+	@NamedQuery(name = "Manager.findManagerByEmail", query = "Select e from Manager e where e.email = :email "),
 	@NamedQuery(name = "Manager.allManagers", query = "select e from Manager e "),
 	@NamedQuery(name = "Manager.findManagerById", query = "select e from Manager e where e.id = :id "),
 	@NamedQuery(name = "Manager.findPassordByEmailOrUsername", query = "Select e.password from Manager e where e.name = :credential or e.email=:credential "),
@@ -30,8 +35,9 @@ public class Manager implements Serializable {
 	private String password;
 	private String email;
 	@Column(nullable=true)
-	@OneToMany(mappedBy="generalManager",fetch=FetchType.EAGER)
-	private Set<Restaurant> restaurants;
+	@OneToMany(mappedBy="generalManager",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@JsonIgnore
+	private Set<Restaurant> restaurants = new HashSet<Restaurant>();
 	private static final long serialVersionUID = 1L;
 
 	public Manager() {

@@ -33,6 +33,7 @@ public class RestaurantService {
 	@Path("/createRestaurant")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Restaurant createRestaurant(Restaurant r){
+		
 		return restaurantDao.createRestaurant(r);
 	}
 	
@@ -63,6 +64,12 @@ public class RestaurantService {
 	@Path("/restaurant/locations/{locationid}")
 	public RestaurantLocation getBranchRestaurantInfoById(@PathParam("locationid")int locationid){
 		return restaurantDao.getBranchRestaurantInfoById(locationid);
+		
+	}
+	@GET
+	@Path("/allrestaurant/locations")
+	public List<Restaurant> getAllRestaurantLocations(){
+		return restaurantDao.getAllRestaurantLocations();
 		
 	}
 	@GET

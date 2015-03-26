@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 
 /**
@@ -36,18 +41,15 @@ public class Orders implements Serializable {
 	private boolean isComplete;
 	private String completeTime;
 	@ManyToOne
+//	@JsonBackReference
 	private RestaurantLocation restaurantLocation;
 	@ManyToOne
 	private Customer customer;
 	
-	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+//	@JsonManagedReference
 	private List<Orders_Items> orderItems ;
-//	@ManyToMany(targetEntity=Item.class)
-//	@JoinTable(name="Order_Item",
-//			joinColumns = { @JoinColumn(name = "Order_ID") }, 
-//		       inverseJoinColumns = { @JoinColumn(name = "Item_ID") }
-//	)
-//	private List<Item> items;
+
 	private static final long serialVersionUID = 1L;
 
 	public Orders() {

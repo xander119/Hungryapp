@@ -10,13 +10,18 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * Entity implementation class for Entity: Restaurant
  *
  */
 @NamedQueries({
 		@NamedQuery(name = "Restaurant.findMenus", query = "Select o from Menu o where o.restaurant.id = :id"),
-		@NamedQuery(name = "Restaurant.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id") })
+		@NamedQuery(name = "Restaurant.findAllLocations", query = "Select o from Restaurant o") 
+		})
 @Entity
 @XmlRootElement
 public class Restaurant implements Serializable {
@@ -34,11 +39,14 @@ public class Restaurant implements Serializable {
 	@Lob
 	private byte[] logo;
 	
-	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	
+	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL)
 	private OpenHour openHour;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",fetch = FetchType.EAGER)
 	private Set<RestaurantLocation> locations;
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+//	@JsonManagedReference
+	@JsonIgnore
 	private Set<Menu> menus;
 
 	private static final long serialVersionUID = 1L;
@@ -128,5 +136,7 @@ public class Restaurant implements Serializable {
 	public void setDeliveryNote(String deliveryNote) {
 		this.deliveryNote = deliveryNote;
 	}
+
+	
 
 }

@@ -10,6 +10,9 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * Entity implementation class for Entity: Menu
  *
@@ -27,6 +30,7 @@ public class Menu implements Serializable {
 	private String name;
 	private String note;
 	@OneToMany(mappedBy="menu")
+//	@JsonManagedReference
 	private Set<Item> items;
 	@ManyToOne
 	private Restaurant restaurant;

@@ -1,22 +1,18 @@
-'use strict';
-(function() {
 
-	var Hungryapp = angular.module('Hungryapp', [ 'app.routeConfig',
-			'app.service', 'app.controllers', 'app.directives', "xeditable","ui.bootstrap" ]);
+
+	var Hungryapp = angular.module('Hungryapp', [ 'xeditable','app.routeConfig',
+			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart']);
 	var control = angular.module('app.controllers', [ 'ngCookies' ]);
 	var route = angular.module('app.routeConfig', [ 'ngRoute' ]);
 	var services = angular.module('app.service', [ 'ngResource' ]);
 	var directives = angular.module('app.directives', []);
 	Hungryapp.run(function(editableOptions) {
-		editableOptions.theme = 'bs2';
+		  editableOptions.theme = 'bs3';
 	});
 	route.config([ '$routeProvider', function($routeProvider) {
 		$routeProvider.when('/login', {
 			templateUrl : 'partials/UserLogin.html',
 			controller : 'LoginController'
-		}).when('/', {
-			templateUrl : 'partials/Home.html',
-			contoller : 'HomeController'
 		}).when('/signup', {
 			templateUrl : 'partials/UserSignUp.html',
 			controller : 'SignUpController'
@@ -43,7 +39,16 @@
 		}).when('/newRestaurant',{
 			templateUrl : 'partials/RestaurantCreate.html',
 			controller : 'restaurantCreateCtrl'
-				}).otherwise({
+		}).when('/restaurantList',{
+			templateUrl : 'partials/RestaurantList.html',
+			controller : 'restListCtrl'
+		}).when('/restaurantDetails',{
+			templateUrl : 'partials/RestaurantDetails.html',
+			controller : 'restDetailsCtrl'
+		}).when('/', {
+			templateUrl : 'partials/HomePage.html',
+			controller : 'HomeCtrl'
+		}).otherwise({
 			redirectTo : '/'
 		});
 	} ]);
@@ -58,7 +63,7 @@
 				}
 			},
 			adminAuth : {
-				url : '/Hungryapp/rest/Login/admin-:credential/:password',
+				url : 'rest/Login/admin-:credential/:password',
 				method : 'GET',
 				params : {
 					credential : '@credential',
@@ -71,22 +76,22 @@
 	services.factory('MemberService', function($resource) {
 		return $resource('/Hungryapp/rest/members', null, {
 			register : {
-				url : '/Hungryapp/rest/members/register',
+				url : 'rest/members/register',
 				method : 'POST'
 			},
 			getUser : {
-				url : '/Hungryapp/rest/members/myInfo/:id',
+				url : 'rest/members/myInfo/:id',
 				method : 'GET',
 				params : {
 					id : '@id'
 				}
 			},
 			updateUser : {
-				url : '/Hungryapp/rest/members/updateInfo',
+				url : 'rest/members/updateInfo',
 				method : 'PUT'
 			},
 			getHistoryOrders : {
-				url : '/Hungryapp/rest/members/orders/:id',
+				url : 'rest/members/orders/:id',
 				method : 'GET',
 				params : {
 					id : '@id'
@@ -101,24 +106,53 @@
 		});
 	});
 	services.factory('AdminService',function($resource){
-		return $resource('/Hungryapp/rest/admin',null,{
+		return $resource('rest/admin',null,{
 			register : {
-				url : '/Hungryapp/rest/admin/registerAsOwner',
+				url : 'rest/admin/registerAsOwner',
 				method : 'POST'
 			},
 			getRestaurantOwn : {
-				url : 'Hungryapp/rest/admin/myRestaurant/:id',
+				url : 'rest/admin/myRestaurant/:id',
 				method : 'GET',
 				params : {
 					id : '@id'
 				}
 			},
 			getManager : {
-				url : 'Hungryapp/rest/admin/:id',
+				url : 'rest/admin/:id',
 				method : 'GET',
 				params : {
 					id : '@id'
 				}
+			}
+			
+		});
+	});
+	services.factory('RestaurantServices',function($resource){
+		return $resource('rest/restaurants/',null,{
+			newRest : {
+				url : 'rest/restaurants/createRestaurant',
+				method : 'POST'
+			},
+			allLocations : {
+				url : 'rest/restaurants/allrestaurant/locations',
+				method : 'GET',
+				isArray : true
+			},
+			getRest : {
+				url : 'rest/restaurants/:id',
+				method : 'GET',
+				params : {
+					id : '@id'
+				}
+			}
+		});
+	});
+	services.factory('MenuServices',function($resource){
+		return $resource('/Hungryapp/rest/menus',null,{
+			newMenu : {
+				url : 'rest/menus/createMenu',
+				method : 'POST'
 			}
 			
 		});
@@ -128,58 +162,161 @@
 				userid : "",
 				adminid : "",
 				isAdminR : false,
-				isAuth : false
+				isAuth : false,
+				restaurant : {},
+				RestaurantNearMe: [],
+				isHome : false
+				
 		};
 
 		return loggedInUser;
 
 	});
-	control.controller('restaurantCreateCtrl', [ '$scope','$filter', function($scope,$filter) {
+	control.controller('restListCtrl',['$scope','$location','DataService','RestaurantServices',function($scope,$location,DataService,RestaurantServices){
+		$scope.restaurantList = DataService.RestaurantNearMe;
+		console.log($scope.restaurantList);
+		$scope.toDetails= function(rest){
+			DataService.restaurant = rest;
+			console.log(DataService.restaurant);
+			$location.path('/restaurantDetails');
+		};
+	}]);
+	
+	control.controller('restDetailsCtrl',['$scope','DataService',function($scope,DataService){
+		$scope.currentRest = DataService.restaurant;
+		$scope.isCus = !DataService.isAdminR;
+	}]);
+	control.controller('restaurantCreateCtrl', [ '$scope','$modal','$timeout','$http','RestaurantServices','AdminService','DataService','MenuServices', function($scope,$modal,$timeout,$http,RestaurantServices,AdminService,DataService,MenuServices) {
 		$scope.progress = 25;
-		$scope.res = {};
-		$scope.openHour={};
-		$scope.deliTime={};
-		$scope.saveOpenTime = function(openHours){
+		$scope.openHour = {};
+		$scope.menus = [{name : '',
+        				note : '',
+        				items : [
+        				         {name:'',description:'',price:''}
+        				         ]
+        }];
+		$scope.tempLoc =[];
+		$scope.restaurantLoc =[];
+		var   geocoder = new google.maps.Geocoder();
+		$scope.locateAddr = function(){
+			var address = $scope.tempLoc.address;
+			geocoder.geocode( { 'address': address}, function(results, status) {
+			    if (status == google.maps.GeocoderStatus.OK) {
+			        $scope.map.setCenter(results[0].geometry.location);
+			        $scope.map.panTo(results[0].geometry.location);
+			        $scope.map.setZoom(13);
+			        $scope.map.markers.restPosition.setPosition(results[0].geometry.location);
+			      } else {
+			        alert('Geocode was not successful for the following reason: ' + status);
+			      }
+			    });
+		};
+		
+		 //start map 
+		$scope.$watch('progress==50', function () {
+			var map = $scope.map;
+            window.setTimeout(function(){
+            	google.maps.event.trigger(map, 'resize');
+               },100);
+
+			});
+		
+		$scope.updateMarker = function(){
+			console.log($scope.map);
+		};
+		$scope.saveAddress = function(){
 			
-			$scope.openHour={
-				monday : new Date(openHours.mondayStart).toTimeString().substring(0,5) + '~' + new Date(openHours.mondayEnd).toTimeString().substring(0,5),
-				tuesday : new Date(openHours.tuesdayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.tuesdayEnd).toTimeString().substring(0,5),
-				wednesday : new Date(openHours.wednesdayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.wednesdayEnd).toTimeString().substring(0,5),
-				thursday : new Date(openHours.thursdayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.thursdayEnd).toTimeString().substring(0,5),
-				friday : new Date(openHours.fridayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.fridayEnd).toTimeString().substring(0,5),
-				saturday : new Date(openHours.saturdayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.saturdayEnd).toTimeString().substring(0,5),
-				sunday : new Date(openHours.sundayStart).toTimeString().substring(0,5) + '~' +  new Date(openHours.sundayEnd).toTimeString().substring(0,5)
-			};
-			console.log($scope.openHour);
+			console.log($scope.map);
+			var lat = $scope.map.markers.restPosition.getPosition().lat();
+			var lng = $scope.map.markers.restPosition.getPosition().lng();
+			$scope.restaurantLoc.push({email:$scope.tempLoc.email, telephone : $scope.tempLoc.telephone,latitude: lat,longitude:lng,address:$scope.tempLoc.address});
+			$scope.tempLoc = ''; 
+			$scope.restaurantContactForm.$setPristine();
+			console.log($scope.restaurantLoc);
+			
 		};
-		$scope.saveDeliTime = function(delitime){
-			$scope.deliTime={
-					deliveryHour : delitime.start + '~' + delitime.end,
-					deliveryNote : delitime.note
-			};
-			console.log(delitime);
-			console.log($scope.deliTime);
+		$scope.deleteAddr = function(restLoc){
+			 var index=$scope.restaurantLoc.indexOf(restLoc);
+		      $scope.restaurantLoc.splice(index,1);     
 		};
 		
-		
+		$scope.addMenuForm = function(){
+		      $scope.menus.push(
+				                {name : '',
+				                	note : '',
+				                	items : [
+				                	         {name:'',description:'',price:''}
+				                	         ]
+				                });
+		      console.log($scope.menus);
+		    };
+		    $scope.addMenuItem = function(menu){
+		      menu.items.push({name:'',description:'',price:''});
+		    };
+		    
+		    
+		$scope.deleteMenuItem = function(menu){
+		};
+		$scope.previous = function() {
+			$scope.progress = $scope.progress - 25;
+		};
 		
 		$scope.next = function() {
+			
+			if($scope.progress==25){
+				console.log($scope.openHours);
+				if($scope.openHours.monday==true){
+					$scope.openHour.monday= new Date($scope.openHours.mondayStart).toTimeString().substring(0,5) + '~' + new Date($scope.openHours.mondayEnd).toTimeString().substring(0,5) ;
+				}
+				if($scope.openHours.tuesday==true){
+					$scope.openHour.tuesday = new Date($scope.openHours.tuesdayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.tuesdayEnd).toTimeString().substring(0,5);
+				}
+				if($scope.openHours.wednesday==true){
+					$scope.openHour.wednesday = new Date($scope.openHours.wednesdayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.wednesdayEnd).toTimeString().substring(0,5);
+				}
+				if($scope.openHours.thursday==true){
+					$scope.openHour.thursday = new Date($scope.openHours.thursdayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.thursdayEnd).toTimeString().substring(0,5);
+				}
+				if($scope.openHours.friday==true){
+					$scope.openHour.friday = new Date($scope.openHours.fridayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.fridayEnd).toTimeString().substring(0,5);
+				}
+				if($scope.openHours.saturday==true){
+					$scope.openHour.saturday = new Date($scope.openHours.saturdayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.saturdayEnd).toTimeString().substring(0,5);
+				}
+				if($scope.openHours.sunday==true){
+					$scope.openHour.sunday = new Date($scope.openHours.sundayStart).toTimeString().substring(0,5) + '~' +  new Date($scope.openHours.sundayEnd).toTimeString().substring(0,5);
+				}
+			//add openhours and deliveryhours to restaurant details
+				$scope.res.openHour = $scope.openHour;
+				$scope.res.deliveryHour = new Date($scope.deliveryTime.start).toTimeString().substring(0,5) + '~' + new Date($scope.deliveryTime.end).toTimeString().substring(0,5);
+				console.log($scope.res);
+				
+
+			}else if($scope.progress==50){
+				$scope.res.locations = $scope.restaurantLoc;
+				console.log($scope.res);
+				
+			}
+			else if ($scope.progress==75){
+				//add menu or items 
+				$scope.res.menus = $scope.menus;
+				console.log($scope.menus);
+			}
+			//persist to restaurant
 			$scope.progress = $scope.progress + 25;
-		};
-		$scope.showOHModal = false;
-		$scope.toggleOHModal = function() {
-			$scope.showOHModal = !$scope.showOHModal;
+			console.log($scope.res);
 		};
 		
-		$scope.showDHModal = false;
-		$scope.toggleDHModal = function() {
-			$scope.showDHModal = !$scope.showDHModal;
+		$scope.finish = function(){
+			//$scope.res.generalManager =  AdminService.getManager({ id : DataService.adminid });
+			console.log($scope.res.generalManager); 
+			//AdminService.getManager({ id : DataService.adminid })
+
+			RestaurantServices.newRest($scope.res);
 		};
+		
 	} ]);
 	
-	control.controller('restaurantDetailsCtrl', ['$scope', function($scope) {
-
-	} ]);
 	control.controller('forgotPasswordCtrl', [ '$scope', '$location',
 			'$window', function($scope, $location, $window) {
 
@@ -229,6 +366,7 @@
 				};
 
 			} ]);
+		
 	control.controller('managerDetailsCtrl', [ '$scope', '$location',
 			'$window','AdminService','DataService', function($scope, $location, $window,AdminService,DataService) {
 				this.tab = 1;
@@ -254,14 +392,12 @@
 				console.log($scope.restaurantOwn);
 
 			} ]);
-	control.controller('HomeController', [ '$scope', '$location', '$window',
-			'$cookieStore', function($scope, $location, $window, $cookieStore) {
-
-			} ]);
+	
 	control.controller('userdetailsCtrl', [ '$scope', 'DataService',
 			'MemberService', function($scope, DataService, MemberService) {
 				this.tab = 1;
 				$scope.currentUser = {};
+
 				$scope.onClickTab = function(tab) {
 					this.tab = tab;
 				};
@@ -269,15 +405,15 @@
 				$scope.isActiveTab = function(checkTab) {
 					return this.tab == checkTab;
 				};
-				$scope.checkUsername = function(data){
-					
-				};
-				$scope.checkEmail = function(data){
-					
-				};
-				$scope.checkMobile = function(data){
-					
-				};
+//				$scope.checkUsername = function(data){
+//					
+//				};
+//				$scope.checkEmail = function(data){
+//					
+//				};
+//				$scope.checkMobile = function(data){
+//					
+//				};
 				$scope.updateUser = function(aUser){
 					$scope.updatedUser = MemberService.updateUser(aUser);
 					$scope.currentUser = $scope.updatedUser;
@@ -286,12 +422,170 @@
 				$scope.historyOrders = MemberService.getHistoryOrders({ id  : DataService.userid });
 				
 				$scope.currentUser = MemberService.getUser({ id : DataService.userid });
+				$scope.$watch("currentUser", function(newValue, oldValue) {
+				      if(newValue!=oldValue){
+				          $scope.enabled = true;
+				          }
+				      if(newValue ==  oldValue){
+				          $scope.enabled = false;
+				      }
+				  },true);
 				console.log($scope.historyOrders);
 			} ]);
+	control.controller(
+				'HomeCtrl',
+				[
+						'$scope',
+						'$location',
+						'$window',
+						'$cookieStore',
+						'$timeout',
+						'$compile',
+						'DataService',
+						'RestaurantServices',
+						function($scope, $location, $window, $cookieStore,
+								$timeout, $compile, DataService,
+								RestaurantServices) {
+		var currentlat;
+		var currentlng;
+		var directionsService = new google.maps.DirectionsService();
+		DataService.isHome = true;
+		$scope.isHome = DataService.isHome;
+		$scope.locations = [ {
+								latitude : '53.335575',
+								longitude : '-6.29167919218753'
+							}, {
+								latitude : '53.335575',
+								longitude : '36.87652269296882'
+							} ];
+		$scope.RestaurantNearMe = [];
+		$scope.allLocation  = RestaurantServices.allLocations();
+		console.log($scope.allLocation);
+		$scope.getRList = function(){
+			currentlat = $scope.myMarker.getPosition().lat();
+			currentlng = $scope.myMarker.getPosition().lng();
+			var end;
+			var currentLoc = new google.maps.LatLng(currentlat, currentlng);
+//			console.log($scope.allLocation);
+			console.log(currentLoc);
+			
+			$scope.radius = 3;
+			var radius = $scope.radius;
+			$scope.allLocation.forEach(function(restaurant){
+				//get locations of this restaurant
+				$scope.locations = restaurant.locations;
+				//for each restaurant cal distance and put it into near restaurant if in radius of 3km
+				$scope.locations.forEach(function(location){
+					end = new google.maps.LatLng(location.latitude, location.longitude);
+					 var distance;
+					 console.log(end + "end");
+					    var request = {
+					        origin: currentLoc,
+					        destination: end,
+					        travelMode: google.maps.DirectionsTravelMode.DRIVING
+					    };
 
+					    directionsService.route(request, function(response, status) {
+					        if (status == google.maps.DirectionsStatus.OK) {
+					             distance = response.routes[0].legs[0].distance.value / 1000;
+					             console.log(distance+'km');
+					             if(distance< radius){
+										if(distance!=0){
+											if($scope.RestaurantNearMe.indexOf(restaurant) == -1){
+												$scope.RestaurantNearMe.push(restaurant);
+											}
+											
+											console.log($scope.RestaurantNearMe);
+										}
+									};
+					        }
+					    });
+				});
+				 
+				
+			});
+			
+		};
+		$scope.viewList = function(){
+			DataService.RestaurantNearMe = $scope.RestaurantNearMe;
+			$location.path('/restaurantList');
+			console.log($scope.RestaurantNearMe);
+			console.log(DataService.RestaurantNearMe);
+		};
+		$scope.showMe = function(position){
+			$scope.markLat = position.coords.latitude;
+			$scope.markLng = position.coords.longitude;
+			$scope.currlatlng = new google.maps.LatLng($scope.markLat, $scope.markLng);
+			console.log($scope.currlatlng);
+			var contentString = '<div><span>I am here.</span><br> <button class="btn btn-link" ng-click="viewList()" >Near me</button> </div> ';
+			var compiled = $compile(contentString)($scope);
+			$scope.myMarker = new google.maps.Marker(
+					{
+						map: $scope.map,
+						position: $scope.currlatlng , 
+						animation : google.maps.Animation.DROP,
+					    draggable:true
+					}					
+					);
+			var Infowindow = new google.maps.InfoWindow({content : compiled[0]});
+			Infowindow.open($scope.map,$scope.myMarker);
+
+			google.maps.event.addListener($scope.myMarker, 'click', function() {
+					Infowindow.open($scope.map,$scope.myMarker);
+			  });
+			
+			google.maps.event.addListener($scope.myMarker, 'dragend', function() {
+				$scope.getRList();
+				});
+			$scope.getRList();
+		};
+
+		 $scope.showError = function (error) {
+	            switch (error.code) {
+	                case error.PERMISSION_DENIED:
+	                    $scope.error = "User denied the request for Geolocation.";
+	                    break;
+	                case error.POSITION_UNAVAILABLE:
+	                    $scope.error = "Location information is unavailable.";
+	                    break;
+	                case error.TIMEOUT:
+	                    $scope.error = "The request to get user location timed out.";
+	                    break;
+	                case error.UNKNOWN_ERROR:
+	                    $scope.error = "An unknown error occurred.";
+	                    break;
+	            }
+	            $scope.$apply();
+	        };
+	       
+		$scope.getCurrLoc = function(){
+			if (navigator.geolocation) {
+	            navigator.geolocation.getCurrentPosition($scope.showMe,$scope.showError);
+	        }
+	        else {
+	            $scope.error = "Geolocation is not supported by this browser.";
+	        }
+		} ;
+		$scope.getCurrLoc();
+		$scope.backToMe = function(){
+			$scope.map.panTo($scope.currlatlng);
+			$scope.map.setZoom(13);
+			$scope.myMarker.setPosition($scope.currlatlng);
+			$scope.getRList();
+		};
+		
+		$scope.display = function() {
+			console.log($scope.map);
+			console.log( "latitude :" +currentlat + " longitude :" + currentlng);
+		};
+		
+		
+
+	} ]);
 	control.controller('IndexController', [ '$scope', '$location', '$window',
 			'$cookieStore', 'DataService',
 			function($scope, $location, $window, $cookieStore, DataService) {
+		
 				$scope.isAdmin = function(){
 					return DataService.isAdminR;
 					};
@@ -363,9 +657,10 @@
 						firstname : Customer.firstname,
 						email : Customer.email,
 						password : Customer.password,
-						joinedDate : new Date().toDateString(),
+						joinedDate : new Date().toDateString()
 					};
-					MemberService.register($scope.c);
+					
+				 MemberService.register($scope.c);
 					console.log("Successful Registered");
 					$location.path('/Hungryapp');
 				};
@@ -386,88 +681,23 @@
 		};
 
 	} ]);
-	directives.directive('openHourModal', function () {
-	    return {
-	      template: '<div class="modal fade">' + 
-	          '<div class="modal-dialog">' + 
-	            '<div class="modal-content">' + 
-	              '<div class="modal-header">' + 
-	                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-	                '<h4 class="modal-title">{{ title }}</h4>' + 
-	              '</div>' + 
-	              '<div class="modal-body" ng-transclude></div>' + 
-	            '</div>' + 
-	          '</div>' + 
-	        '</div>',
-	      restrict: 'E',
-	      transclude: true,
-	      replace:true,
-	      scope:true,
-	      link: function postLink(scope, element, attrs) {
-	        scope.title = attrs.title;
+	directives.directive('onlyNum', function() {
+        return function(scope, element, attrs) {
 
-	        scope.$watch(attrs.visible, function(value){
-	          if(value == true)
-	            $(element).modal('show');
-	          else
-	            $(element).modal('hide');
-	        });
+            var keyCode = [8,9,37,39,48,49,50,51,52,53,54,55,56,57,96,97,98,99,100,101,102,103,104,105,110];
+            element.bind("keydown", function(event) {
+                if($.inArray(event.which,keyCode) == -1) {
+                    scope.$apply(function(){
+                        scope.$eval(attrs.onlyNum);
+                        event.preventDefault();
+                    });
+                    event.preventDefault();
+                }
 
-	        $(element).on('shown.bs.modal', function(){
-	          scope.$apply(function(){
-	            scope.$parent[attrs.visible] = true;
-	          });
-	        });
-
-	        $(element).on('hidden.bs.modal', function(){
-	          scope.$apply(function(){
-	            scope.$parent[attrs.visible] = false;
-	          });
-	        });
-	      }
-	    };
-	});
-	directives.directive('deliveryHourModal', function () {
-	    return {
-	      template: '<div class="modal fade">' + 
-	          '<div class="modal-dialog">' + 
-	            '<div class="modal-content">' + 
-	              '<div class="modal-header">' + 
-	                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-	                '<h4 class="modal-title">{{ title }}</h4>' + 
-	              '</div>' + 
-	              '<div class="modal-body" ng-transclude></div>' + 
-	            '</div>' + 
-	          '</div>' + 
-	        '</div>',
-	      restrict: 'E',
-	      transclude: true,
-	      replace:true,
-	      scope:true,
-	      link: function postLink(scope, element, attrs) {
-	        scope.title = attrs.title;
-
-	        scope.$watch(attrs.visible, function(value){
-	          if(value == true)
-	            $(element).modal('show');
-	          else
-	            $(element).modal('hide');
-	        });
-
-	        $(element).on('shown.bs.modal', function(){
-	          scope.$apply(function(){
-	            scope.$parent[attrs.visible] = true;
-	          });
-	        });
-
-	        $(element).on('hidden.bs.modal', function(){
-	          scope.$apply(function(){
-	            scope.$parent[attrs.visible] = false;
-	          });
-	        });
-	      }
-	    };
-	});
+            });
+        };
+    })
+	
 	directives.directive('toggleCheckbox', function($timeout) {
 
         /**
@@ -512,4 +742,3 @@
         };
     });
 	
-})();

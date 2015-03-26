@@ -1,0 +1,20 @@
+<div class=row >
+<div id="home" name ="home">
+<button class="btn btn-danger" data-ng-click="display()">Display(test)</button>
+
+	<div class="google-map ">
+		<map  center="current-location" zoom=13  draggable="true" style="display: block; height: 100%;" >
+			<!-- <marker  id="myLocation" position="[34,55]"   on-click="showInfoWindow(event, 'currentLocationInfo')"
+				animation="DROP" draggable="true" on-dragend="getRList()" /> 
+				<info-window id="currentLocationInfo" visible-on-marker="myLocation">
+				<div>
+					<span>I'm here.{{markLat}},{{markLng}}</span>
+					<br> <a href="#restaurantDetails" >Near me</a> 
+				</div> 
+			</info-window>
+				-->
+			<custom-control position="TOP_RIGHT" index="1" on-click="backToMe()"><button class="btn btn-success"> Back to Me</button></custom-control>
+		</map>
+	</div>
+	</div>
+</div>

@@ -1,67 +1,73 @@
 package database.entity;
 
-import database.entity.Restaurant;
-
 import java.io.Serializable;
-import java.lang.Double;
-import java.lang.Integer;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * Entity implementation class for Entity: RestaruantLocation
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id")	
-	})
-
+		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o ") })
 @Entity
 public class RestaurantLocation implements Serializable {
 
-	   
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private Double latitude;
-	private Double longtitude;
-	private String number;
-	private String street;
-	private String town;
-	private String country;
-	
+	private String address;
+	private String telephone;
+	private String email;
+	private Double longitude;
+
 	@ManyToOne
+	// @JsonBackReference
+	@JsonIgnore
 	private Restaurant restaurant;
-	@OneToMany(mappedBy="restaurantLocation",cascade=CascadeType.ALL)
-	private Set<Orders> orders ;
-	
+
+	@OneToMany(mappedBy = "restaurantLocation", cascade = CascadeType.ALL)
+	// @JsonManagedReference
+	@JsonIgnore
+	private Set<Orders> orders = new HashSet<Orders>();
+
 	private static final long serialVersionUID = 1L;
+	
 	public RestaurantLocation() {
 		super();
-	}   
+	}
+
 	public Integer getId() {
 		return this.id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}   
+	}
+
 	public Double getLatitude() {
 		return this.latitude;
 	}
 
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
-	}   
-	public Double getLongtitude() {
-		return this.longtitude;
 	}
 
-	public void setLongtitude(Double longtitude) {
-		this.longtitude = longtitude;
-	}   
-	
 	public Restaurant getRestaurant() {
 		return this.restaurant;
 	}
@@ -69,35 +75,47 @@ public class RestaurantLocation implements Serializable {
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
+
+	@JsonIgnore
 	public Set<Orders> getOrders() {
 		return orders;
 	}
+
 	public void setOrders(Set<Orders> orders) {
 		this.orders = orders;
 	}
-	public String getNumber() {
-		return number;
+
+	public String getTelephone() {
+		return telephone;
 	}
-	public void setNumber(String number) {
-		this.number = number;
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
-	public String getStreet() {
-		return street;
+
+	public String getEmail() {
+		return email;
 	}
-	public void setStreet(String street) {
-		this.street = street;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getTown() {
-		return town;
+
+	public String getAddress() {
+		return address;
 	}
-	public void setTown(String town) {
-		this.town = town;
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	public String getCountry() {
-		return country;
+
+	public Double getLongitude() {
+		return longitude;
 	}
-	public void setCountry(String country) {
-		this.country = country;
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
-   
+
+
 }

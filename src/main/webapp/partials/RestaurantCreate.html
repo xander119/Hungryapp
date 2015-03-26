@@ -6,13 +6,13 @@
 				value="progress" type="danger"> <i>{{progress}}</i></progressbar>
 		</div>
 	</div>
-	<div>
+	<div >
 		<form id="restaurantDetailsForm" name="restaurantDetailsForm"
 			class="form-horizontal form-group" novalidate ng-show="progress==25">
 			<div class="form-group">
 				<label for="name" class="col-md-3 control-label">Restaurant
-					Name</label>
-				<div class="col-md-9">
+					Name : </label>
+				<div class="col-md-3" style="margin-left: 25px;">
 					<input type="text" ng-model="res.name" class="form-control"
 						name="name" placeholder="Name" required />
 					<div ng-show="restaurantDetailsForm.name.$dirty">
@@ -23,12 +23,100 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="openHour" class="col-md-3 control-label">Open
-					Hour</label>
-				<div class="col-md-9">
-					<input type="text" ng-model="res.openHour" class="form-control"
-						name="openHour" placeholder="Open Hour" data-ng-click="toggleOHModal()"  required />
+
+			<div id="openHour" class="form-group">
+				<label for="openHour" class="col-md-3 control-label"
+					style="margin-top: 20px;">Open Hours : </label>
+				<div class="col-md-7 " style="margin-left: 35px; margin-top: 10px;">
+					<div class="form-group form-inline" style="margin-top: 5px;">
+						<input toggle-checkbox id="monday" name="monday"
+							data-ng-model="openHours.monday" type="checkbox"
+							data-toggle="toggle" data-width="80" checked data-on="Mon."
+							data-off="Mon."> <input type="time"
+							data-ng-disabled="!openHours.monday" style="margin-left: 2cm;"
+							class="form-control " data-ng-model="openHours.mondayStart"
+							id="mondayStart" name="mondayStart" /> <label> ~ </label> <input
+							type="time" data-ng-disabled="!openHours.monday"
+							class="form-control " data-ng-model="openHours.mondayEnd"
+							id="mondayEnd" name="mondayEnd" />
+					</div>
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="tuesday" name="tuesday"
+							data-ng-model="openHours.tuesday" type="checkbox" checked
+							data-width="80" data-toggle="toggle" data-on="Tue."
+							data-off="Tue."> <input type="time"
+							data-ng-disabled="!openHours.tuesday" style="margin-left: 2cm;"
+							class="form-control" data-ng-model="openHours.tuesdayStart"
+							id="tuesdayStart" name="tuesdayStart" /> <label> ~ </label> <input
+							type="time" data-ng-disabled="!openHours.tuesday"
+							class="form-control" data-ng-model="openHours.tuesdayEnd"
+							id="tuesdayEnd" name="tuesdayEnd" />
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="wednesday" name="wednesday"
+							data-ng-model="openHours.wednesday" type="checkbox" checked
+							data-width="80" data-toggle="toggle" data-on="Wed."
+							data-off="Wed."> <input type="time"
+							data-ng-disabled="!openHours.wednesday" style="margin-left: 2cm;"
+							data-ng-model="openHours.wednesdayStart" class="form-control"
+							id="wednesdayStart" name="wednesdayStart" /> <label> ~ </label>
+						<input type="time" data-ng-disabled="!openHours.wednesday"
+							data-ng-model="openHours.wednesdayEnd" class="form-control"
+							id="wednesdayEnd" name="wednesdayEnd" />
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="thursday" name="thursday"
+							data-ng-model="openHours.thursday" type="checkbox" checked
+							data-width="80" data-toggle="toggle" data-on="Thu."
+							data-off="Thu."> <input type="time"
+							data-ng-disabled="!openHours.thursday" style="margin-left: 2cm;"
+							data-ng-model="openHours.thursdayStart" class="form-control"
+							id="thursdayStart" name="thursdayStart" /> <label> ~ </label> <input
+							type="time" data-ng-disabled="!openHours.thursday"
+							data-ng-model="openHours.thursdayEnd" class="form-control"
+							id="thursdayEnd" name="thursdayEnd" />
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox checked id="friday" name="friday"
+							data-ng-model="openHours.friday" type="checkbox" data-checked
+							data-width="80" data-toggle="toggle" data-on="Fri."
+							data-off="Fri."> <input type="time"
+							data-ng-disabled="!openHours.friday" style="margin-left: 2cm;"
+							data-ng-model="openHours.fridayStart" class="form-control"
+							id="fridayStart" name="fridayStart" /> <label> ~ </label> <input
+							type="time" data-ng-disabled="!openHours.friday"
+							data-ng-model="openHours.fridayEnd" class="form-control"
+							id="fridayEnd" name="fridayEnd" />
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox checked id="satuday" name="satuday"
+							data-ng-model="openHours.satuday" type="checkbox" data-width="80"
+							data-toggle="toggle" data-on="Sat." data-off="Sat."> <input
+							type="time" data-ng-disabled="!openHours.satuday"
+							style="margin-left: 2cm;" data-ng-model="openHours.saturdayStart"
+							class="form-control" id="satudayStart" name="satudayStart" /> <label>
+							~ </label> <input type="time" data-ng-disabled="!openHours.satuday"
+							data-ng-model="openHours.saturdayEnd" class="form-control"
+							id="satudayEnd" name="satudayEnd" />
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="sunday" name="sunday"
+							data-ng-model="openHours.sunday" type="checkbox" checked
+							data-width="80" data-toggle="toggle" data-on="Sun."
+							data-off="Sun."> <input type="time"
+							data-ng-disabled="!openHours.sunday" style="margin-left: 2cm;"
+							data-ng-model="openHours.sundayStart" class="form-control"
+							id="sundayStart" name="sundayStart" /> <label> ~ </label> <input
+							type="time" data-ng-disabled="!openHours.sunday"
+							data-ng-model="openHours.sundayEnd" class="form-control"
+							id="sundayEnd" name="sundayEnd" />
+					</div>
+
 					<div ng-show="restaurantDetailsForm.openHour.$dirty ">
 						<small class="text-warning"
 							ng-show="restaurantDetailsForm.openHour.$error.required">Your
@@ -37,114 +125,153 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
+
+			<div id="deliveryHour" class="form-group">
 				<label for="deliveryHours" class="col-md-3 control-label">Delivery
-					Hours</label>
-				<div class="col-md-9">
-					<input type="text" ng-model="res.deliveryHours" data-ng-click="toggleDHModal()"
-						class="form-control" name="deliveryHours"
-						placeholder="Delivery Hours" required />
-					<div ng-show="restaurantDetailsForm.deliveryHours.$dirty">
-						<small class="text-warning"
-							ng-show="restaurantDetailsForm.deliveryHours.$error.required">Your
-							input is required.</small>
+					Hours : </label>
+				<div class="col-md-7 " style="margin-left: 35px; margin-top: 10px;">
+
+					<div class="form-group form-inline ">
+
+						<input type="time" class="form-control" id="deliveryTimeStart"
+							name="deliveryTimeStart" data-ng-model="deliveryTime.start" /> <label>
+							~ </label> <input type="time" class="form-control" id="deliveryTimeEnd"
+							name="deliveryTimeEnd" data-ng-model="deliveryTime.end " />
 
 					</div>
 				</div>
 			</div>
+
 			<div class="form-group">
-				<label for="type" class="col-md-3 control-label">Type</label>
-				<div class="col-md-9">
+				<label for="deliveryNote" class="col-md-3 control-label">Delivery
+					Note: </label>
+				<div class="col-md-7" style="margin-left: 25px;margin-top: 10px;">
+					<textarea rows="5" cols="30" class="form-control" placeholder="Delivery description(optional)"
+						data-ng-model="res.deliveryNote"></textarea>
+
+					<div ng-show="restaurantDetailsForm.deliveryHours.$dirty">
+						<small class="text-warning"
+							ng-show="restaurantDetailsForm.deliveryHours.$error.required">Your
+							input is required.</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="type" class="col-md-3 control-label">Type : </label>
+				<div class="col-md-3" style="margin-left: 25px;">
 					<input type="text" ng-model="res.type" class="form-control"
 						name="type" placeholder="Food Type" required />
 					<div ng-show="restaurantDetailsForm.type.$dirty ">
 						<small class="text-warning"
 							ng-show="restaurantDetailsForm.type.$error.required">Your
 							input is required.</small>
-
 					</div>
 				</div>
 			</div>
 		</form>
 
+<!-- ng-show="progress==50" -->
+		<div ng-show="progress==50" >
+		<h3>Restaurant Locations: </h3>
+			<form id="restaurantContactForm" name="restaurantContactForm" class="form-horizontal " novalidate>
+				<div class="form-group">
+					<div class="col-lg-3" style="margin-left: 30px">
+						<div class="form-group ">
+							<label class="control-label" >Contact number : </label> 
+							<input only-num data-ng-model="tempLoc.telephone" name="telephone" class="form-control " for="telephone" type="text" placeholder="Restaurant telephone"  required="required"  
+								data-ng-maxlength= 13 >
+							<div
+								ng-show="restaurantContactForm.telephone.$dirty && restaurantContactForm.telephone.$invalid">
+								<small class="text-warning"
+									ng-show="restaurantContactForm.telephone.$error.required">Your
+									Field is required.</small> <small class="text-warning"
+									ng-show="restaurantContactForm.telephone.$error.maxlength">No longer than 13 numbers.</small>
 
-	</div>
-	<button class="btn btn-primary" data-ng-click="next()"
-		data-ng-hide="progress==100">Next</button>
+							</div>
+						</div>
+						<div class="form-group ">
+							<label class="control-label">Email : </label> 
+							<input data-ng-model="tempLoc.email" class="form-control" name="email" for="email" type="email"placeholder="Restaurant email" required="required">
+							<div
+								ng-show="restaurantContactForm.email.$dirty && restaurantContactForm.email.$invalid">
+								<small class="text-warning"
+									ng-show="restaurantContactForm.email.$error.required">Your email
+									is required.</small> <small class="text-warning"
+									ng-show="restaurantContactForm.email.$error.email">That is not a
+									valid email.</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 " style="margin-left: 300px">
+						<div class="form-group ">
+							<label class="control-label">Address : </label> 
+							<textarea cols="10" rows="6" data-ng-model="tempLoc.address" class="form-control"  placeholder="Restaurant address" required="required" >
+							</textarea>
+							<button class="btn btn-info right" data-ng-click="locateAddr()"> Locate address on map</button>
+						</div>
+					</div>
+				</div>
+					<div class="form-group">
+					<span class="text-info">Drag pin for your location on map, if this is not your location.</span>
+						<br><map  center="current-location" zoom-control="true" zoom="13" >
+       							 <marker id="restPosition" position = "current-location" animation="DROP"  draggable="true" on-dragend="updateMarker()"></marker>
+						</map>
+					</div>
+					<div>
+						<button ng-disabled="restaurantContactForm.$invalid" class="btn btn-primary" ng-click="saveAddress()"  >Save this Address</button>
+					</div>
+			</form>
+			<form class="form-group form-inline" ng-repeat = "resLoc in restaurantLoc">
+					<br>Contact Number : {{resLoc.telephone}} 
+					<br>Email : {{resLoc.email}} 
+					<br>Address: 
+					<br> &nbsp; {{resLoc.address}} 
+					<br>Longitude : {{resLoc.longitude}} 
+					<br>Latitude : {{resLoc.latitude}}
+					<br> <button class="btn btn-danger" ng-click="deleteAddr(resLoc)">Delete</button>
+				</form>
+		</div>
+
+
+		<div ng-show="progress==75">
+			
+			<form id="restaurantMenuForm" name="restaurantMenuForm" class="form-horizontal " novalidate data-ng-repeat="menu in menus" >
+				<div id="menuHeader" class="form-group form-inline" style="margin-top: 20px; margin-left: 15px;">
+					<span style="font-size: large;">
+						<label class="control-label">Menu Name : </label>
+						<input class="form-control" type="text" data-ng-model="menu.name" required="required">
+					</span>
+						<label class="control-label" style="margin-left: 30px">Menu note : </label>
+						<input class="form-control" style="margin-left: 25px" type="text" data-ng-model="menu.note" >
+					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 20px;" data-ng-click="addMenuItem(menu)" title="Add New Item"><span class=" glyphicon glyphicon-plus"></span></button>
+				</div>
+
+				<div class="list-group form-group" >
+					<div class="list-group-item form-inline"
+						data-ng-repeat="item in menu.items ">
+						<label class="control-label " >Name:   </label>
+						<input class="form-control "  type="text" data-ng-model="item.name" placeholder="Item name" required="required" > 
+						<label class="control-label " style="margin-left: 35px;">Description/Ingredients:    </label>
+						<input class="form-control " type="text" data-ng-model="item.description" placeholder="Item Description" required="required" >
+						<label class="control-label " style="margin-left: 35px;">Price:    </label>
+						<input class="form-control " type="number" data-ng-model="item.price" min="0" placeholder="Item Price" required="required" >
+
+					</div>
+				</div>
+			</form>
+			<button class="btn btn-primary" data-ng-click="addMenuForm()"><span class=" glyphicon glyphicon-plus-sign" ></span> More Menu</button>
+		</div>
 		
+		<button class="btn btn-primary " style="position: relative;left: 59%;"  data-ng-click="previous()"
+		data-ng-hide="progress==25">Previous</button>
+		<!-- 
+		data-ng-disabled="restaurantDetailsForm.$invalid && restaurantMenuForm.$invalid"
+		 -->
+		<button class="btn btn-primary" style="position: relative;left: 60%;"  data-ng-click="next()" 
+		data-ng-hide="progress==100">Next</button>
+		<button class="btn btn-primary" style="position: relative;left: 60%;"  data-ng-click="finish()" data-ng-disabled="restaurantDetailsForm.$invalid"
+		data-ng-show="progress==100">Finish</button>
 		
 	
-
-<open-hour-modal title="Select open hours" visible="showOHModal">
-    <form class="form-horizontal form-group" data-ng-submit="saveOpenTime(openHours)">
-     
-		<div class="form-group form-inline" style="margin-left: 2cm;" >
-			<input  toggle-checkbox  id="monday" name="monday" data-ng-model="openHours.monday" type="checkbox" data-toggle="toggle" data-width = "80" checked data-on="Mon."  data-off="Mon.">
-			<input type="time" data-ng-disabled="!openHours.monday" style="margin-left: 2cm;" class="form-control " data-ng-model="openHours.mondayStart" id="mondayStart" name="mondayStart"
-			   /> 
-			<label > ~ </label>
-			<input type="time" data-ng-disabled="!openHours.monday" class="form-control " data-ng-model="openHours.mondayEnd" id="mondayEnd" name="mondayEnd" />
-		</div>
-		<div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox  id="tuesday" name="tuesday" data-ng-model="openHours.tuesday" type="checkbox" checked data-width="80" data-toggle="toggle" data-on="Tue." data-off="Tue.">
-       		<input type="time" data-ng-disabled="!openHours.tuesday"style="margin-left: 2cm;" class="form-control" data-ng-model="openHours.tuesdayStart" id="tuesdayStart" name="tuesdayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.tuesday" class="form-control" data-ng-model="openHours.tuesdayEnd" id="tuesdayEnd" name="tuesdayEnd"/>
-      	</div>
-      	
-      	<div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox  id="wednesday" name="wednesday" data-ng-model="openHours.wednesday" type="checkbox" checked data-width="80" data-toggle="toggle" data-on="Wed." data-off="Wed.">
-       		<input type="time" data-ng-disabled="!openHours.wednesday" style="margin-left: 2cm;" data-ng-model="openHours.wednesdayStart" class="form-control" id="wednesdayStart" name="wednesdayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.wednesday" data-ng-model="openHours.wednesdayEnd" class="form-control" id="wednesdayEnd" name="wednesdayEnd"/>
-      	</div>
-      	
-      	<div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox  id="thursday" name="thursday" data-ng-model="openHours.thursday" type="checkbox" checked data-width="80" data-toggle="toggle" data-on="Thu." data-off="Thu.">
-       		<input type="time" data-ng-disabled="!openHours.thursday"style="margin-left: 2cm;" data-ng-model="openHours.thursdayStart" class="form-control" id="thursdayStart" name="thursdayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.thursday" data-ng-model="openHours.thursdayEnd" class="form-control" id="thursdayEnd" name="thursdayEnd"/>
-      	</div>
-      	
-      	<div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox  id="friday" name="friday" data-ng-model="openHours.friday" type="checkbox" data-checked data-width="80" data-toggle="toggle" data-on="Fri." data-off="Fri.">
-       		<input type="time" data-ng-disabled="!openHours.friday"style="margin-left: 2cm;" data-ng-model="openHours.fridayStart" class="form-control" id="fridayStart" name="fridayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.friday" data-ng-model="openHours.fridayEnd" class="form-control" id="fridayEnd" name="fridayEnd"/>
-      	</div>
-      
-     	 <div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox checked id="satuday" name="satuday" data-ng-model="openHours.satuday" type="checkbox"  data-width="80" data-toggle="toggle" data-on="Sat." data-off="Sat.">
-       		<input type="time" data-ng-disabled="!openHours.satuday"style="margin-left: 2cm;" data-ng-model="openHours.saturdayStart" class="form-control" id="satudayStart" name="satudayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.satuday" data-ng-model="openHours.saturdayEnd" class="form-control" id="satudayEnd" name="satudayEnd"/>
-      	</div>
-      	
-      	<div class="form-group form-inline " style="margin-left: 2cm;">
-        	<input toggle-checkbox  id="sunday" name="sunday" data-ng-model="openHours.sunday" type="checkbox" checked data-width="80" data-toggle="toggle" data-on="Sun." data-off="Sun.">
-       		<input type="time" data-ng-disabled="!openHours.sunday"style="margin-left: 2cm;" data-ng-model="openHours.sundayStart" class="form-control" id="sundayStart" name="sundayStart" />
-        	<label> ~ </label>
-        	<input type="time" data-ng-disabled="!openHours.sunday" data-ng-model="openHours.sundayEnd" class="form-control" id="sundayEnd" name="sundayEnd"/>
-      	</div>
-		
-      <button type="submit" class="btn btn-primary " style="margin-left: 65%;">Save</button>
-      
-    </form>
- </open-hour-modal>
-<delivery-hour-modal title="Select delivery hours" visible="showDHModal">
-<form class="form-horizontal" data-ng-submit="saveDeliTime(deliveryTime)">
-	<div class="form-group form-inline " style="margin-left: 2cm;">
-        	
-       		<input type="time" style="margin-left: 2cm;" class="form-control" id="deliveryTimeStart" name="deliveryTimeStart" data-ng-model="deliveryTime.start"/>
-        	<label> ~ </label>
-        	<input type="time"  class="form-control" id="deliveryTimeEnd" name="deliveryTimeEnd" data-ng-model="deliveryTime.end "/>
-        	
-      	</div>
-      	<div class="form-group" style="margin-left: 4cm;">
-      		<textarea rows="5" cols="30" placeholder="Delivery description" data-ng-model="deliveryTime.note"></textarea>      		
-      	</div>
-      <button type="submit" class="btn btn-primary " style="margin-left: 65%;"  >Save</button>
-      
-    </form>
-</delivery-hour-modal>
+	</div>
 </div>

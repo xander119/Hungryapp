@@ -1,0 +1,25 @@
+<div class="row">
+
+<div class="row clearfix" >
+
+		<div class="list-group" >
+			<div class="list-group-item" ng-repeat="rests in restaurantList" >
+				<button class="btn btn-link" ng-click="toDetails(rests)"> {{rests.name}}</button>
+				<br> {{rests.type}} 
+				<!--  <br>Open Hour :
+				<div class="opentime">
+				<br><span>{{rests.openHour.monday || 'Close'}}</span> 
+				<br><span> {{rests.openHour.tuesday || 'Close'}}</span>
+				<br><span> {{rests.openHour.wednesday || 'Close'}}</span>
+				<br><span> {{rests.openHour.thursday || 'Close'}}</span>
+				<br><span> {{rests.openHour.friday || 'Close'}}</span>
+				<br><span> {{rests.openHour.saturday || 'Close'}}</span>
+				<br><span> {{rests.openHour.sunday || 'Close'}}</span>
+				</div> -->
+			</div>
+		</div>
+
+			</div>
+
+
+</div>

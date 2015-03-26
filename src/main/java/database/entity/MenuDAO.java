@@ -23,6 +23,11 @@ public class MenuDAO {
 	public Menu createMenu(Menu m) {
 		// TODO Auto-generated method stub
 		if(m!=null){
+			if(m.getItems()!=null){
+				for(Item i : m.getItems()){
+					i.setMenu(m);
+				}
+			}
 			em.persist(m);
 			return m;
 		}

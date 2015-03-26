@@ -9,6 +9,8 @@ import java.lang.Integer;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * Entity implementation class for Entity: Orders_Items
  *
@@ -23,10 +25,12 @@ public class Orders_Items implements Serializable {
 	private Integer id;
 	@ManyToOne
 	@JoinColumn(name="order_id",referencedColumnName="id")
+//	@JsonBackReference
 	private Orders order;
 	
 	@ManyToOne
 	@JoinColumn(name="item_id",referencedColumnName="id")
+//	@JsonBackReference
 	private Item item;
 	
 	private static final long serialVersionUID = 1L;

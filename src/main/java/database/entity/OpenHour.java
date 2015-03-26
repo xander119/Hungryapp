@@ -2,14 +2,19 @@ package database.entity;
 
 import java.io.Serializable;
 import java.lang.String;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  * Entity implementation class for Entity: OpenHour
  *
  */
 @Entity
-
+@XmlRootElement
 public class OpenHour implements Serializable {
 
 	   
@@ -24,6 +29,7 @@ public class OpenHour implements Serializable {
 	private String saturday;
 	private String sunday;
 	@OneToOne
+	@JsonBackReference("rest-oh")
 	private Restaurant restaurant;
 	private static final long serialVersionUID = 1L;
 

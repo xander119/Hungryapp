@@ -1,6 +1,7 @@
 <div class="container">
+
 	<div class="row clearfix">
-		<div class="col-md-12 column">
+		<div class="col-md-12 ">
 			<ul class="nav nav-pills">
 
 				<li data-ng-class="{active:isActiveTab(1)}"
@@ -22,58 +23,63 @@
 					</div>
 
 				</div>
-				<form class="col-md-9 form-inline" editable-form name="editableForm"  onaftersave="updateUser(currentUser)">
+				
+				<div class="col-md-9 form-inline"  >
 				
 					<div class="form-group">
-						<h2><span editable-text="currentUser.username" e-name="username" onbeforesave = "checkUsername($data)"
-						 e-required >{{currentUser.username ||'username'}}</span></h2>
+						<h2><a href="" editable-text="currentUser.username" e-name="username"  required >{{currentUser.username ||'username'}}</a></h2>
 					 </div>
 					<div class="Info-section">
 						<div class="Info ">
 							<span class="list-group-item-text Info-item-title">First name :</span>
-								<span editable-text="currentUser.firstname" e-name="firstname" e-required>{{currentUser.firstname}}</span>
+								<a href="" editable-text="currentUser.firstname"  e-name="firstname" required>{{currentUser.firstname ||'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text Info-item-title">Last name :</span>
-								<span editable-text="currentUser.surname" e-name="surname" e-required>{{currentUser.surname}}</span>
+								<a href="" editable-text="currentUser.surname" e-name="surname" e-required>{{currentUser.surname ||'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text Info-item-title">Email :</span>
-								<span editable-text="currentUser.email" e-name="email" e-required onbeforesave = "checkEmail($data)">{{currentUser.email}}</span>
+								<a href="" editable-text="currentUser.email" e-name="email" e-required >{{currentUser.email ||'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text Info-item-title">Mobile :</span>
-								<span editable-text="currentUser.mobile" e-name="mobile"  onbeforesave = "checkMobile($data)" >{{currentUser.mobile}}</span>
+								<a editable-text="currentUser.mobile" e-name="mobile"   >{{currentUser.mobile ||'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text Info-item-title">Address :</span>
-								<span editable-text="currentUser.address" e-name="address" >{{currentUser.address}}</span>
+								<a editable-text="currentUser.address" e-name="address" >{{currentUser.address ||'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text Info-item-title">Date of Birth:</span>
-								<span editable-bsdate="currentUser.dateOfBrith" e-datepicker-popup="dd-MMMM-yyyy" e-name="dateOfBrith" > {{(currentUser.dateOfBrith | date : "dd/MM/yyyy") || 'empty'}}</span>
+								<a editable-date="currentUser.dateOfBrith"  e-name="dateOfBrith" > {{(currentUser.dateOfBrith | date : "dd/MM/yyyy") || 'empty'}}</a>
 						</div>
 						<div class="Info">
 							<span class="list-group-item-text">Joined Date :</span>
 								<span >{{currentUser.joinedDate}}</span>
 						</div>
+
+
+						
 						
 					</div>
-					<div >
-							<!-- button to show form -->
-							<button type="button" class="btn btn-default"
+					{{currentUser}},
+					<br>
+					{{old}}
+					<div  ng-show="enabled">
+							<!--<button type="button" class="btn btn-default"
 								data-ng-click="editableForm.$show()"
 								data-ng-show="!editableForm.$visible">Edit</button>
+								updateUser(currentUser) button to show form -->
+							
 							<!-- buttons to submit / cancel form -->
-						<span ng-show="editableForm.$visible">
-							<button type="submit" class="btn btn-primary" 
-								ng-disabled="editableForm.$waiting">Save</button>
-							<button type="button" class="btn btn-default"
-								ng-disabled="editableForm.$waiting"
-								ng-click="editableForm.$cancel()">Cancel</button>
+						<span >
+							<button type="submit" class="btn btn-primary" ng-click="updateUser(currentUser)" >Save</button>
+							<button type="button" class="btn btn-default" ng-click="enabled=false">Cancel</button>
 						</span>
+						
 					</div>
-				</form>
+				</div>
 				
 			</div>
 

@@ -1,12 +1,26 @@
-#map {
-	height: 420px;
-	width: 600px;
+.google-map {
+	height: 650px;
+width: 1200px;
 }
+.opentime{
+	font-size: x-small;
+	padding-left: 2cm;
+}
+
+
+.modal-map {display:block; width:450px; height:300px;}
 
 .infoWindowContent {
 	font-size: 14px !important;
 	border-top: 1px solid #ccc;
 	padding-top: 10px;
+}
+
+.cus-footer {
+	position: absolute;
+	margin-top: 0px;
+	width: 100%;
+	text-align: right;
 }
 
 h2 {
@@ -41,7 +55,6 @@ html,body {
 	zoom: 1;
 	position: relative;
 }
-
 
 .progress {
 	background: rgba(245, 245, 245, 1);
