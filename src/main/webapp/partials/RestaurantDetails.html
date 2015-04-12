@@ -14,8 +14,6 @@
 				<br><span> Saturday : {{currentRest.openHour.saturday || 'Close'}}</span>
 				<br><span> Sunday : {{currentRest.openHour.sunday || 'Close'}}</span>
 				</div> 
-		
-		
 		</div>
 		<div data-ng-repeat="currentMenu in currentRest.menus">
 			<div class="form-group">
@@ -36,17 +34,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</form>
-	<hr>
-	<div ng-show="isCus">
-		<ngcart-cart></ngcart-cart>
-	</div>
-	<hr>
-
-	<!-- show button if user is a manager 
-				ng-show= "if manager is true"-->
-	<div align="right" ng-hide="isCus">
+			<div align="right" ng-hide="isCus">
 		<!-- button to show form -->
 		<button type="button" class="btn btn-default" data-ng-click="editableForm.$show()" data-ng-show="!editableForm.$visible">Edit</button>
 		<!-- buttons to submit / cancel form -->
@@ -55,11 +43,11 @@
 			<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
 		</span>
 	</div>
-</div>
-<script type="text/ng-template" id="template/ngCart/addtocart.html">
+		</div>
+	</form>
+	<script type="text/ng-template" id="template/ngCart/addtocart.html">
 <div ng-hide="attrs.id">
     <a class="btn btn-lg btn-primary" ng-disabled="true" ng-transclude></a>
-
 </div>
 <div ng-show="attrs.id">
     <div>
@@ -76,69 +64,4 @@
     </mark>
 </div>
 </script>
-<script type="text/ng-template" id="template/ngCart/summary.html"><div class="row">
- 
-    <div class="col-md-6">{{ ngCart.getTotalItems() }}
-        <ng-pluralize count="ngCart.getTotalItems()" when="{1: 'item', 'other':'items'}"></ng-pluralize>
-        <br />{{ ngCart.totalCost() | currency }}
-    </div>
-</div>
-</script>
-<script type="text/ng-template" id="template/ngCart/cart.html">
-<div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0">
-    Your cart is empty
-</div>
-
-<div class="table-responsive col-lg-12" ng-show="ngCart.getTotalItems() > 0">
-
-    <table class="table table-striped ngCart cart">
-
-        <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th>Quantity</th>
-            <th>Amount</th>
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tfoot>
-        <tr ng-show="ngCart.getTax()">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Tax ({{ ngCart.getTaxRate() }}%):</td>
-            <td>{{ ngCart.getTax() | currency }}</td>
-        </tr>
-        <tr ng-show="ngCart.getShipping()">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Shipping:</td>
-            <td>{{ ngCart.getShipping() | currency }}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Total:</td>
-            <td>{{ ngCart.totalCost() | currency }}</td>
-        </tr>
-        </tfoot>
-        <tbody>
-        <tr ng-repeat="item in ngCart.getCart().items track by $index">
-            <td><span ng-click="ngCart.removeItemById(item.getId())" class="glyphicon glyphicon-remove"></span></td>
-
-            <td>{{ item.getName() }}</td>
-            <td><span class="glyphicon glyphicon-minus" ng-class="{'disabled':item.getQuantity()==1}"
-                      ng-click="item.setQuantity(-1, true)"></span>&nbsp;&nbsp;
-                {{ item.getQuantity() | number }}&nbsp;&nbsp;
-                <span class="glyphicon glyphicon-plus" ng-click="item.setQuantity(1, true)"></span></td>
-            <td>{{ item.getPrice() | currency}}</td>
-            <td>{{ item.getTotal() | currency }}</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-</script>
+	

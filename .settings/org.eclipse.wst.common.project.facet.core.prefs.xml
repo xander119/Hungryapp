@@ -14,12 +14,12 @@
       <attribute name="provider-id" value="jaxb-no-op-library-provider"/>
     </node>
     <node name="platform">
-      <attribute name="platform-id" value="generic_2_2"/>
+      <attribute name="platform-id" value="generic_2_1"/>
     </node>
   </facet>
   <facet id="jpt.jpa">
     <node name="libprov">
-      <attribute name="provider-id" value="runtime-library-provider"/>
+      <attribute name="provider-id" value="jpa-no-op-library-provider"/>
     </node>
   </facet>
 </root>

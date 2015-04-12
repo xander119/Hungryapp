@@ -20,6 +20,16 @@ public class CustomerDAO {
 	@PersistenceContext
 	EntityManager em;
 	
+	Customer loggedUser;
+	
+	public Customer getLoggedUser() {
+		return loggedUser;
+	}
+
+	public void setLoggedUser(Customer loggedUser) {
+		this.loggedUser = loggedUser;
+	}
+
 	public boolean createCustomer(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		if(c!=null){
 			//hash password before store it.
@@ -67,8 +77,8 @@ public class CustomerDAO {
 		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", credential).getResultList();
 		
 		Gson gson = new Gson();		
-		
-		return "{\"result\":\"success\"," + gson.toJson(customers.get(0)).substring(1);
+		setLoggedUser(customers.get(0));
+		return "{\"result\":\"success\"," + gson.toJson(loggedUser).substring(1);
 		
 	}
 	

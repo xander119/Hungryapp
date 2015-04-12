@@ -18,7 +18,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "Menu.findById", query = "Select e from Menu e ") })
+	@NamedQuery(name = "Menu.findById", query = "Select e from Menu e where e.id = :id") })
 @Entity
 @XmlRootElement
 public class Menu implements Serializable {
