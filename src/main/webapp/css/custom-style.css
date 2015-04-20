@@ -1,14 +1,23 @@
 .google-map {
 	height: 650px;
-width: 1200px;
+	width: 1200px;
 }
-.opentime{
+
+.opentime {
 	font-size: x-small;
 	padding-left: 2cm;
 }
 
+.restaurant:hover {
+	padding: 20px;
+	border-radius: 15px;
+}
 
-.modal-map {display:block; width:450px; height:300px;}
+.modal-map {
+	display: block;
+	width: 450px;
+	height: 300px;
+}
 
 .infoWindowContent {
 	font-size: 14px !important;
@@ -28,7 +37,7 @@ h2 {
 	margin-top: 0;
 }
 
-html,body {
+html, body {
 	margin: 0;
 	height: 100%;
 }

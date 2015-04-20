@@ -12,16 +12,32 @@ public class RestApplication extends Application {
 	
 	
 	public RestApplication() {
+		singletons.add(new RequestInterceptor());
 		singletons.add(new AdminServices());
 		singletons.add(new LoginService());
 		singletons.add(new MembersService());
 		singletons.add(new MenusServices());
 		singletons.add(new OrderService());
 		singletons.add(new RestaurantService());
+		
 		}
 
 
-	public void setSingletons(Set<Object> singletons) {
-		this.singletons = singletons;
-	}
+//	@Override
+//	public Set<Object> getSingletons() {
+//		// TODO Auto-generated method stub
+//		return this.singletons;
+//	}
+////
+//
+//	@Override
+//	public Set<Class<?>> getClasses() {
+//		// TODO Auto-generated method stub
+//		 Set<Class<?>> set = new  HashSet<Class<?>>();
+//		 
+//		return set;
+//	}
+
+
+
 }

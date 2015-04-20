@@ -4,7 +4,17 @@
 var control = angular.module('app.controllers', [ 'ngCookies' ]);
 
 control.controller('restListCtrl',['$scope','$location','DataService','RestaurantServices',function($scope,$location,DataService,RestaurantServices){
-	$scope.restaurantList = DataService.RestaurantNearMe;
+	var locationidList = DataService.RestaurantNearMe;
+	$scope.restaurantList = [];
+	console.log(locationidList);
+	locationidList.forEach(function(locationid){
+		//	if($scope.restaurantList.indexOf(locationid) == -1){
+				$scope.restaurantList.push( RestaurantServices.getRestaurantByLocaId({id : locationid}));
+				$scope.restaurantList.push(locationid);
+			//}
+					
+	});
+	
 	DataService.isHome = false;
 	console.log($scope.restaurantList);
 	$scope.toDetails= function(rest){
@@ -12,17 +22,28 @@ control.controller('restListCtrl',['$scope','$location','DataService','Restauran
 		console.log(DataService.restaurant);
 		$location.path('/restaurantDetails');
 	};
+	
+	
 }]);
 
 control.controller('shoppingCartCtrl',['$scope','DataService',function($scope,DataService){
 	
 }]);
 
-control.controller('restDetailsCtrl',['$scope','DataService','',function($scope,DataService){
+control.controller('restDetailsCtrl',['$scope','DataService', function($scope,DataService){
 	$scope.currentRest = DataService.restaurant;
-	$scope.isCus = !DataService.isAdminR;
+	$scope.isCus = function() {
+		console.log(!DataService.isAdminR);
+		return !DataService.isAdminR;
+	};
+	$scope.review = {};
+
+    this.addReview = function(){
+      $scope.currentRest.reviews.push($scope.review);
+      $scope.review = {};
+    };
 }]);
-control.controller('restaurantCreateCtrl', [ '$scope','$modal','$timeout','$http','RestaurantServices','AdminService','DataService','MenuServices', function($scope,$modal,$timeout,$http,RestaurantServices,AdminService,DataService,MenuServices) {
+control.controller('restaurantCreateCtrl', [ '$scope','$modal','$timeout','$http', 'RestaurantServices','AdminService','$cookieStore','MenuServices', function($scope,$modal,$timeout,$http, RestaurantServices,AdminService,$cookieStore,MenuServices) {
 	$scope.progress = 25;
 	$scope.openHour = {};
 	$scope.menus = [{name : '',
@@ -144,11 +165,20 @@ control.controller('restaurantCreateCtrl', [ '$scope','$modal','$timeout','$http
 	};
 	
 	$scope.finish = function(){
-		//$scope.res.generalManager =  AdminService.getManager({ id : DataService.adminid });
-		console.log($scope.res.generalManager); 
+		$scope.generalManager ; 
+		AdminService.getManager({ id :  $cookieStore.get('loggedInUser').id },function(data){
+			$scope.generalManager.id = data.id;
+			console.log(data); 
+		});
+		$scope.res.generalManager.id =  $scope.generalManager.id;
+		console.log($scope.generalManager); 
 		//AdminService.getManager({ id : DataService.adminid })
 
 		RestaurantServices.newRest($scope.res);
+	};
+	
+	$scope.activeRest = function(){
+		$scope.res.status = "active";
 	};
 	
 } ]);
@@ -174,37 +204,35 @@ control.controller('managerRegisterCtrl', [ '$scope', '$location',
 		} ]);
 
 
-	control.controller('managerLoginCtrl', [ '$scope', '$location', '$window','$cookieStore','AuthService','DataService',
-		function($scope, $location, $window,$cookieStore,AuthService,DataService) {
-		$scope.loadadminId = function (id){
-			$scope.adminid = id;
-			DataService.adminid = $scope.adminid;
-			DataService.isAdminR = true;
-			DataService.isAuth = true;
-		};
+	control.controller('managerLoginCtrl', [ '$scope', '$location', '$cookieStore','$cookieStore','AuthService','Base64',
+		function($scope, $location, $cookieStore,$cookieStore,AuthService,Base64) {
+		
 			$scope.login = function(credential, password) {
-				
-				$scope.status = AuthService.adminAuth({
-					credential : credential,
-					password : password
-				}, function(data) {
-					if (data.result === "success") {
-						$scope.loadadminId(data.id);
-						$cookieStore.put(data.id + "admin", data.name);
-						console.log(DataService.adminid);
+				var basAuth =  Base64.encode(credential+':'+password);
+				 AuthService.adminAuth({
+					credential : credential
+				},password, function(data) {
+					if (data != null) {
+						var loggedInUser = {
+								username : data.name,
+								id : data.id,
+								role : 'admin'
+						}
+						$cookieStore.put('loggedInUser', loggedInUser);
+						$cookieStore.put('basicAuth', basAuth);
+						console.log(basAuth);
 						credential = '';
 						$location.path('/Hungryapp');
 					} else {
-
+						
 					}
 				});
-				console.log(status.name);
 			};
 
 		} ]);
 	
-control.controller('managerDetailsCtrl', [ '$scope', '$location',
-		'$window','AdminService','DataService', function($scope, $location, $window,AdminService,DataService) {
+control.controller('managerDetailsCtrl', [ '$scope', '$location', '$cookieStore',
+		'$window','AdminService','DataService', function($scope, $location,$cookieStore, $window,AdminService,DataService) {
 			this.tab = 1;
 			$scope.currentManager = {};
 			$scope.onClickTab = function(tab) {
@@ -223,17 +251,23 @@ control.controller('managerDetailsCtrl', [ '$scope', '$location',
 				$scope.currentManager = $scope.updatedAdmin;
 			};
 			
-			$scope.restaurantOwn = AdminService.getRestaurantOwn({ id  : DataService.adminid });
-			$scope.currentManager = AdminService.getManager({ id : DataService.adminid });
+			$scope.restaurantOwn = AdminService.getRestaurantOwn({ id  :  $cookieStore.get('loggedInUser').id  });
+			$scope.currentManager = AdminService.getManager({ id :  $cookieStore.get('loggedInUser').id  });
+			
+			console.log("local Storage : " +  $cookieStore.get('loggedInUser'));
 			console.log($scope.restaurantOwn);
 
 		} ]);
 
-control.controller('userdetailsCtrl', [ '$scope', 'DataService',
-		'MemberService', function($scope, DataService, MemberService) {
+control.controller('userdetailsCtrl', [ '$scope','Base64', 'DataService', '$cookieStore',
+		'MemberService', function($scope,Base64, DataService,$cookieStore, MemberService) {
 			this.tab = 1;
-			$scope.currentUser = {};
-
+			//$scope.currentUser = {};
+			$scope.enabled = false;
+			$scope.$watch("currentUser", function() {
+		          $scope.enabled = true;
+		          console.log('called');
+		  },true);
 			$scope.onClickTab = function(tab) {
 				this.tab = tab;
 			};
@@ -251,21 +285,22 @@ control.controller('userdetailsCtrl', [ '$scope', 'DataService',
 //				
 //			};
 			$scope.updateUser = function(aUser){
-				$scope.updatedUser = MemberService.updateUser(aUser);
-				$scope.currentUser = $scope.updatedUser;
+				//update authentication when user profile has changed
+				$scope.enabled= true;
+				var basic = $cookieStore.get('basicAuth');
+				var decoded = Base64.decode(basic).split(":");
+				
+				$cookieStore.remove('basicAuth');
+				var encoded = Base64.encode($scope.currentUser.username + ':' + decoded[1]);
+				$cookieStore.put('basicAuth',encoded);
+				
+				$scope.currentUser = MemberService.updateUser(aUser);
 			};
 			
-			$scope.historyOrders = MemberService.getHistoryOrders({ id  : DataService.userid });
+			$scope.historyOrders = MemberService.getHistoryOrders({ id  :  $cookieStore.get('loggedInUser').id });
 			
-			$scope.currentUser = MemberService.getUser({ id : DataService.userid });
-			$scope.$watch("currentUser", function(newValue, oldValue) {
-			      if(newValue!=oldValue){
-			          $scope.enabled = true;
-			          }
-			      if(newValue ==  oldValue){
-			          $scope.enabled = false;
-			      }
-			  },true);
+			$scope.currentUser = MemberService.getUser({ id :  $cookieStore.get('loggedInUser').id });
+			
 			console.log($scope.historyOrders);
 		} ]);
 control.controller(
@@ -274,12 +309,12 @@ control.controller(
 					'$scope',
 					'$location',
 					'$window',
-					'$cookieStore',
+					'$cookieStore', 
 					'$timeout',
 					'$compile',
 					'DataService',
 					'RestaurantServices',
-					function($scope, $location, $window, $cookieStore,
+					function($scope, $location, $window, $cookieStore, 
 							$timeout, $compile, DataService,
 							RestaurantServices) {
 	var currentlat;
@@ -287,6 +322,7 @@ control.controller(
 	var directionsService = new google.maps.DirectionsService();
 	DataService.isHome = true;
 	$scope.isHome = DataService.isHome;
+	
 	$scope.locations = [ {
 							latitude : '53.335575',
 							longitude : '-6.29167919218753'
@@ -332,8 +368,10 @@ control.controller(
 				             console.log(distance+'km');
 				             if(distance< radius){
 									if(distance!=0){
-										if($scope.RestaurantNearMe.indexOf(restaurant) == -1){
-											$scope.RestaurantNearMe.push(restaurant);
+										if($scope.RestaurantNearMe.indexOf(location) == -1){
+											console.log(location);
+											$scope.RestaurantNearMe.push(location.id);
+//											$scope.RestaurantNearMe.restaurant.distance = distance;
 										}
 										
 										console.log($scope.RestaurantNearMe);
@@ -349,6 +387,7 @@ control.controller(
 	};
 	$scope.viewList = function(){
 		DataService.RestaurantNearMe = $scope.RestaurantNearMe;
+//		DataService.location = $scope.
 		$location.path('/restaurantList');
 		console.log($scope.RestaurantNearMe);
 		console.log(DataService.RestaurantNearMe);
@@ -420,27 +459,44 @@ control.controller(
 
 } ]);
 control.controller('IndexController', [ '$scope', '$location', '$window',
-		'$cookieStore', 'DataService',
-		function($scope, $location, $window, $cookieStore, DataService) {
+		'$cookieStore',  'DataService','AuthService',
+		function($scope, $location, $window, $cookieStore, DataService,AuthService) {
 		$scope.isHome = DataService.isHome;
+		
+		$scope.isCus = function() {
+			if($cookieStore.get('loggedInUser') != null){
+				return $cookieStore.get('loggedInUser').role == 'customer';
+				}
+		};
+			
 			$scope.isAdmin = function(){
-				return DataService.isAdminR;
+				if($cookieStore.get('loggedInUser') != null){
+					return $cookieStore.get('loggedInUser').role == 'admin';
+					}
 				};
 			$scope.notLoggedIn = function() {
-				$scope.name = $cookieStore.get(DataService.adminid+"admin");
-				$scope.username = $cookieStore.get(DataService.userid);
-				return !DataService.isAuth;
-			};
-			$scope.Logout = function() {
-				if($scope.isAdmin()){
-					$cookieStore.remove(DataService.adminid+"admin");
-					DataService.adminid = "";
-				}else{					
-					$cookieStore.remove(DataService.userid);
-					DataService.userid = "";
+				
+				if($cookieStore.get('loggedInUser') != null){
+					$scope.name =  $cookieStore.get('loggedInUser').username;
+					console.log($cookieStore.get('basicAuth'));
 				}
-				DataService.isAuth = false;
-				$location.path('/Hungryapp');
+				return $cookieStore.get('basicAuth') == null;
+			};
+			
+			$scope.Logout = function() {
+				$cookieStore.remove('loggedInUser');
+				$cookieStore.remove('basicAuth');
+				$location.path('Hungryapp');
+			};
+			$scope.viewProfile= function(){
+				var userRole = $cookieStore.get('loggedInUser').role;
+				if(userRole == 'customer'){
+					
+					$location.path('/userDetails');
+				}else{
+					$location.path('/managerDetails');
+				}
+				
 			};
 
 		} ]);
@@ -449,36 +505,78 @@ control.controller('LoginController', [
 		'$location',
 		'$window',
 		'$cookieStore',
-		'DataService',
-		'AuthService',
-		function($scope, $location, $window, $cookieStore, DataService,
-				AuthService) {
+		'$facebook', 
+		'MemberService',
+		'AuthService','Base64',
+		function($scope, $location, $window, $cookieStore,$facebook, MemberService,
+				AuthService,Base64) {
 			
-			$scope.loadUserId = function (id){
-				$scope.userid = id;
-				DataService.userid = $scope.userid;
-				DataService.isAuth = true;
-				console.log(DataService.userid);
-			};
+//			$scope.facebookLogin = function() {
+//				console.log('login clicked');				
+//			    $facebook.login().then(function(response) {
+//			    	console.log(response);
+//			    	if(response.status=='connected'){
+//			    		//check DB 
+//			    		var result = checkDB();
+//			    		//DataService.isAuth = true;
+//			    		
+//			    		
+//			    		if(result){
+//			    			console.log('logged in.');
+//			    			$location.path('/Hungryapp');
+//			    		}else{
+//			    			$location.path('/fbUserReg');
+//			    		}
+//			    		
+//			    		
+//			    	}
+//			    });
+				
+//			  };
+//			function checkDB(){
+//				var result = false;
+//				$facebook.api("/me").then( 
+//				      function(response) {
+					    	//LOCAL STORAGE
+//				    	  MemberService.getUserByEmail({email : response.email}, function(data){
+//				    		  if (data.result === "success") {
+//				    			  var loggedInUser = {
+//											username : data.username,
+//											id : data.userid,
+//											role : 'customer'
+//									}
+//									$cookieStore.put('loggedInUser', loggedInUser);
+//									$cookieStore.put('basicAuth', basAuth);
+//									result = true;
+//								}
+//				    	  });
+//				    	  console.log('User Detail recived.');
+//				    	  console.log(response);
+//				      },
+//				      function(err) {
+//				    	  console.log("Please log in");
+//				      });
+//				return result;
+//				};
 			$scope.login = function(credential, password) {
-
-				$scope.status = AuthService.auth({
-					credential : credential,
-					password : password
-				}, function(data) {
+				var basAuth = Base64.encode(credential+':'+password);
+				AuthService.auth({credential : credential},password, function(data) {
 					if (data.result === "success") {
-						$scope.loadUserId(data.userid);
-						console.log(DataService.userid);
-						
-						$cookieStore.put(data.userid, data.username);
-						console.log($cookieStore.get(DataService.userid));
+						var loggedInUser = {
+								username : data.username,
+								id : data.userid,
+								role : 'customer'
+						}
+						$cookieStore.put('loggedInUser', loggedInUser);
+						$cookieStore.put('basicAuth', basAuth);
 						credential = '';
 						$location.path('/Hungryapp');
-					} else {
-
+					}else{
+						$scope.status = data;
 					}
 				});
-				console.log(status.username);
+				//console.log($scope.status.customer.userName);
+				
 			};
 			
 		} ]);
@@ -494,11 +592,48 @@ control.controller('SignUpController', [ '$scope', '$location', '$window',
 					firstname : Customer.firstname,
 					email : Customer.email,
 					password : Customer.password,
+					joinedDate : new Date().toDateString(),
+				};
+				
+			 MemberService.register($scope.c);
+				console.log("Successful Registered");
+				$location.path('/login');
+			};
+		} ]);
+
+control.controller('fbUserRegisterCtrl', [ '$scope', '$location', '$window','$facebook',
+		'MemberService', function($scope, $location, $window,$facebook, MemberService) {
+			$scope.user = {};
+			$scope.registerNewUser = function() {
+				 
+				 $facebook.api("/me").then( 
+					      function(response) {
+					    	  $scope.user = {
+					    			  firstname : response.first_name,
+					    			  surname : response.last_name,
+					    			  email : response.email,
+					    	  }
+					    	  console.log('User Detail recived.');
+					    	  console.log(response);
+					      },
+					      function(err) {
+					    	  console.log("Please log in");
+					      });
+				$scope.c = {
+					surname : $scope.user.surname,
+					username : $scope.user.username,
+					firstname : $scope.user.firstname,
+					email : $scope.user.email,
+					password : $scope.user.password,
 					joinedDate : new Date().toDateString()
 				};
 				
 			 MemberService.register($scope.c);
 				console.log("Successful Registered");
-				$location.path('/Hungryapp');
+				$location.path('/login');
 			};
 		} ]);
+
+
+
+

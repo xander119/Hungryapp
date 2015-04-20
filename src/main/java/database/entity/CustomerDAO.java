@@ -20,7 +20,7 @@ public class CustomerDAO {
 	@PersistenceContext
 	EntityManager em;
 	
-	Customer loggedUser;
+	private Customer loggedUser;
 	
 	public Customer getLoggedUser() {
 		return loggedUser;
@@ -77,8 +77,8 @@ public class CustomerDAO {
 		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", credential).getResultList();
 		
 		Gson gson = new Gson();		
-		setLoggedUser(customers.get(0));
-		return "{\"result\":\"success\"," + gson.toJson(loggedUser).substring(1);
+		
+		return "{\"result\":\"success\"," + gson.toJson(customers.get(0)).substring(1);
 		
 	}
 	
@@ -110,5 +110,21 @@ public class CustomerDAO {
 		else{
 			return false;
 		}
+	}
+
+	public String checkLoginUser(String credential) {
+		if(getLoggedUser()!=null){
+			Gson gson = new Gson();		
+			return "{\"result\":\"success\"," + gson.toJson(getLoggedUser()).substring(1);
+		}
+		return "{\"result\":\"notLogin\"}";
+	}
+
+	public Customer getCustomerByEmailOrUsername(String email) {
+		// TODO Auto-generated method stub
+		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", email).getResultList();
+		if(!customers.isEmpty())
+			return customers.get(0);
+		return null;
 	}
 }

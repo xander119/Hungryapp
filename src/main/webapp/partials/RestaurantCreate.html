@@ -261,6 +261,12 @@
 			</form>
 			<button class="btn btn-primary" data-ng-click="addMenuForm()"><span class=" glyphicon glyphicon-plus-sign" ></span> More Menu</button>
 		</div>
+		<div data-ng-show="progress==100">
+			<div class="row">
+				<h4>Do you want to activate restaurant now ? </h4>
+				<button class="btn btn-link" data-ng-click="activeRest()" value="Put My restaurant to the Market"></button>
+			</div>
+		</div>
 		
 		<button class="btn btn-primary " style="position: relative;left: 59%;"  data-ng-click="previous()"
 		data-ng-hide="progress==25">Previous</button>
@@ -269,8 +275,8 @@
 		 -->
 		<button class="btn btn-primary" style="position: relative;left: 60%;"  data-ng-click="next()" 
 		data-ng-hide="progress==100">Next</button>
-		<button class="btn btn-primary" style="position: relative;left: 60%;"  data-ng-click="finish()" data-ng-disabled="restaurantDetailsForm.$invalid"
-		data-ng-show="progress==100">Finish</button>
+		<button class="btn btn-primary" style="position: relative;left: 60%; "  data-ng-click="finish()" data-ng-disabled="restaurantDetailsForm.$invalid"
+		data-ng-show="progress==100" >Save</button>
 		
 	
 	</div>

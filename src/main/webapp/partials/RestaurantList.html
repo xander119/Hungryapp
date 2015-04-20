@@ -1,11 +1,18 @@
 <div class="row">
 
 <div class="row clearfix" >
-
-		<div class="list-group" >
-			<div class="list-group-item" ng-repeat="rests in restaurantList" >
-				<button class="btn btn-link" ng-click="toDetails(rests)"> {{rests.name}}</button>
+	<div class="row">
+		<div class="col-md-12">
+			<span></span>
+		</div>
+	
+	</div>
+<!-- Filter restaurant by type, rating, populatorty, pricing  -->
+		<div class="row" >
+			<div class="col-md-4 restaurant " data-ng-repeat="rests in restaurantList" data-ng-click="toDetails(rests)">
+				<button class="btn btn-link" > {{rests.name}}</button>
 				<br> {{rests.type}} 
+				
 				<!--  <br>Open Hour :
 				<div class="opentime">
 				<br><span>{{rests.openHour.monday || 'Close'}}</span> 

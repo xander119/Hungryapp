@@ -7,7 +7,8 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+
+
 
 /**
  * Entity implementation class for Entity: OpenHour
@@ -29,7 +30,8 @@ public class OpenHour implements Serializable {
 	private String saturday;
 	private String sunday;
 	@OneToOne
-	@JsonBackReference("rest-oh")
+	@JoinColumn(name="restaurant_id")
+	@JsonBackReference("openhour")
 	private Restaurant restaurant;
 	private static final long serialVersionUID = 1L;
 

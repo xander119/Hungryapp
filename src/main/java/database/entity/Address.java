@@ -6,6 +6,8 @@ import java.lang.String;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * Entity implementation class for Entity: Address
  *
@@ -22,6 +24,8 @@ public class Address implements Serializable {
 	
 
 	@ManyToOne
+	@JoinColumn(name="customer_fk")
+	@JsonBackReference("customer_location")
 	private Customer customer;
 	private static final long serialVersionUID = 1L;
 

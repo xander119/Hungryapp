@@ -12,16 +12,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+
+
 
 /**
  * Entity implementation class for Entity: Restaurant
  *
  */
 @NamedQueries({
+		@NamedQuery(name = "Restaurant.findRestaurantOwnedById", query = "Select e from Restaurant e where e.generalManager.id = :managerid "),
 		@NamedQuery(name = "Restaurant.findMenus", query = "Select o from Menu o where o.restaurant.id = :id"),
-		@NamedQuery(name = "Restaurant.findAllLocations", query = "Select o from Restaurant o") 
-		})
+		@NamedQuery(name = "Restaurant.findAllLocations", query = "Select o from Restaurant o"),
+		@NamedQuery(name = "Restaurant.findRestByLocationId", query = "Select o from RestaurantLocation r inner join r.restaurant o where r.restaurant.id = o.id and r.id = :id"),
+})
 @Entity
 @XmlRootElement
 public class Restaurant implements Serializable {
@@ -32,20 +37,24 @@ public class Restaurant implements Serializable {
 	private String name;
 	private String deliveryHour;
 	private String deliveryNote;
-	
+	private String status ;
 	private String type;
 	@ManyToOne
+	@JoinColumn(name="generalManager_id")
+	@JsonIgnore
 	private Manager generalManager;
 	@Lob
+	@Column(columnDefinition="LONGBLOB")
 	private byte[] logo;
 	
 	
 	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL)
+	@JsonManagedReference("openhour")
 	private OpenHour openHour;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurant",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="restaurant",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JsonManagedReference("location")
 	private Set<RestaurantLocation> locations;
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-//	@JsonManagedReference
+	@OneToMany(mappedBy="restaurant", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Menu> menus;
 
@@ -135,6 +144,20 @@ public class Restaurant implements Serializable {
 
 	public void setDeliveryNote(String deliveryNote) {
 		this.deliveryNote = deliveryNote;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	

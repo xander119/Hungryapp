@@ -49,7 +49,7 @@
 			<div class="list-group-item" data-ng-hide="restaurantOwn = null">
 						You have no restaurant yet.<a href = "#newRestaurant" style="margin-left: 8px;">    Start new ?</a>
 					</div>
-				<div data-ng-repeat="Restaurant in Restaurants" class="list-inline">
+				<div data-ng-repeat="Restaurant in restaurantOwn " class="list-inline">
 					<div class="list-group-item">{{Restaurant.name}}
 					<div >
 						<button type="button" class="btn btn-primary" ng-click="editRestaurant(Restaurant.id)">Edit</button>

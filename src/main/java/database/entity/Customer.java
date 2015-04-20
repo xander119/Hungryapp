@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -43,10 +45,8 @@ public class Customer implements Serializable {
 	@Column(nullable=true)
 	private int mobile;
 	@Lob	
-	@Column(nullable=true)
+	@Column(nullable=true,columnDefinition="longblob")
 	private byte[] profilePic;
-	
-
 	@Column(nullable=false)
 	private String password;
 	private String joinedDate;
@@ -60,9 +60,11 @@ public class Customer implements Serializable {
 	
 	@Column(nullable=true)
 	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
+	@JsonManagedReference("customer")
 	private Set<Orders> orders;
 	@Column(nullable=true)
 	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
+	@JsonManagedReference("customer_location")
 	private Set<Address> addresses;
 	private static final long serialVersionUID = 1L;
 

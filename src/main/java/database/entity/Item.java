@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,13 +34,12 @@ public class Item implements Serializable {
 	private double price;
 	
 	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JsonManagedReference
+	@JsonManagedReference("item_ordersitems")
 	private List<Orders_Items> orderItems ;
 	@ManyToOne
-//	@JsonBackReference
+	@JoinColumn(name="menu_id")
+	@JsonBackReference("item_menu")
 	private Menu menu;
-//	@ManyToMany(mappedBy="items",targetEntity=Orders.class)
-//	private List<Orders> orders;
 	
 	
 	private static final long serialVersionUID = 1L;

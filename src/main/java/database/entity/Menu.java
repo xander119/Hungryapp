@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
@@ -30,9 +31,11 @@ public class Menu implements Serializable {
 	private String name;
 	private String note;
 	@OneToMany(mappedBy="menu")
-//	@JsonManagedReference
+	@JsonManagedReference("item_menu")
 	private Set<Item> items;
 	@ManyToOne
+	@JoinColumn(name="restaurant_id")
+	@JsonIgnore
 	private Restaurant restaurant;
 	private static final long serialVersionUID = 1L;
 

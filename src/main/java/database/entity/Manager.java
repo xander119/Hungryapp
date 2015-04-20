@@ -17,7 +17,6 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "Manager.findRestaurantOwnedById", query = "Select e from Restaurant e where e.generalManager = :manager "),
 	@NamedQuery(name = "Manager.findManagerByEmail", query = "Select e from Manager e where e.email = :email "),
 	@NamedQuery(name = "Manager.allManagers", query = "select e from Manager e "),
 	@NamedQuery(name = "Manager.findManagerById", query = "select e from Manager e where e.id = :id "),
@@ -37,7 +36,7 @@ public class Manager implements Serializable {
 	@Column(nullable=true)
 	@OneToMany(mappedBy="generalManager",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	@JsonIgnore
-	private Set<Restaurant> restaurants = new HashSet<Restaurant>();
+	private Set<Restaurant> restaurants;
 	private static final long serialVersionUID = 1L;
 
 	public Manager() {
@@ -77,6 +76,12 @@ public class Manager implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Manager [id:" + id + ", name:" + name + ", password:"
+				+ password + ", email:" + email + "]";
 	}
    
 }

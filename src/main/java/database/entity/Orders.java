@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -41,13 +42,16 @@ public class Orders implements Serializable {
 	private boolean isComplete;
 	private String completeTime;
 	@ManyToOne
-//	@JsonBackReference
+	@JoinColumn(name="restaurantLocation_id")
+	@JsonBackReference("orders")
 	private RestaurantLocation restaurantLocation;
 	@ManyToOne
+	@JoinColumn(name="customer_userid")
+	@JsonBackReference("customer")
 	private Customer customer;
 	
-	@OneToMany(mappedBy="order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JsonManagedReference
+	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JsonManagedReference("order_ordersitems")
 	private List<Orders_Items> orderItems ;
 
 	private static final long serialVersionUID = 1L;

@@ -25,12 +25,12 @@ public class Orders_Items implements Serializable {
 	private Integer id;
 	@ManyToOne
 	@JoinColumn(name="order_id",referencedColumnName="id")
-//	@JsonBackReference
+	@JsonBackReference("order_ordersitems")
 	private Orders order;
 	
 	@ManyToOne
 	@JoinColumn(name="item_id",referencedColumnName="id")
-//	@JsonBackReference
+	@JsonBackReference("item_ordersitems")
 	private Item item;
 	
 	private static final long serialVersionUID = 1L;

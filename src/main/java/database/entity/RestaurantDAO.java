@@ -19,8 +19,9 @@ public class RestaurantDAO {
 	public Restaurant createRestaurant(Restaurant r) {
 		// TODO Auto-generated method stub#
 		if(r.getGeneralManager()!=null){
+			r.getGeneralManager().getRestaurants().add(r);
 			//Manager m = (Manager) em.createNamedQuery("Manager.findManagerByEmail").setParameter("email",  r.getGeneralManager().getEmail()).getResultList().get(0);
-			//System.out.println(m.getEmail());
+			System.out.println(r.getGeneralManager().toString());
 			//r.setGeneralManager(m);
 		}
 		if(r.getLocations()!=null){
@@ -34,8 +35,6 @@ public class RestaurantDAO {
 			}
 		}
 		if(r.getOpenHour()!=null){
-//			OpenHour oh = em.find(OpenHour.class,r.getOpenHour());
-//			oh.setOpenHour(r);
 				r.getOpenHour().setRestaurant(r);
 		}
 		em.persist(r);
@@ -86,7 +85,12 @@ public class RestaurantDAO {
 		em.remove(em.find(Restaurant.class, restaurantid));
 		
 	}
-
+	public Restaurant getRestaurantByLocationId(int id){
+		
+		List<Restaurant> results = em.createNamedQuery("Restaurant.findRestByLocationId").setHint("eclipselink.join-fetch", "e.projects.milestones").setParameter("id", id).getResultList();
+		
+		return results.get(0);
+	}
 	public List<Restaurant> getAllRestaurantLocations() {
 		// TODO Auto-generated method stub
 		List<Restaurant> results = em.createNamedQuery("Restaurant.findAllLocations").getResultList();
