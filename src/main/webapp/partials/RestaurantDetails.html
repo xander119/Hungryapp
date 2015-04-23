@@ -1,83 +1,113 @@
-<div>
-	<form class="col-md-12 form-inline" editable-form name="editableForm">
-
-		<div class="form-group">
-			{{currentRest.name}} {{currentRest.type}} <br>Open Hour :
-			<div class="opentime">
-				<br> Monday : <span>{{currentRest.openHour.monday || 'Close'}}</span> <br> Tuesday : <span>{{currentRest.openHour.tuesday ||
-					'Close'}}</span> <br> <span> Wednesday : {{currentRest.openHour.wednesday || 'Close'}}</span> <br> <span> Thursday :
-					{{currentRest.openHour.thursday || 'Close'}}</span> <br> <span> Friday :{{currentRest.openHour.friday || 'Close'}}</span> <br> <span>
-					Saturday : {{currentRest.openHour.saturday || 'Close'}}</span> <br> <span> Sunday : {{currentRest.openHour.sunday || 'Close'}}</span>
-			</div>
-		</div>
-		<div data-ng-repeat="currentMenu in currentRest.menus">
-			<div class="form-group">
-				<h3>
-					<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name ||'name'}}</span>
-				</h3>
-				<span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
-			</div>
-			<div class="Info-section">
-				<div class="Info list-inline" ng-repeat="item in currentMenu.items">
-					<span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span> <span class="text-left">
-						{{item.description}}</span> <span class="text-right" editable-text="item.price" e-name="itemPrice" e-required>{{item.price}}</span>
-					<!-- show button if user is a customer 
+<div class="row">
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-6">
+			<form class="col-md-12 form-inline" editable-form name="editableMenuForm">
+				<div class="form-group"></div>
+				<div data-ng-repeat="currentMenu in currentRest.menus">
+					<div class="form-group">
+						<h3>
+							<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name ||'name'}}</span>
+						</h3>
+						<span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
+					</div>
+					<div class="Info-section">
+						<div class="Info list-inline" ng-repeat="item in currentMenu.items">
+							<span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span> <span
+								class="text-left"
+							> {{item.description}}</span> <span class="text-right" editable-text="item.price" e-name="itemPrice" e-required>{{item.price}}</span>
+							<!-- show button if user is a customer 
 							ng-show= "if customer is true"-->
-					<div>
-						<ngcart-addtocart id="{{ item.id }}" name="{{ item.name }}" price="{{ item.price }}" quantity="1" quantity-max="30" data="item">Add
-						to cart.</ngcart-addtocart>
+							<div data-ng-hide="isAdmin()" >
+								<ngcart-addtocart id="{{ item.id }}" name="{{ item.name }}" price="{{ item.price }}" quantity="1" quantity-max="30" data="item">Add
+								to cart.</ngcart-addtocart>
+							</div>
+						</div>
+					</div>
+					<div align="right" data-ng-show="isAdmin()" >
+						<!-- button to show form -->
+						<button type="button" class="btn btn-default" data-ng-click="editableMenuForm.$show()" data-ng-show="!editableMenuForm.$visible">Edit</button>
+						<!-- buttons to submit / cancel form -->
+						<span ng-show="editableMenuForm.$visible">
+							<button type="submit" class="btn btn-primary" ng-disabled="editableMenuForm.$waiting">Save</button>
+							<button type="button" class="btn btn-default" ng-disabled="editableMenuForm.$waiting" ng-click="editableMenuForm.$cancel()">Cancel</button>
+						</span>
 					</div>
 				</div>
-			</div>
-			<div align="right" ng-hide="isCus">
-				<!-- button to show form -->
-				<button type="button" class="btn btn-default" data-ng-click="editableForm.$show()" data-ng-show="!editableForm.$visible">Edit</button>
-				<!-- buttons to submit / cancel form -->
-				<span ng-show="editableForm.$visible">
-					<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">Save</button>
-					<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
-				</span>
+			</form>
+			<div data-ng-hide="isAdmin()" class="row">
+			<div class="col-md-12">
+				<h4>Reviews</h4>
+				<ul>
+
+					<li data-ng-repeat="review in currentRest.reviews">
+						<div>
+							<h4>{{review.stars}} Stars</h4>
+							<span>{{review.body}}</span>  
+							<cite class="clearfix">---{{review.author}}</cite>
+						</div>
+					</li>
+				</ul>
+				<form name="reviewForm" data-ng-submit="addReview()"  novalidate >
+
+					<!--  Live Preview -->
+					<div class="form-group">
+						<h4>{{review.stars}}</h4><span>  Stars</span>
+						<span>{{review.body}}</span>
+						<cite class="clearfix" style="font-size: small;bottom: auto;margin-left: 50%;position: absolute;">By ---{{review.author}}</cite>
+					</div>
+
+					<!--  Review Form -->
+					<h4>Submit a Review</h4>
+					<fieldset class="form-group">
+						<select ng-model="review.stars" class="form-control" data-ng-options="stars for stars in [5,4,3,2,1]" title="Stars">
+							<option value="">Rate the Product</option>
+						</select>
+					</fieldset>
+					<fieldset class="form-group">
+						<textarea data-ng-model="review.body" class="form-control" placeholder="Write a short review of the product..." title="Review"></textarea>
+					</fieldset>
+					<fieldset class="form-group">
+						<input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
+					</fieldset>
+				</form>
+				</div>
 			</div>
 		</div>
-	</form>
-	<h4>Reviews</h4>
-	<ul>
-              
-              <li data-ng-repeat="review in currentRest.reviews">
-                <blockquote>
-                  <strong>{{review.stars}} Stars</strong>
-                  {{review.body}}
-                  <cite class="clearfix">¡ª{{review.author}}</cite>
-                </blockquote>
-              </li>
-            </ul>
-	<form name="reviewForm" data-ng-submit="addReview()" novalidate>
-
-		<!--  Live Preview -->
-		<blockquote>
-			<strong>{{review.stars}}</strong><span>Stars</span> {{review.body}} <cite class="clearfix">¡ª{{review.author}}</cite>
-		</blockquote>
-
-		<!--  Review Form -->
-		<h4>Submit a Review</h4>
-		<fieldset class="form-group">
-			<select ng-model="review.stars" class="form-control" data-ng-options="stars for stars in [5,4,3,2,1]" title="Stars">
-				<option value="">Rate the Product</option>
-			</select>
-		</fieldset>
-		<fieldset class="form-group">
-			<textarea data-ng-model="review.body" class="form-control" placeholder="Write a short review of the product..." title="Review"></textarea>
-		</fieldset>
-		<fieldset class="form-group">
-			<input data-ng-model="review.author" type="email" class="form-control" placeholder="example@example.com" title="Email" />
-		</fieldset>
-		<fieldset class="form-group">
-			<input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
-		</fieldset>
-	</form>
+		<div class="col-md-4">
+			<form class="col-md-12 form-inline" editable-form name="restBasicInfo">
+				<h3>{{currentRest.name}}</h3>
+				{{currentRest.type}}
+				<br>Open Hour :
+				
+					<div class="opentime">
+						<br> Monday : <span>{{currentRest.openHour.monday || 'Close'}}</span> 
+						<br> Tuesday : <span>{{currentRest.openHour.tuesday || 'Close'}}</span> 
+						<br> <span> Wednesday : {{currentRest.openHour.wednesday || 'Close'}}</span> 
+						<br> <span> Thursday : {{currentRest.openHour.thursday || 'Close'}}</span>  
+						<br> <span> Friday :{{currentRest.openHour.friday || 'Close'}}</span> 
+						<br> <span>Saturday : {{currentRest.openHour.saturday || 'Close'}}</span> 
+						<br> <span> Sunday : {{currentRest.openHour.sunday || 'Close'}}</span>
+					</div>
+					<br/>
+					Delivery Time : {{currentRest.deliveryHour }}
+					{{currentRest.deliveryNote}}
+				<div align="right" data-ng-hide="isCus">
+					<!-- button to show form -->
+					<button type="button" class="btn btn-default" data-ng-click="restBasicInfo.$show()" data-ng-show="!restBasicInfo.$visible">Edit</button>
+					<!-- buttons to submit / cancel form -->
+					<span data-ng-show="restBasicInfo.$visible">
+						<button type="submit" class="btn btn-primary" ng-disabled="restBasicInfo.$waiting">Save</button>
+						<button type="button" class="btn btn-default" ng-disabled="restBasicInfo.$waiting" data-ng-click="restBasicInfo.$cancel()">Cancel</button>
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--  Review Form -->
 </div>
 
-<!--  Review Form -->
+
 
 <script type="text/ng-template" id="template/ngCart/addtocart.html">
 <div ng-hide="attrs.id">
@@ -93,8 +123,8 @@
            ng-click="ngCart.addItem(id, name, price, q, data)"
            ng-transclude>fgg</a>
     </div>
-    <mark  ng-show="inCart()">
+    <span  ng-show="inCart()">
         This item is in your cart. <a ng-click="ngCart.removeItemById(id)" style="cursor: pointer;">Remove</a>
-    </mark>
+    </span>
 </div>
 </script>

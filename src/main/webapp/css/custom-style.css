@@ -7,10 +7,21 @@
 	font-size: x-small;
 	padding-left: 2cm;
 }
+.container{
+	background-color:rgba(192,192,192,0.7);
+	width: 1140px;
+	height: 650px;
+}
 
 .restaurant:hover {
-	padding: 20px;
-	border-radius: 15px;
+	-webkit-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	transform: scale(1.1);
+	transition: 0.5s ease;
+	background-color: #b6aefb;
+}
+.a{
+	color: #ffffff;
 }
 
 .modal-map {
@@ -27,9 +38,12 @@
 
 .cus-footer {
 	position: absolute;
-	margin-top: 0px;
+	margin-top:20px;
 	width: 100%;
 	text-align: right;
+	margin-right:25px;
+	font-weight: bold;
+	
 }
 
 h2 {

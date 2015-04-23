@@ -32,7 +32,7 @@ public class OpenHour implements Serializable {
 	@OneToOne
 	@JoinColumn(name="restaurant_id")
 	@JsonBackReference("openhour")
-	private Restaurant restaurant;
+	private Restaurant  restaurant;
 	private static final long serialVersionUID = 1L;
 
 	public OpenHour() {
@@ -100,5 +100,7 @@ public class OpenHour implements Serializable {
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
+	
+	
    
 }

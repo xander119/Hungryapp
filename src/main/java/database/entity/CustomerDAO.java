@@ -21,6 +21,7 @@ public class CustomerDAO {
 	EntityManager em;
 	
 	private Customer loggedUser;
+	private Emailsender email = new Emailsender();
 	
 	public Customer getLoggedUser() {
 		return loggedUser;
@@ -31,6 +32,8 @@ public class CustomerDAO {
 	}
 
 	public boolean createCustomer(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		String registerSuccessBody = "Dear Customer : \n"+"\n\t\tCongratulations You have successfully registered to Hungry. Welcome "+ c.getFirstname() + "! "
+				+"\n\n" + "\t\t\t\t Kind Regards, Hungry Customer service";
 		if(c!=null){
 			//hash password before store it.
 			String unHshedpassword = c.getPassword();
@@ -38,6 +41,7 @@ public class CustomerDAO {
 			
 			if(isCustomerExist(c.getUsername(),c.getEmail())){
 				em.persist(c);
+				email.sendEmail(c.getEmail(), "New account Created! ", registerSuccessBody );
 				return true;
 			}else{
 				return false;
@@ -60,25 +64,26 @@ public class CustomerDAO {
 		return em.merge(c);
 	}
 
-	public String validateLoginUser(String credential, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	public Customer validateLoginUser(String credential, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		// TODO Auto-generated method stub
 		String imputPassword;
 		
 		List<String> passwords = (List<String>) em.createNamedQuery("Customer.findPassordByEmailOrUsername").setParameter("credential", credential).getResultList();
 		if(passwords.isEmpty()){
-			return "{\"result\":\"You are not in our database.\"}";
+			return  null; 
+			//"{\"result\":\"You are not in our database.\"}";
 		}
 		imputPassword = passwords.get(0);
 		
 		boolean correctPass = PasswordHash.validatePassword(password,imputPassword);
 		if(!correctPass){
-			return "{\"result\":\"The password you entered is incorrct.\"}";
+			return null;//"{\"result\":\"The password you entered is incorrct.\"}";
 		}
 		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", credential).getResultList();
 		
-		Gson gson = new Gson();		
+			
 		
-		return "{\"result\":\"success\"," + gson.toJson(customers.get(0)).substring(1);
+		return customers.get(0);
 		
 	}
 	
@@ -113,10 +118,9 @@ public class CustomerDAO {
 	}
 
 	public String checkLoginUser(String credential) {
-		if(getLoggedUser()!=null){
-			Gson gson = new Gson();		
-			return "{\"result\":\"success\"," + gson.toJson(getLoggedUser()).substring(1);
-		}
+			
+//			return "{\"result\":\"success\"," + gson.toJson(getLoggedUser()).substring(1);
+		
 		return "{\"result\":\"notLogin\"}";
 	}
 
@@ -126,5 +130,28 @@ public class CustomerDAO {
 		if(!customers.isEmpty())
 			return customers.get(0);
 		return null;
+	}
+
+	public Address createAddress(Address a, int custId) {
+		// TODO Auto-generated method stub
+		
+		Customer c = (Customer) em.createNamedQuery("Customer.findById").setParameter("id", custId).getResultList().get(0);
+		a.setCustomer(c);
+		a = em.merge(a);
+		
+		return a;
+	}
+
+	public Address deleteAddress(int addrId) {
+		// TODO Auto-generated method stubaddrId
+		Address a = (Address) em.createNamedQuery("Address.findById").setParameter("id", addrId).getResultList().get(0);
+		try {
+			em.remove(a);
+			System.out.println(a.getLine1());
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+		return a;
 	}
 }

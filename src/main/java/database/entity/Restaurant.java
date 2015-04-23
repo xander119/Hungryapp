@@ -5,6 +5,8 @@ import database.entity.RestaurantLocation;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -24,8 +26,11 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @NamedQueries({
 		@NamedQuery(name = "Restaurant.findRestaurantOwnedById", query = "Select e from Restaurant e where e.generalManager.id = :managerid "),
 		@NamedQuery(name = "Restaurant.findMenus", query = "Select o from Menu o where o.restaurant.id = :id"),
+		@NamedQuery(name = "Restaurant.findById", query = "Select o from Restaurant o where o.id = :id"),
 		@NamedQuery(name = "Restaurant.findAllLocations", query = "Select o from Restaurant o"),
 		@NamedQuery(name = "Restaurant.findRestByLocationId", query = "Select o from RestaurantLocation r inner join r.restaurant o where r.restaurant.id = o.id and r.id = :id"),
+		@NamedQuery(name = "Restaurant.findByItemId", query = "Select distinct r.id from Item i inner join i.menu m join m.restaurant r where r.id= :id")
+		
 })
 @Entity
 @XmlRootElement
@@ -35,27 +40,35 @@ public class Restaurant implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String name;
-	private String deliveryHour;
-	private String deliveryNote;
 	private String status ;
 	private String type;
+	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL)
+	@JsonManagedReference("openhour")
+	private OpenHour openHour;
+
+	private String deliveryHour;
+	
+
+	private String deliveryNote;
 	@ManyToOne
 	@JoinColumn(name="generalManager_id")
-	@JsonIgnore
+	@JsonBackReference("restaurant-manager")
 	private Manager generalManager;
 	@Lob
 	@Column(columnDefinition="LONGBLOB")
 	private byte[] logo;
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JsonManagedReference("orders")
+	private Set<Orders> orders ;
 	
 	
-	@OneToOne(mappedBy="restaurant",cascade=CascadeType.ALL)
-	@JsonManagedReference("openhour")
-	private OpenHour openHour;
+	
+
 	@OneToMany(mappedBy="restaurant",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JsonManagedReference("location")
 	private Set<RestaurantLocation> locations;
 	@OneToMany(mappedBy="restaurant", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JsonIgnore
+	@JsonManagedReference("restaurant-menu")
 	private Set<Menu> menus;
 
 	private static final long serialVersionUID = 1L;
@@ -70,16 +83,6 @@ public class Restaurant implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	
-
-	public String getDeliveryHour() {
-		return this.deliveryHour;
-	}
-
-	public void setDeliveryHour(String deliveryHour) {
-		this.deliveryHour = deliveryHour;
 	}
 
 	public Set<RestaurantLocation> getLocations() {
@@ -130,21 +133,6 @@ public class Restaurant implements Serializable {
 		this.menus = menus;
 	}
 
-	public OpenHour getOpenHour() {
-		return openHour;
-	}
-
-	public void setOpenHour(OpenHour openHour) {
-		this.openHour = openHour;
-	}
-
-	public String getDeliveryNote() {
-		return deliveryNote;
-	}
-
-	public void setDeliveryNote(String deliveryNote) {
-		this.deliveryNote = deliveryNote;
-	}
 
 	/**
 	 * @return the status
@@ -159,6 +147,50 @@ public class Restaurant implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public OpenHour getOpenHour() {
+		return openHour;
+	}
+
+	public void setOpenHour(OpenHour openHour) {
+		this.openHour = openHour;
+	}
+
+	public String getDeliveryHour() {
+		return deliveryHour;
+	}
+
+	public void setDeliveryHour(String deliveryHour) {
+		this.deliveryHour = deliveryHour;
+	}
+
+	public String getDeliveryNote() {
+		return deliveryNote;
+	}
+
+	public void setDeliveryNote(String deliveryNote) {
+		this.deliveryNote = deliveryNote;
+	}
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
+	}
+	@Override
+	public String toString() {
+		return "Restaurant [id=" + id + ", name=" + name + ", status=" + status
+				+ ", type=" + type + ", openHour=" + openHour
+				+ ", deliveryHour=" + deliveryHour + ", deliveryNote="
+				+ deliveryNote + ", generalManager=" + generalManager
+				+ ", logo=" + Arrays.toString(logo) + ", locations="
+				+ locations + ", menus=" + menus + "]";
+	}
+
+	
+
+	
 
 	
 

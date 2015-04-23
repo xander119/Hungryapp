@@ -1,30 +1,5 @@
 <div class="row">
-
-	<div class="progress progress-striped ">
-		<div>
-			<progressbar class="progress-striped active" max="100"
-				value="progress" type="danger"> <i>{{progress}}</i></progressbar>
-		</div>
-	</div>
-	<div >
-		<form id="restaurantDetailsForm" name="restaurantDetailsForm"
-			class="form-horizontal form-group" novalidate ng-show="progress==25">
-			<div class="form-group">
-				<label for="name" class="col-md-3 control-label">Restaurant
-					Name : </label>
-				<div class="col-md-3" style="margin-left: 25px;">
-					<input type="text" ng-model="res.name" class="form-control"
-						name="name" placeholder="Name" required />
-					<div ng-show="restaurantDetailsForm.name.$dirty">
-						<small class="text-warning"
-							ng-show="restaurantDetailsForm.name.$error.required">Your
-							input is required.</small>
-
-					</div>
-				</div>
-			</div>
-
-			<div id="openHour" class="form-group">
+<div id="openHour" class="form-group">
 				<label for="openHour" class="col-md-3 control-label"
 					style="margin-top: 20px;">Open Hours : </label>
 				<div class="col-md-7 " style="margin-left: 35px; margin-top: 10px;">
@@ -141,7 +116,7 @@
 					</div>
 				</div>
 			</div>
-
+	<h3>Restaurant Locations: </h3>
 			<div class="form-group">
 				<label for="deliveryNote" class="col-md-3 control-label">Delivery
 					Note: </label>
@@ -156,23 +131,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="type" class="col-md-3 control-label">Type : </label>
-				<div class="col-md-3" style="margin-left: 25px;">
-					<input type="text" ng-model="res.type" class="form-control"
-						name="type" placeholder="Food Type" required />
-					<div ng-show="restaurantDetailsForm.type.$dirty ">
-						<small class="text-warning"
-							ng-show="restaurantDetailsForm.type.$error.required">Your
-							input is required.</small>
-					</div>
-				</div>
-			</div>
-		</form>
-
-<!-- ng-show="progress==50" -->
-		<div ng-show="progress==50" >
-		<h3>Restaurant Locations: </h3>
+			
+		
+		
+	
 			<form id="restaurantContactForm" name="restaurantContactForm" class="form-horizontal " novalidate>
 				<div class="form-group">
 					<div class="col-lg-3" style="margin-left: 30px">
@@ -230,55 +192,4 @@
 					<br>Latitude : {{resLoc.latitude}}
 					<br> <button class="btn btn-danger" ng-click="deleteAddr(resLoc)">Delete</button>
 				</form>
-		</div>
-
-
-		<div ng-show="progress==75">
-			
-			<form id="restaurantMenuForm" name="restaurantMenuForm" class="form-horizontal " novalidate data-ng-repeat="menu in menus" >
-				<div id="menuHeader" class="form-group form-inline" style="margin-top: 20px; margin-left: 15px;">
-					<span style="font-size: large;">
-						<label class="control-label">Menu Name : </label>
-						<input class="form-control" type="text" data-ng-model="menu.name" required="required">
-					</span>
-						<label class="control-label" style="margin-left: 30px">Menu note : </label>
-						<input class="form-control" style="margin-left: 25px" type="text" data-ng-model="menu.note" >
-					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 20px;" data-ng-click="addMenuItem(menu)" title="Add New Item"><span class=" glyphicon glyphicon-plus"></span></button>
-					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 5px;" data-ng-click="deleteAMenu(menu)" title="Delete This Menu"><span class=" glyphicon glyphicon-minus"></span></button>
-				</div>
-
-				<div class="list-group form-group" >
-					<div class="list-group-item form-inline"
-						data-ng-repeat="item in menu.items ">
-						<label class="control-label " >Name:   </label>
-						<input class="form-control "  type="text" data-ng-model="item.name" placeholder="Item name" required="required" > 
-						<label class="control-label " style="margin-left: 35px;">Description/Ingredients:    </label>
-						<input class="form-control " type="text" data-ng-model="item.description" placeholder="Item Description" required="required" >
-						<label class="control-label " style="margin-left: 35px;">Price:    </label>
-						<input class="form-control " type="number" data-ng-model="item.price" min="0" placeholder="Item Price" required="required" >
-						<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(item)" title="Delete This Item"><span class=" glyphicon glyphicon-minus"></span></button>
-					</div>
-				</div>
-			</form>
-			<button class="btn btn-primary" data-ng-click="addMenuForm()"><span class=" glyphicon glyphicon-plus-sign" ></span> More Menu</button>
-		</div>
-		<div data-ng-show="progress==100">
-			<div class="row">
-				<h4>Do you want to activate restaurant now ? </h4>
-				<button class="btn btn-link" data-ng-click="activeRest()" value="Put My restaurant to the Market"></button>
-			</div>
-		</div>
-		
-		<button class="btn btn-primary " style="position: relative;left: 59%;"  data-ng-click="previous()"
-		data-ng-hide="progress==25">Previous</button>
-		<!-- 
-		data-ng-disabled="restaurantDetailsForm.$invalid && restaurantMenuForm.$invalid"
-		 -->
-		<button class="btn btn-primary" style="position: relative;left: 60%;"  data-ng-click="next()" 
-		data-ng-hide="progress==100">Next</button>
-		<button class="btn btn-primary" style="position: relative;left: 60%; "  data-ng-click="finish()" data-ng-disabled="restaurantDetailsForm.$invalid"
-		data-ng-show="progress==100" >Save</button>
-		
-	
-	</div>
 </div>

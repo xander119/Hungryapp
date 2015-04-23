@@ -33,15 +33,15 @@ public class OrderService {
 	private RequestInterceptor interceptor;
 	
 	@POST
-	@Path("/createOrder")
+	@Path("/createOrder/{restIdAndCustId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Orders newOrder(Orders order){
-		return ordersDao.createOrder(order);
+	public Response newOrder(Orders order,@PathParam("restIdAndCustId") String restIdAndCustId){
+		return Response.status(200).entity( ordersDao.createOrder(order,restIdAndCustId)).build();
 	}
 	@GET
 	@Path("/{orderid}")
-	public Orders getOrder(@PathParam("orderid") int orderid){
-		return ordersDao.getOrderById(orderid);
+	public Response getOrder(@PathParam("orderid") int orderid){
+		return  Response.status(200).entity(ordersDao.getOrderById(orderid)).build();
 	}
 	@GET
 	@Path("/allOrders")

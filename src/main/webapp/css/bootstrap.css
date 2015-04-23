@@ -3703,7 +3703,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #3783c8;
+  font-size:medium;
 }
 .nav-stacked > li {
   float: none;
@@ -5601,7 +5602,7 @@ button.close {
   left: 0;
   z-index: 1060;
   display: none;
-  max-width: 276px;
+  max-width: 180px;
   padding: 1px;
   text-align: left;
   white-space: normal;

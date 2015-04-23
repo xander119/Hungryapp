@@ -1,16 +1,59 @@
 
 
+<div class="row">
 
-
-<div>
+<div class = "row" style=" margin: 20px;">
+	<div class="col-md-12" >
 	<ngcart-cart></ngcart-cart>
+	<button class="btn btn-primary" style="margin-left: 80%;" data-ng-hide="ngCart.getTotalItems() == 0" data-ng-click = "checkOut()"> <span class="glyphicon glyphicon-eur"></span>Check out</button>
+	
+	</div>
 </div>
 <hr>
 
-<script type="text/ng-template" id="template/ngCart/cart.html">
-<div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0">
+
+	<div class="row" data-ng-show="checkOutClicked" style="margin-left: 25px;">
+		<div class="col-md-12" >
+			<h4>Select delivery Address:</h4>
+			<form editable-form name="addressForm" data-ng-submit="saveAddress(address)" data-ng-repeat="address in cusAddresses ">
+				<label class="checkbox"> <input type="checkbox" name="checkAddres" data-ng-model="address.checked">
+				</label>
+				<div>
+					<span class="title">Line 1: </span> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty' }}</span>
+				</div>
+				<div>
+					<span class="title">Line 2: </span> <span editable-text="address.line2" e-name="line2" e-required>{{address.line2 || 'empty' }}</span>
+				</div>
+				<div>
+					<span class="title">Line 3: </span> <span editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty' }}</span>
+				</div>
+				<div>
+					<span class="title">County: </span> <span editable-text="address.county" e-name="county" e-required>{{address.county || 'empty' }}</span>
+				</div>
+
+
+				<div>
+					<!-- button to show form -->
+					<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
+					<!-- buttons to submit / cancel form -->
+					<span ng-show="addressForm.$visible">
+						<button type="submit" class="btn btn-primary" data-ng-disabled="addressForm.$waiting">Save</button>
+						<button type="button" class="btn btn-default" data-ng-disabled="addressForm.$waiting" data-ng-click="addressForm.$cancel()">Cancel</button>
+					</span>
+				</div>
+			</form>
+			<label>Select payment type:
+			<select data-ng-model="selectedType" data-ng-options="payments.name for payments in payments"></select> 
+			</label>
+			<button   class="btn btn-primary" data-ng-click="processedCheckout()">Processed</button></div>
+			<div style="margin-left: 40%"><ngcart-checkout service="{{selectedType.type}}" settings="payPalSettings"></ngcart-checkout></div>
+		</div>		
+	</div>
+
+	<script type="text/ng-template" id="template/ngCart/cart.html"><div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0">
     Your cart is empty
 </div>
+
 <div class="table-responsive col-lg-12" ng-show="ngCart.getTotalItems() > 0">
 
     <table class="table table-striped ngCart cart">
@@ -61,6 +104,31 @@
         </tr>
         </tbody>
     </table>
+
+
+
+</script>
+
+
+<script type="text/ng-template" id="template/ngCart/checkout.html"><div ng-if="service=='paypal'">
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" ng-show="ngCart.getTotalItems()">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="alexwang119@yahoo.com">
+        <input type="hidden" name="lc" value="CA">
+        <input type="hidden" name="item_name" value="Meal">
+        <input type="hidden" name="item_number" value="{{ ngCart.getTotalItems() }}">
+        <input type="hidden" name="amount" value="{{ ngCart.getSubTotal()}}">
+        <input type="hidden" name="currency_code" value="EUR">
+        <input type="hidden" name="button_subtype" value="services">
+        <input type="hidden" name="no_note" value="0">
+        <input type="hidden" name="tax_rate" value="{{ ngCart.getTaxRate()}}">
+        <input type="hidden" name="shipping" value="{{ ngCart.getShipping()}}">
+        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+    </form>
+
 </div>
 
 </script>
+</div>

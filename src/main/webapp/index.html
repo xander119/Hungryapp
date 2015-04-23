@@ -16,12 +16,12 @@
 <link href="css/bootstrap-toggle.min.css" rel="stylesheet" type='text/css'>
 <link href="css/ngDialog.css" rel="stylesheet" type='text/css'>
 <!-- Fav and touch icons -->
-<script type="text/javascript" src=js/jquery.min.js></script>
-<script type="text/javascript" src=js/bootstrap.min.js></script>
+<script type="text/javascript" src="lib/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="lib/bootstrap.min.js"></script>
     
 </head>
 
-<body data-ng-app="Hungryapp" >
+<body data-ng-app="Hungryapp" style="background-image: url('img/mainBackGround1.jpg');" >
 
 	<div class="navbar navbar-static-top navbar-default navbar-inverse" data-ng-controller="IndexController">
 		<div class="navbar-header">
@@ -51,7 +51,7 @@
 			<li data-ng-hide="notLoggedIn()" style="color: gray;font-size: medium;margin-right: 5px; font-family: 'Lobster', cursive;"> 
 				<a href="" data-ng-click = "viewProfile()">{{name}}</a>
 			</li>
-			<li  >
+			<li data-ng-show="!isAdmin()" >
 				<a href="#myCart"> <ngcart-summary></ngcart-summary></a>
 			</li>
 			<li data-ng-show="notLoggedIn()"  style="margin-right: 10px;"><a href="#login">Log in / Sign in</a></li>
@@ -61,19 +61,15 @@
 	<div class="container">
 		<div  data-ng-view></div>
 	</div>
-	<footer class="cus-footer">
-		<div class="container">
-			<p class="text-muted">
-				<a href="#joinus">Join Us</a> | <a href="#aboutus">About Us</a> | <a
-					href="#managerEntry">I'm Manager.</a>
-					  								
-					  
-					
-			</p>
-		</div>
-	</footer>
+	
 
 </body>
+<footer class="cus-footer">
+		<a href="#joinus" style="color: #ffffff;">Join Us</a> 
+		| <a href="#aboutus" style="color: #ffffff;">About Us</a> 
+		| <a href="#managerEntry" style="color: #ffffff;">I'm Manager.</a>
+
+</footer>
 <script type="text/ng-template" id="template/ngCart/summary.html">
 <div class="row" >
 	<div class="col-md-4 text-right"> <span class="glyphicon glyphicon-shopping-cart"></span> </div>
@@ -95,7 +91,8 @@
 <script src="lib/ng-map.min.js"></script>
 <script src= "lib/ngDialog.js"></script>
 <script src= "lib/ngStorage.js"></script>
-<script src="lib/ngFacebook.js"></script>
+<script src= "lib/ngFacebook.js"></script>
+<script src= "lib/angular-modal-service.js"></script>
 
 <script src="js/app.js"></script>
 <script src="lib/xeditable.js"></script>

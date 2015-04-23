@@ -20,6 +20,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import database.entity.Address;
 import database.entity.Customer;
 import database.entity.CustomerDAO;
 
@@ -79,6 +80,27 @@ public class MembersService {
 		return Response.status(401).entity("Unauthorized").build();
 	}
 	
+	@POST
+	@Path("/createAddress/{custId}")
+	public Response createAddress(@Context HttpHeaders hHeaders,@PathParam("custId")int custId, Address a) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"customer"})), hHeaders)){
+			return Response.status(200).entity( customerDao.createAddress(a,custId)).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
+	@DELETE
+	@Path("/deleteAddress/{addrId}")
+	public Response deleteAddress(@Context HttpHeaders hHeaders, @PathParam("addrId")int addrId) {
+		Address result = null;
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"customer"})), hHeaders)){
+			result = customerDao.deleteAddress(addrId);
+			if(result !=null)
+				return Response.status(200).entity(result).build();
+			else
+				return Response.status(404).entity(result + "No Address found.").build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
 	
 	@PUT
 	@Path("/updateInfo")

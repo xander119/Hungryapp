@@ -11,7 +11,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import database.entity.Customer;
 import database.entity.CustomerDAO;
 import database.entity.Manager;
 import database.entity.ManagerDAO;
@@ -29,12 +31,16 @@ public class LoginService {
 	@POST
 	@Path("/{credential}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String login(@PathParam("credential")String credential,String password){
-		String result ;
+	public Response login(@PathParam("credential")String credential,String password){
+		Customer result ;
 		try {
 			
 			result = customerDao.validateLoginUser(credential,password);
-			return result;
+			if(result==null){
+				return Response.status(400).entity("{\"result\":\"Incorrect Password or username.\"}").build();
+				
+			}
+			return Response.status(200).entity(result).build();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +49,7 @@ public class LoginService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "{\"result\":\"Unable to Check.\"}";
+		return Response.status(400).entity("Error").build();
 	}
 //	@GET
 //	@Path("/{credential}")
@@ -62,12 +68,15 @@ public class LoginService {
 	@POST
 	@Path("/admin-{credential}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Manager adminLogin(@PathParam("credential")String credential,String password){
+	public Response adminLogin(@PathParam("credential")String credential,String password){
 		Manager result = null ;
 		try {
 			
 			result = managerDao.validateUser(credential,password);
-			return result;
+			if(result == null){
+				return Response.status(400).entity("{\"result\":\"Incorrect Password or username.\"}").build();
+			}
+			return Response.status(200).entity(result).build();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +85,7 @@ public class LoginService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return result;
+		return Response.status(400).entity("{\"result\":\"Unable to Check.\"}").build();
 	}
 	
 }

@@ -13,7 +13,7 @@ services.factory('AuthService', function($resource) {
 				}
 			},
 			adminAuth : {
-				url : 'rest/Login/admin-:credential/',
+				url : 'rest/Login/admin-:credential',
 				method : 'POST',
 				params : {
 					credential : '@credential'
@@ -59,6 +59,21 @@ services.factory('AuthService', function($resource) {
 				params : {
 					id : '@email'
 				}
+			},
+			createAddress : {
+				url : 'rest/members/createAddress/:id',
+				method : 'POST',
+				params : {
+					id : '@id'
+				}
+
+			},
+			deleteAddress : {
+				url : 'rest/members/deleteAddress/:id',
+				method : 'DELETE',
+				params : {
+					id : '@id'
+				}
 			}
 
 		});
@@ -66,6 +81,18 @@ services.factory('AuthService', function($resource) {
 	services.factory('MenuService',function($resource){
 		return $resource('/Hungryapp/rest/admin',null,{
 			
+		});
+	});
+	services.factory('OrderService',function($resource){
+		return $resource('/Hungryapp/rest/order',null,{
+			createOrder : {
+				url : 'rest/order/createOrder/:restIdAndCustId',
+				method : 'POST',
+				params : {
+					restIdAndCustId : '@restIdAndCustId'
+				}
+				
+			}
 		});
 	});
 	services.factory('AdminService',function($resource){
@@ -96,8 +123,11 @@ services.factory('AuthService', function($resource) {
 	services.factory('RestaurantServices',function($resource){
 		return $resource('rest/restaurants/',null,{
 			newRest : {
-				url : 'rest/restaurants/createRestaurant',
-				method : 'POST'
+				url : 'rest/restaurants/createRestaurant/:managerid',
+				method : 'POST',
+				params : {
+					managerid : '@managerid'
+				}
 			},
 			allLocations : {
 				url : 'rest/restaurants/allrestaurant/locations',
@@ -112,7 +142,14 @@ services.factory('AuthService', function($resource) {
 				}
 			},
 			getRestaurantByLocaId : {
-				url : 'rest/restaurantByLocationId/:id',
+				url : 'rest/restaurants/location/:id',
+				method : 'GET',
+				params : {
+					id : '@id'
+				}
+			},
+			getRestaurantByItemId : {
+				url : 'rest/restaurants/item/:id',
 				method : 'GET',
 				params : {
 					id : '@id'
@@ -163,7 +200,78 @@ services.factory('AuthService', function($resource) {
 	        }
 	    };
 	}]);
-	
+	services.factory('counties', function(){
+		return { getCounties : function(){
+			 var counties = [ { area : 'Dublin 1', id : 1 }, { area : 'Dublin 2', id : 2 }, {
+				area : 'Dublin 4',
+				id : 4
+			}, {
+				area : 'Dublin 5',
+				id : 5
+			}, {
+				area : 'Dublin 6',
+				id : 6
+			}, {
+				area : 'Dublin 7',
+				id : 7
+			}, {
+				area : 'Dublin 8',
+				id : 8
+			}, {
+				area : 'Dublin 9',
+				id : 9
+			}, {
+				area : 'Dublin 10',
+				id : 10
+			}, {
+				area : 'Dublin 11',
+				id : 11
+			}, {
+				area : 'Dublin 12',
+				id : 12
+			}, {
+				area : 'Dublin 13',
+				id : 13
+			}, {
+				area : 'Dublin 14',
+				id : 14
+			}, {
+				area : 'Dublin 15',
+				id : 15
+			}, {
+				area : 'Dublin 16',
+				id : 16
+			}, {
+				area : 'Dublin 17',
+				id : 17
+			}, {
+				area : 'Dublin 18',
+				id : 18
+			}, {
+				area : 'Dublin 19',
+				id : 19
+			}, {
+				area : 'Dublin 20',
+				id : 20
+			}, {
+				area : 'Dublin 21',
+				id : 21
+			}, {
+				area : 'Dublin 22',
+				id : 22
+			}, {
+				area : 'Dublin 23',
+				id : 23
+			}, {
+				area : 'Dublin 24',
+				id : 24
+			}, {
+				area : 'Dublin city Center',
+				id : 25
+			}];
+			 return counties;
+		}}
+	})
 	
 	//reference http://stackoverflow.com/questions/17959563/how-do-i-get-basic-auth-working-in-angularjs
 	services.factory('Base64', function() {

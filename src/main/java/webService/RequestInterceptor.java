@@ -13,6 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import org.jboss.resteasy.util.Base64;
 
+import database.entity.Customer;
 import database.entity.CustomerDAO;
 import database.entity.Manager;
 import database.entity.ManagerDAO;
@@ -33,12 +34,17 @@ public class RequestInterceptor{
 		boolean isAllowed = false;
 		String userRole = null;
 		Manager managerResult = null ;
-		String customerResult = null;
+		Customer customerResult = null;
 		
 		
 		try {
-			 managerResult = managerDao.validateUser(credential,password);
-			 customerResult = customerDao.validateLoginUser(credential,password);
+			if(rolesSet.contains("customer")){
+				customerResult = customerDao.validateLoginUser(credential,password);
+			}else{
+				managerResult = managerDao.validateUser(credential,password);
+			}
+			 
+			 
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,14 +55,16 @@ public class RequestInterceptor{
 		if(managerResult!=null){
 			 userRole = "admin";
 			 System.out.print(managerResult.getName());
-		}else if(customerResult.contains("success")){
+		}else if(customerResult!=null){
 			 userRole = "customer";
-			 System.out.println(customerResult);
+			 System.out.println(customerResult.getEmail());
 		}
 		//Verify user role
 		if(rolesSet.contains(userRole))
 		{
 			isAllowed = true;
+		}else{
+			isAllowed = false;
 		}
 		return isAllowed;
 	}

@@ -1,30 +1,42 @@
 
 
 	var Hungryapp = angular.module('Hungryapp', [ 'xeditable','app.routeConfig',
-			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart','ngFacebook']);
+			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart','ngFacebook','angularModalService']);
 	
 	var route = angular.module('app.routeConfig', [ 'ngRoute' ]);
 	Hungryapp.run(function(editableOptions,$rootScope) {
 		  editableOptions.theme = 'bs3';
-		// Load the facebook SDK asynchronously
-		  (function(){
-		     // If we've already installed the SDK, we're done
-		     if (document.getElementById('facebook-jssdk')) {return;}
-
-		     // Get the first script element, which we'll use to find the parent node
-		     var firstScriptElement = document.getElementsByTagName('script')[0];
-
-		     // Create a new script element and set its id
-		     var facebookJS = document.createElement('script'); 
-		     facebookJS.id = 'facebook-jssdk';
-
-		     // Set the new script's source to the source of the Facebook JS SDK
-		     facebookJS.src = '//connect.facebook.net/en_US/all.js';
-
-		     // Insert the Facebook JS SDK into the DOM
-		     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
-		   }());
+//		// Load the facebook SDK asynchronously
+//		  (function(){
+//		     // If we've already installed the SDK, we're done
+//		     if (document.getElementById('facebook-jssdk')) {return;}
+//
+//		     // Get the first script element, which we'll use to find the parent node
+//		     var firstScriptElement = document.getElementsByTagName('script')[0];
+//
+//		     // Create a new script element and set its id
+//		     var facebookJS = document.createElement('script'); 
+//		     facebookJS.id = 'facebook-jssdk';
+//
+//		     // Set the new script's source to the source of the Facebook JS SDK
+//		     facebookJS.src = '//connect.facebook.net/en_US/all.js';
+//
+//		     // Insert the Facebook JS SDK into the DOM
+//		     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
+//		   }());
 	});
+	
+	
+	Hungryapp.filter('decorate', [ function() {
+
+		  function decorateFilter(input) {
+		    return '--' + input ;
+		  }
+		  decorateFilter.$stateful = true;
+
+		  return decorateFilter;
+		}]);
+	
 	Hungryapp.config(function($facebookProvider,$httpProvider){
 		$facebookProvider.setAppId('1003791322978682');
 		 $httpProvider.interceptors.push('myInterceptor');
@@ -76,6 +88,9 @@
 		}).when('/fbUserReg', {
 			templateUrl : 'partials/fbUserRegister.html',
 			controller : 'fbUserRegisterCtrl'
+		}).when('/placeOrder',{
+			templateUrl : 'partials/processingOrder.html',
+			controller : 'pOCtrl'
 		}).otherwise({
 			redirectTo : '/'
 		});

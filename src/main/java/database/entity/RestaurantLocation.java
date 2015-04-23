@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -24,9 +25,10 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  *
  */
 @NamedQueries({
-		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurant.id = :id"),
 		@NamedQuery(name = "RestaurantLocation.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id"),
-		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o ") })
+		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o ") 
+		})
 @Entity
 public class RestaurantLocation implements Serializable {
 
@@ -41,13 +43,10 @@ public class RestaurantLocation implements Serializable {
 
 	@ManyToOne
 	@JsonBackReference("location")
-//	@JsonIgnore
 	@JoinColumn(name="restaurant_id")
 	private Restaurant restaurant;
-
-	@OneToMany(mappedBy = "restaurantLocation", cascade = CascadeType.ALL)
-	@JsonManagedReference("orders")
-	private Set<Orders> orders = new HashSet<Orders>();
+	
+	
 
 	private static final long serialVersionUID = 1L;
 	
@@ -79,14 +78,7 @@ public class RestaurantLocation implements Serializable {
 		this.restaurant = restaurant;
 	}
 
-	@JsonIgnore
-	public Set<Orders> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(Set<Orders> orders) {
-		this.orders = orders;
-	}
+	
 
 	public String getTelephone() {
 		return telephone;

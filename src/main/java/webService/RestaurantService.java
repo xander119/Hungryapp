@@ -35,14 +35,25 @@ public class RestaurantService {
 	private RequestInterceptor interceptor;
 	
 	@POST
-	@Path("/createRestaurant")
+	@Path("/createRestaurant/{managerid}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createRestaurant(@Context HttpHeaders hHeaders,Restaurant r) {
+	public Response createRestaurant(@Context HttpHeaders hHeaders,@PathParam("managerid") int managerid,Restaurant r) {
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
-			return Response.status(200).entity(restaurantDao.createRestaurant(r)).build();
+			return Response.status(200).entity(restaurantDao.createRestaurant(r, managerid)).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
+//	@POST
+//	@Path("/createRestaurantLocation/{restId}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response createLocationForRest(@Context HttpHeaders hHeaders,@PathParam("restId") int restId,RestaurantLocation rl){
+//		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+//			return Response.status(200).entity(restaurantDao.createLocationForRest(rl, restId)).build();
+//		}
+//		return Response.status(401).entity("Unauthorized").build();
+//	}
+//	
+	
 	@PUT
 	@Path("/updateRestaurant")
 	public Response updateRestaurantInfo(@Context HttpHeaders hHeaders,Restaurant r) {
@@ -56,6 +67,12 @@ public class RestaurantService {
 	@Path("/{id}")
 	public Restaurant getRestaurantById(@PathParam("id") int id) {
 		return restaurantDao.getRestaurantById(id);
+
+	}
+	@GET
+	@Path("/item/{itemId}")
+	public Response getRestaurantByItemId(@PathParam("itemId") int itemId) {
+		return Response.status(200).entity(restaurantDao.getRestaurantByItemId(itemId)).build();
 
 	}
 
@@ -77,24 +94,24 @@ public class RestaurantService {
 	}
 
 	@GET
-	@Path("/restaurant/locations/{locationid}")
-	public RestaurantLocation getBranchRestaurantInfoById(
+	@Path("/location/{locationid}")
+	public Restaurant getBranchRestaurantInfoById(
 			@PathParam("locationid") int locationid) {
-		return restaurantDao.getBranchRestaurantInfoById(locationid);
+		return restaurantDao.getRestaurantByLocationId(locationid);
 
 	}
 
 	@GET
 	@Path("/allrestaurant/locations")
-	public List<Restaurant> getAllRestaurantLocations() {
-		return restaurantDao.getAllRestaurantLocations();
+	public List<RestaurantLocation> getAllRestaurantLocations() {
+		return restaurantDao.getAllLocations();
 
 	}
-	@GET
-	@Path("/restaurantByLocationId/{locationid}")
-	public Restaurant getRestaurantByLocationId(@PathParam("locationid") int locationid){
-		return restaurantDao.getRestaurantByLocationId(locationid);
-	}
+//	@GET
+//	@Path("/restaurantByLocationId/{locationid}")
+//	public Restaurant getRestaurantByLocationId(@PathParam("locationid") int locationid){
+//		return restaurantDao.getRestaurantByLocationId(locationid);
+//	}
 
 	@GET
 	@Path("/{id}/locations")

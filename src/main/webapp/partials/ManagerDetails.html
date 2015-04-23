@@ -3,63 +3,82 @@
 		<div class="col-md-12 column">
 			<ul class="nav nav-pills">
 
-				<li data-ng-class="{active:isActiveTab(1)}"
-					data-ng-init="onClickTab(1)"><a href
-					data-ng-click="onClickTab(1)">Profiles</a></li>
-				<li data-ng-class="{active:isActiveTab(2)}"><a href
-					data-ng-click="onClickTab(2)">Restaurants</a></li>
+				<li data-ng-class="{active:isActiveTab(1)}" data-ng-init="onClickTab(1)"><a href data-ng-click="onClickTab(1)">Profiles</a></li>
+				<li data-ng-class="{active:isActiveTab(2)}"><a href data-ng-click="onClickTab(2)">Restaurants</a></li>
 			</ul>
 
 
 			<div class="row clearfix" data-ng-show="isActiveTab(1)" align="justify">
 
-				<form class="col-md-12 form-inline" editable-form
-					name="editableForm">
+				<form class="col-md-12 form-inline" editable-form name="editableForm">
 					<div class="form-group">
 						<h3>
-							<span editable-text="currentManager.name" e-name="username"
-								e-required>{{currentManager.name || 'Name'}}</span>
+							<span editable-text="currentManager.name" e-name="username" e-required>{{currentManager.name || 'Name'}}</span>
 						</h3>
 					</div>
 					<div class="Info-section">
 						<div class="Info">
-							<span class="list-group-item-text">Email :</span> <span
-								editable-text="currentManager.email" e-name="email" e-required>{{currentManager.email}}</span>
+							<span class="list-group-item-text">Email :</span> <span editable-text="currentManager.email" e-name="email" e-required>{{currentManager.email}}</span>
 						</div>
 					</div>
 				</form>
-				<div  align="right">
+				<div align="right">
 					<!-- button to show form -->
-					<button type="button" class="btn btn-default"
-						data-ng-click="editableForm.$show()"
-						data-ng-show="!editableForm.$visible">Edit</button>
+					<button type="button" class="btn btn-default" data-ng-click="editableForm.$show()" data-ng-show="!editableForm.$visible">Edit</button>
 					<!-- buttons to submit / cancel form -->
 					<span ng-show="editableForm.$visible">
-						<button type="submit" class="btn btn-primary"
-							ng-disabled="editableForm.$waiting">Save</button>
-						<button type="button" class="btn btn-default"
-							ng-disabled="editableForm.$waiting"
-							ng-click="editableForm.$cancel()">Cancel</button>
+						<button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">Save</button>
+						<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
 					</span>
 				</div>
 			</div>
 
 
-			<div class="list-group" data-ng-show="isActiveTab(2)">
-			<div class="list-group-item" data-ng-hide="restaurantOwn = null">
-						You have no restaurant yet.<a href = "#newRestaurant" style="margin-left: 8px;">    Start new ?</a>
+			<div class="row" data-ng-show="isActiveTab(2)">
+				<div  data-ng-show="restaurantOwn==null">You have no restaurant yet.</div>
+				<div data-ng-repeat="Restaurant in restaurantOwn ">
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="{{Restaurant.name}}">
+					<div class="row">
+						<div class="col-md-4">
+							IMAGE.
+						</div>
+						<div class="col-md-4" >
+							<div class="row">DeliveryHour : {{Restaurant.deliveryHour}}</div>
+							<div class="row">{{Restaurant.deliveryNote}}</div>
+						</div>
+						<div class="col-md-4" >
+							 <button class="btn btn-link" Popover-animation="true" popover-placement="right" popover=" Monday : {{Restaurant.openHour.monday  || 'Close'}} 
+				Tuesday :{{Restaurant.openHour.tuesday || 'Close'}} 
+				Wednesday : {{Restaurant.openHour.wednesday || 'Close'}} 
+				Thursday : {{Restaurant.openHour.thursday || 'Close'}} 
+				Friday :{{Restaurant.openHour.friday || 'Close'}} 
+				Saturday : {{Restaurant.openHour.saturday || 'Close'}}
+				Sunday : {{Restaurant.openHour.sunday || 'Close'}}" popover-trigger="mouseenter" popover-title="Open Hour :">Open Hour</button>
+						</div>
+						<div class="row">
+						<div class="col-md-10"></div>
+							<div class="col-md-2">
+								<button type="button" class="btn btn-primary" data-ng-click="editRestaurant(Restaurant.id)">Edit</button>
+							</div>
+						</div>
 					</div>
-				<div data-ng-repeat="Restaurant in restaurantOwn " class="list-inline">
-					<div class="list-group-item">{{Restaurant.name}}
-					<div >
-						<button type="button" class="btn btn-primary" ng-click="editRestaurant(Restaurant.id)">Edit</button>
-					</div>
-					</div>
+					</accordion-group>
+					</accordion>
 				</div>
-
-
+				<div>
+					<a href="#newRestaurant" style="margin-left: 8px;">Start new ?</a>
+				</div>
 			</div>
-
+	<script type="text/ng-template" id="templateId.html">
+      			<br> Monday : <span>{{Restaurant.openHour.monday || 'Close'}}</span> 
+				<br> Tuesday : <span>{{Restaurant.openHour.tuesday || 'Close'}}</span> 
+				<br> <span> Wednesday : {{Restaurant.openHour.wednesday || 'Close'}}</span> 
+				<br> <span> Thursday : {{Restaurant.openHour.thursday || 'Close'}}</span> 
+				<br> <span> Friday :{{Restaurant.openHour.friday || 'Close'}}</span> 
+				<br> <span> Saturday : {{Restaurant.openHour.saturday || 'Close'}}</span>
+				<br> <span> Sunday : {{Restaurant.openHour.sunday || 'Close'}}</span>
+    </script>
 
 
 		</div>

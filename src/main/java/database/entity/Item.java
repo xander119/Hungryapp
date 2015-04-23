@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,6 +23,10 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  * Entity implementation class for Entity: Item
  *
  */
+@NamedQueries({
+@NamedQuery(name = "Item.findById", query = "Select o from Item o where o.id = :id")
+})
+
 @Entity
 @XmlRootElement
 public class Item implements Serializable {

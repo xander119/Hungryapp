@@ -42,9 +42,9 @@ public class Orders implements Serializable {
 	private boolean isComplete;
 	private String completeTime;
 	@ManyToOne
-	@JoinColumn(name="restaurantLocation_id")
+	@JoinColumn(name="restaurant_id")
 	@JsonBackReference("orders")
-	private RestaurantLocation restaurantLocation;
+	private Restaurant restaurant;
 	@ManyToOne
 	@JoinColumn(name="customer_userid")
 	@JsonBackReference("customer")
@@ -135,13 +135,14 @@ public class Orders implements Serializable {
 		this.orderItems = orderItems;
 	}
 
-	public RestaurantLocation getRestaurantLocation() {
-		return restaurantLocation;
+	public Restaurant getRestaurant() {
+		return restaurant;
 	}
 
-	public void setRestaurantLocation(RestaurantLocation restaurantLocation) {
-		this.restaurantLocation = restaurantLocation;
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
 	}
 
+	
 	
 }

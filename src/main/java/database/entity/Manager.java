@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
@@ -35,7 +36,7 @@ public class Manager implements Serializable {
 	private String email;
 	@Column(nullable=true)
 	@OneToMany(mappedBy="generalManager",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	@JsonIgnore
+	@JsonManagedReference("restaurant-manager")
 	private Set<Restaurant> restaurants;
 	private static final long serialVersionUID = 1L;
 

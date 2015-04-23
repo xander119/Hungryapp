@@ -30,12 +30,12 @@ public class Menu implements Serializable {
 	private Integer id;
 	private String name;
 	private String note;
-	@OneToMany(mappedBy="menu")
+	@OneToMany(mappedBy="menu",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("item_menu")
 	private Set<Item> items;
 	@ManyToOne
 	@JoinColumn(name="restaurant_id")
-	@JsonIgnore
+	@JsonBackReference("restaurant-menu")
 	private Restaurant restaurant;
 	private static final long serialVersionUID = 1L;
 

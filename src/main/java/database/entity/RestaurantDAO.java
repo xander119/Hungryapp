@@ -16,13 +16,11 @@ public class RestaurantDAO {
 	@PersistenceContext
 	EntityManager em;
 
-	public Restaurant createRestaurant(Restaurant r) {
+	public Restaurant createRestaurant(Restaurant r, int managerid) {
 		// TODO Auto-generated method stub#
-		if(r.getGeneralManager()!=null){
-			r.getGeneralManager().getRestaurants().add(r);
-			//Manager m = (Manager) em.createNamedQuery("Manager.findManagerByEmail").setParameter("email",  r.getGeneralManager().getEmail()).getResultList().get(0);
-			System.out.println(r.getGeneralManager().toString());
-			//r.setGeneralManager(m);
+		if(managerid!=0){
+			Manager m = (Manager) em.createNamedQuery("Manager.findManagerById").setParameter("id",  managerid).getResultList().get(0);
+			r.setGeneralManager(m);
 		}
 		if(r.getLocations()!=null){
 			for(RestaurantLocation rl : r.getLocations()){
@@ -32,15 +30,35 @@ public class RestaurantDAO {
 		if(r.getMenus()!=null){
 			for(Menu menu : r.getMenus()){
 				menu.setRestaurant(r);
+				for(Item i : menu.getItems()){
+					i.setMenu(menu);
+				}
 			}
 		}
-		if(r.getOpenHour()!=null){
-				r.getOpenHour().setRestaurant(r);
-		}
+//		if(r.getOpenHour()!=null){
+//				r.getOpenHour().setRestaurant(r);
+//		}
+		System.out.println(r.toString());
 		em.persist(r);
 		return r;
 
 	}
+	
+//	public RestaurantLocation createLocationForRest(RestaurantLocation rl,int restaurantId){
+//		if(restaurantId==0){
+//			Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restaurantId).getResultList().get(0);
+//			if(r!=null){
+//				rl.setRestaurant(r);
+//			}
+//		}
+//		if(rl.getOpenHour()!=null){
+//			rl.getOpenHour().setRestaurantLocation(rl);
+//		}
+//		System.out.println(rl.toString());
+//		em.persist(rl);
+//		return rl;
+//		
+//	}
 
 	public Restaurant update(Restaurant r) {
 		// TODO Auto-generated method stub
@@ -68,11 +86,7 @@ public class RestaurantDAO {
 		return meuns;
 	}
 
-	public RestaurantLocation getBranchRestaurantInfoById(int locationid) {
-		// TODO Auto-generated method stub
-		
-		return em.find(RestaurantLocation.class, locationid);
-	}
+	
 
 	public List<RestaurantLocation> getBranchRestaurantsById(int id) {
 		// TODO Auto-generated method stub
@@ -87,13 +101,19 @@ public class RestaurantDAO {
 	}
 	public Restaurant getRestaurantByLocationId(int id){
 		
-		List<Restaurant> results = em.createNamedQuery("Restaurant.findRestByLocationId").setHint("eclipselink.join-fetch", "e.projects.milestones").setParameter("id", id).getResultList();
+		List<Restaurant> results = em.createNamedQuery("Restaurant.findRestByLocationId").setParameter("id", id).getResultList();
 		
 		return results.get(0);
 	}
-	public List<Restaurant> getAllRestaurantLocations() {
+	public List<RestaurantLocation> getAllLocations() {
 		// TODO Auto-generated method stub
-		List<Restaurant> results = em.createNamedQuery("Restaurant.findAllLocations").getResultList();
+		List<RestaurantLocation> results = em.createNamedQuery("RestaurantLocation.findAll").getResultList();
 		return results;
+	}
+
+	public Restaurant getRestaurantByItemId(int itemId) {
+		// TODO Auto-generated method stub
+		Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findByItemId").setParameter("id",  itemId).getResultList().get(0);
+		return r;
 	}
 }
