@@ -1,29 +1,31 @@
 <div class="row">
 
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" style="margin: 15px;">
 			<a href="#home"> Change Location </a>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" style="margin: 20px;">
 			<span> Filter </span>
 		</div>
 	</div>
 	<!-- Filter restaurant by type, rating, populatorty, pricing  -->
-	<div class="row" data-ng-repeat="rest in restaurantList" >
-		<div class="col-md-12 restaurant " data-ng-click="toDetails(rest)">
+	<div class="row" data-ng-repeat="rest in restaurantList" style="border-bottom: activecaption; border-bottom-style: solid;margin: 12px;" >
+		<div class="col-md-12 restaurant " data-ng-click="toDetails(rest.locations[0].id)">
 			<div class="col-md-4">Image.</div>
 			<div class="col-md-8">
 				<div class="row">
 					<div class="col-md-4">
 						<h4>{{rest.name}}</h4>
 						{{rest.type}}
+						<br>{{rest.locations[0].address}}
 					</div>
 					<div class="col-md-8">
-						<div class="row">
-							<div class="col-md-6">Delivery Time: {{rest.deliveryHour}}</div>
-							<div class="col-md-6">{{rest.deliveryNote}}</div>
+						<div class="row" data-ng-repeat = "location in rest.locations">
+							<div class="col-md-4">Delivery Time: {{location.deliveryHour}}</div>
+							<div class="col-md-4">{{location.deliveryNote}}</div>
+							<div class="col-md-4">Distance: {{rest.distance}}</div>
 						</div>
 					</div>
 				</div>

@@ -11,9 +11,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class Emailsender {
-	private final String username = "D11124208@gmail.com";
-	private final String password = "qqtang921109";
-	private final String from = "D11124208@gmail.com";
+	private final String username = "hungryappgroup@gmail.com";
+	private final String password = "19921109";
+	private final String from = "hungryappgroup@gmail.com";
 	private final String host = "smtp.gmail.com";
 	private final  Session session ;
 	

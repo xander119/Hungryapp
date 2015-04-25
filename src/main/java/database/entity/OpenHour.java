@@ -30,9 +30,9 @@ public class OpenHour implements Serializable {
 	private String saturday;
 	private String sunday;
 	@OneToOne
-	@JoinColumn(name="restaurant_id")
+	@JoinColumn(name="restaurantLocation_id")
 	@JsonBackReference("openhour")
-	private Restaurant  restaurant;
+	private RestaurantLocation  restaurantLocation;
 	private static final long serialVersionUID = 1L;
 
 	public OpenHour() {
@@ -94,13 +94,12 @@ public class OpenHour implements Serializable {
 	public void setSunday(String sunday) {
 		this.sunday = sunday;
 	}
-	public Restaurant getRestaurant() {
-		return restaurant;
+	public RestaurantLocation getRestaurantLocation() {
+		return restaurantLocation;
 	}
-	public void setRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
+	public void setRestaurantLocation(RestaurantLocation restaurantLocation) {
+		this.restaurantLocation = restaurantLocation;
 	}
-	
 	
    
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,9 +26,11 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  *
  */
 @NamedQueries({
-		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurant.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id"),
 		@NamedQuery(name = "RestaurantLocation.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id"),
-		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o ") 
+		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o "),
+		//@NamedQuery(name = "RestaurantLocation.findActivated", query = " Select o from RestaurantLocation o ")
+		
 		})
 @Entity
 public class RestaurantLocation implements Serializable {
@@ -40,7 +43,17 @@ public class RestaurantLocation implements Serializable {
 	private String telephone;
 	private String email;
 	private Double longitude;
+	@OneToOne(mappedBy="restaurantLocation",cascade=CascadeType.ALL)
+	@JsonManagedReference("openhour")
+	private OpenHour openHour;
 
+	private String deliveryHour;
+	
+
+	private String deliveryNote;
+	@OneToMany(mappedBy = "restaurantLocation", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JsonManagedReference("orders")
+	private Set<Orders> orders ;
 	@ManyToOne
 	@JsonBackReference("location")
 	@JoinColumn(name="restaurant_id")
@@ -110,6 +123,38 @@ public class RestaurantLocation implements Serializable {
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getDeliveryHour() {
+		return deliveryHour;
+	}
+
+	public void setDeliveryHour(String deliveryHour) {
+		this.deliveryHour = deliveryHour;
+	}
+
+	public String getDeliveryNote() {
+		return deliveryNote;
+	}
+
+	public void setDeliveryNote(String deliveryNote) {
+		this.deliveryNote = deliveryNote;
+	}
+
+	public OpenHour getOpenHour() {
+		return openHour;
+	}
+
+	public void setOpenHour(OpenHour openHour) {
+		this.openHour = openHour;
+	}
+
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
 	}
 
 

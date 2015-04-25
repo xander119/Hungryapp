@@ -4,8 +4,62 @@
 			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart','ngFacebook','angularModalService']);
 	
 	var route = angular.module('app.routeConfig', [ 'ngRoute' ]);
-	Hungryapp.run(function(editableOptions,$rootScope) {
+	Hungryapp.run(function(editableOptions,$rootScope,$location,$cookieStore) {
 		  editableOptions.theme = 'bs3';
+		  
+
+		  $rootScope.$on("$locationChangeStart", function(event, next, current) {
+			  var restrictedRoute = function(route) {
+				  if (route == 'http://localhost:8080/Hungryapp/#/userDetails') {
+					  return true;
+				  }
+				  if (route == 'http://localhost:8080/Hungryapp/#/managerDetails') {
+					  return true;
+				  }
+				  if (route == 'http://localhost:8080/Hungryapp/#/newRestaurant') {
+					  return true;
+				  }
+				  // if(route == 'http://localhost:8080/Hungryapp/#/'){
+				  // return true;
+				  // }
+				  // if(route == 'http://localhost:8080/Hungryapp/#/'){
+				  // return true;
+				  // }
+				  // if(route == 'http://localhost:8080/Hungryapp/#/'){
+				  // return true;
+				  // }
+			  }
+			  
+		      if ( $cookieStore.get('loggedInUser') == null || $cookieStore.get('loggedInUser')  == undefined) {
+		        // no logged user, we should be going to #login
+		    	  console.log(next);
+		        if (!restrictedRoute(next)) {
+		          // already going to #login, no redirect needed
+		        } else {
+		          // not going to #login, we should redirect now
+		        	alert('You have to login to Access.')
+		          $location.path( "/login" );
+		        }
+		      }else{
+		    	  if(next == 'http://localhost:8080/Hungryapp/#/managerEntry'){
+		    		  alert('You have to log out to proceed')
+			          $location.path( "/" );
+		    	  }
+		    	  if(next == 'http://localhost:8080/Hungryapp/#/signup'){
+		    		  alert('You have to log out to proceed')
+			          $location.path( "/" );
+		    	  }
+		    	  if(next == 'http://localhost:8080/Hungryapp/#/managersignup'){
+		    		  alert('You have to log out to proceed')
+			          $location.path( "/" );
+		    	  }
+		    	  if(next == 'http://localhost:8080/Hungryapp/#/login'){
+		    		  alert('You have to log out to proceed')
+			          $location.path( "/" );
+		    	  }
+		    	  
+		      }      
+		    });
 //		// Load the facebook SDK asynchronously
 //		  (function(){
 //		     // If we've already installed the SDK, we're done
@@ -60,7 +114,7 @@
 			templateUrl : 'partials/AboutUs.html'
 		}).when('/managerEntry', {
 			templateUrl : 'partials/ManagerLogin.html',
-			controller : 'managerLoginCtrl'
+			controller : 'managerLoginCtrl',
 		}).when('/managersignup', {
 			templateUrl : 'partials/ManagerRegister.html',
 			controller : 'managerRegisterCtrl'

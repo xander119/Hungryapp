@@ -22,11 +22,11 @@ public class RestaurantDAO {
 			Manager m = (Manager) em.createNamedQuery("Manager.findManagerById").setParameter("id",  managerid).getResultList().get(0);
 			r.setGeneralManager(m);
 		}
-		if(r.getLocations()!=null){
-			for(RestaurantLocation rl : r.getLocations()){
-				rl.setRestaurant(r);
-			}
-		}
+//		if(r.getLocations()!=null){
+//			for(RestaurantLocation rl : r.getLocations()){
+//				rl.setRestaurant(r);
+//			}
+//		}
 		if(r.getMenus()!=null){
 			for(Menu menu : r.getMenus()){
 				menu.setRestaurant(r);
@@ -39,29 +39,34 @@ public class RestaurantDAO {
 //				r.getOpenHour().setRestaurant(r);
 //		}
 		System.out.println(r.toString());
-		em.persist(r);
+		r = em.merge(r);
 		return r;
 
 	}
 	
-//	public RestaurantLocation createLocationForRest(RestaurantLocation rl,int restaurantId){
-//		if(restaurantId==0){
-//			Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restaurantId).getResultList().get(0);
-//			if(r!=null){
-//				rl.setRestaurant(r);
-//			}
-//		}
-//		if(rl.getOpenHour()!=null){
-//			rl.getOpenHour().setRestaurantLocation(rl);
-//		}
-//		System.out.println(rl.toString());
-//		em.persist(rl);
-//		return rl;
-//		
-//	}
+	public RestaurantLocation createLocationForRest(RestaurantLocation rl,int restaurantId){
+		if(restaurantId!=0){
+			Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restaurantId).getResultList().get(0);
+			System.out.println(restaurantId);
+			if(r!=null){
+				System.out.println(r.getName());
+				rl.setRestaurant(r);
+			}
+		}
+		if(rl.getOpenHour()!=null){
+			rl.getOpenHour().setRestaurantLocation(rl);
+		}
+		System.out.println(rl.toString());
+		em.persist(rl);
+		em.flush();
+		return rl;
+		
+	}
 
 	public Restaurant update(Restaurant r) {
 		// TODO Auto-generated method stub
+//		Restaurant rest = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id", r.getId()).getResultList().get(0);
+//		r.setGeneralManager(rest.getGeneralManager());
 
 		return em.merge(r);
 	}
@@ -99,17 +104,18 @@ public class RestaurantDAO {
 		em.remove(em.find(Restaurant.class, restaurantid));
 		
 	}
-	public Restaurant getRestaurantByLocationId(int id){
+	public List<Restaurant> getRestaurantByLocationId(int id){
 		
 		List<Restaurant> results = em.createNamedQuery("Restaurant.findRestByLocationId").setParameter("id", id).getResultList();
 		
-		return results.get(0);
+		return results;
 	}
 	public List<RestaurantLocation> getAllLocations() {
 		// TODO Auto-generated method stub
-		List<RestaurantLocation> results = em.createNamedQuery("RestaurantLocation.findAll").getResultList();
-		return results;
+		List<RestaurantLocation> results = em.createNamedQuery("Restaurant.findActivated").getResultList();
+		return (List<RestaurantLocation>) results;
 	}
+	
 
 	public Restaurant getRestaurantByItemId(int itemId) {
 		// TODO Auto-generated method stub

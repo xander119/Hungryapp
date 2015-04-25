@@ -2,6 +2,8 @@ package webService;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,6 +21,7 @@ import javax.ws.rs.core.Response;
 
 import database.entity.Menu;
 import database.entity.MenuDAO;
+import database.entity.Restaurant;
 
 @Path("/menus")
 @Stateless
@@ -29,10 +32,10 @@ public class MenusServices {
 	@EJB
 	private RequestInterceptor interceptor;
 	@POST
-	@Path("/createMenu")
-	public Response createNewMenu(@Context HttpHeaders hHeaders,Menu m) {
+	@Path("/createMenu/{restId}")
+	public Response createNewMenu(@Context HttpHeaders hHeaders,@PathParam("restId")int restId,Menu m) {
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
-			return Response.status(200).entity(menuDao.createMenu(m)).build();
+			return Response.status(200).entity(menuDao.createMenu(m,restId)).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
@@ -50,8 +53,14 @@ public class MenusServices {
 	@Path("/{menuid}")
 	public Response getMenuById(@PathParam("menuid") int menuid) {
 		return Response.status(200).entity(menuDao.getMenuById(menuid)).build();
+	}
+	@GET
+	@Path("/restaurant/{restid}")
+	public Response getMenuByRestId(@PathParam("restid") int restid) {
+		return Response.status(200).entity(menuDao.getMenuByRestId(restid)).build();
 
 	}
+
 
 	@DELETE
 	@Path("/delete/{menuid}")

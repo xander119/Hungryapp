@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 
@@ -42,13 +41,17 @@ public class Orders implements Serializable {
 	private boolean isComplete;
 	private String completeTime;
 	@ManyToOne
-	@JoinColumn(name="restaurant_id")
+	@JoinColumn(name="restaurantLocation_id")
 	@JsonBackReference("orders")
-	private Restaurant restaurant;
+	private RestaurantLocation restaurantLocation;
 	@ManyToOne
 	@JoinColumn(name="customer_userid")
 	@JsonBackReference("customer")
 	private Customer customer;
+	@ManyToOne
+	@JoinColumn(name="address_id")
+	@JsonBackReference("order-address")
+	private Address address ;
 	
 	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("order_ordersitems")
@@ -135,12 +138,20 @@ public class Orders implements Serializable {
 		this.orderItems = orderItems;
 	}
 
-	public Restaurant getRestaurant() {
-		return restaurant;
+	public RestaurantLocation getRestaurantLocation() {
+		return restaurantLocation;
 	}
 
-	public void setRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
+	public void setRestaurantLocation(RestaurantLocation restaurantLocation) {
+		this.restaurantLocation = restaurantLocation;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	

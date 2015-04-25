@@ -43,16 +43,16 @@ public class RestaurantService {
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
-//	@POST
-//	@Path("/createRestaurantLocation/{restId}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response createLocationForRest(@Context HttpHeaders hHeaders,@PathParam("restId") int restId,RestaurantLocation rl){
-//		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
-//			return Response.status(200).entity(restaurantDao.createLocationForRest(rl, restId)).build();
-//		}
-//		return Response.status(401).entity("Unauthorized").build();
-//	}
-//	
+	@POST
+	@Path("/createRestaurantLocation/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createLocationForRest(@Context HttpHeaders hHeaders,@PathParam("id") int id,RestaurantLocation rl){
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+			return Response.status(200).entity(restaurantDao.createLocationForRest(rl, id)).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
+	
 	
 	@PUT
 	@Path("/updateRestaurant")
@@ -95,10 +95,10 @@ public class RestaurantService {
 
 	@GET
 	@Path("/location/{locationid}")
-	public Restaurant getBranchRestaurantInfoById(
+	public List<Restaurant> getBranchRestaurantInfoById(
 			@PathParam("locationid") int locationid) {
 		return restaurantDao.getRestaurantByLocationId(locationid);
-
+		
 	}
 
 	@GET

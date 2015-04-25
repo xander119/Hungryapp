@@ -4,13 +4,12 @@
 }
 
 .opentime {
-	font-size: x-small;
-	padding-left: 2cm;
+	font-size: medium;
+	padding-left: 30px;
 }
 .container{
 	background-color:rgba(192,192,192,0.7);
-	width: 1140px;
-	height: 650px;
+	
 }
 
 .restaurant:hover {

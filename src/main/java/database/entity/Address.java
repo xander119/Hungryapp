@@ -2,11 +2,13 @@ package database.entity;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  * Entity implementation class for Entity: Address
@@ -30,6 +32,9 @@ public class Address implements Serializable {
 	private Customer customer;
 	private static final long serialVersionUID = 1L;
 
+	@OneToMany(mappedBy="address",fetch=FetchType.EAGER)
+	@JsonManagedReference("order-address")
+	private Set<Orders> orders ;
 	public Address() {
 		super();
 	}
@@ -87,5 +92,13 @@ public class Address implements Serializable {
 	 */
 	public void setCounty(String county) {
 		this.county = county;
+	}
+
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
 	}
 }

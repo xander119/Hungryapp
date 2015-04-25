@@ -108,8 +108,8 @@
 								}}</span>
 						</div>
 						<div class="form-group">
-							<label class="control-label">County: </label> <span editable-text="address.county" e-name="county" e-required>{{address.county ||
-								'empty' }}</span>
+							<label class=" control-label">County: </label> <span editable-select="address.county"
+								e-name="county" e-ng-options="county.area for county in counties"> {{address.county ||'Not set'}} </span>
 						</div>
 						<div>
 							<!-- button to show form -->

@@ -400,6 +400,12 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
                 $scope.ngCart = ngCart;
 
                 $scope.checkout = function () {
+                	if($scope.currentUser ==undefined){
+            			alert(' You are not logged in yet.')
+            			$location.path('/login');
+            		}else{
+            			$scope.checkOutClicked = true;
+            		}
                     fulfilmentProvider.setService($scope.service);
                     fulfilmentProvider.setSettings($scope.settings);
                     var promise = fulfilmentProvider.checkout();
@@ -463,7 +469,6 @@ angular.module('ngCart.fulfilment', [])
                 {data:ngCart.toObject()})
         }
  }])
-
 
 .service('ngCart.fulfilment.paypal', ['$http', 'ngCart', function($http, ngCart){
 

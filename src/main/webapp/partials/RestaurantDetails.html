@@ -1,25 +1,25 @@
 <div class="row">
 	<div class="row">
-		<div class="col-md-2"></div>
+		<div class="col-md-1"></div>
 		<div class="col-md-6">
-			<form class="col-md-12 form-inline" editable-form name="editableMenuForm">
+			<form class="col-md-12 form-inline" editable-form name="editableMenuForm" data-ng-repeat="currentMenu in currentRest.menus"  
+			style="border: black;border-width: thin;border-style: dotted; border-radius:20px; margin: 20px; font-size: medium;  font-style: normal;">
 				<div class="form-group"></div>
-				<div data-ng-repeat="currentMenu in currentRest.menus">
+				<div >
 					<div class="form-group">
-						<h3>
-							<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name ||'name'}}</span>
-						</h3>
-						<span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
+						<h2>
+							<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name ||'name'}}</span> Menu
+						</h2>
+						Note : <span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
 					</div>
 					<div class="Info-section">
-						<div class="Info list-inline" ng-repeat="item in currentMenu.items">
-							<span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span> <span
-								class="text-left"
-							> {{item.description}}</span> <span class="text-right" editable-text="item.price" e-name="itemPrice" e-required>{{item.price}}</span>
+						<div class="Info list-inline" ng-repeat="item in currentMenu.items track by $index">
+							{{$index+1}}. <span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span> 
+							<span class="text-left"  editable-text="item.description" e-name="itemDescription" e-required> {{item.description}}</span><br><div style="margin-left: 200px;"> &euro; <span class="text-right" editable-text="item.price" e-name="itemPrice" e-required>{{item.price}}</span></div>
 							<!-- show button if user is a customer 
 							ng-show= "if customer is true"-->
 							<div data-ng-hide="isAdmin()" >
-								<ngcart-addtocart id="{{ item.id }}" name="{{ item.name }}" price="{{ item.price }}" quantity="1" quantity-max="30" data="item">Add
+								<ngcart-addtocart id="{{ item.id }}" name="{{ item.name }}" price="{{ item.price }}" quantity="1" quantity-max="10" data="locationId">Add
 								to cart.</ngcart-addtocart>
 							</div>
 						</div>
@@ -36,63 +36,71 @@
 				</div>
 			</form>
 			<div data-ng-hide="isAdmin()" class="row">
-			<div class="col-md-12">
-				<h4>Reviews</h4>
+			<div class="col-md-12" style="font-size: medium;">
+				<h3>Reviews</h3>
 				<ul>
 
 					<li data-ng-repeat="review in currentRest.reviews">
-						<div>
-							<h4>{{review.stars}} Stars</h4>
-							<span>{{review.body}}</span>  
-							<cite class="clearfix">---{{review.author}}</cite>
-						</div>
+						<rating ng-model="review.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
+						<span class="label" >{{review.rate}}</span> <span ng-if="review.rate > 1">Stars</span><span ng-if="review.rate == 1">Star</span>
+						<br>
+						<div ><span >{{review.body}}</span></div>
+						<br>
+						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">By ---{{review.author}}</span></div>
 					</li>
 				</ul>
-				<form name="reviewForm" data-ng-submit="addReview()"  novalidate >
+				<form name="reviewForm" data-ng-submit="addReview()" class="col-md-12" novalidate >
 
 					<!--  Live Preview -->
-					<div class="form-group">
-						<h4>{{review.stars}}</h4><span>  Stars</span>
-						<span>{{review.body}}</span>
-						<cite class="clearfix" style="font-size: small;bottom: auto;margin-left: 50%;position: absolute;">By ---{{review.author}}</cite>
+					<div class="form-group" style="margin: 10px;size: 4cm;">
+						<rating ng-model="review.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
+						<span class="label" >{{review.rate}}</span> <span ng-if="review.rate > 1">Stars</span><span ng-if="review.rate == 1">Star</span>
+						<br>
+						<div ><span >{{review.body}}</span></div>
+						<br>
+						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">By ---{{review.author}}</span></div>
 					</div>
-
+					
+					<div style="border-bottom: buttonshadow;border-bottom-style: ridge;" ></div>
 					<!--  Review Form -->
 					<h4>Submit a Review</h4>
-					<fieldset class="form-group">
-						<select ng-model="review.stars" class="form-control" data-ng-options="stars for stars in [5,4,3,2,1]" title="Stars">
-							<option value="">Rate the Product</option>
-						</select>
-					</fieldset>
-					<fieldset class="form-group">
+					<div class="form-group">
+						<rating ng-model="review.rate" max="max" readonly="false" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+						<span class="label"  ng-show="overStar">{{percent}}%</span>
+					</div>
+					<div class="form-group">
 						<textarea data-ng-model="review.body" class="form-control" placeholder="Write a short review of the product..." title="Review"></textarea>
-					</fieldset>
-					<fieldset class="form-group">
+					</div>
+					<div class="form-group">
 						<input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
-					</fieldset>
+					</div>
 				</form>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
-			<form class="col-md-12 form-inline" editable-form name="restBasicInfo">
-				<h3>{{currentRest.name}}</h3>
-				{{currentRest.type}}
+		<div class="col-sm-1"></div>
+		<div class="col-md-4" style="margin-bottom: 20px;">
+		<h2><span >{{currentRest.name}}</span></h2>
+				<span >{{currentRest.type}}</span>
+			
+			<form class="col-md-12 form-inline" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px;">
+			
+				Branch : {{location.address}}
 				<br>Open Hour :
 				
 					<div class="opentime">
-						<br> Monday : <span>{{currentRest.openHour.monday || 'Close'}}</span> 
-						<br> Tuesday : <span>{{currentRest.openHour.tuesday || 'Close'}}</span> 
-						<br> <span> Wednesday : {{currentRest.openHour.wednesday || 'Close'}}</span> 
-						<br> <span> Thursday : {{currentRest.openHour.thursday || 'Close'}}</span>  
-						<br> <span> Friday :{{currentRest.openHour.friday || 'Close'}}</span> 
-						<br> <span>Saturday : {{currentRest.openHour.saturday || 'Close'}}</span> 
-						<br> <span> Sunday : {{currentRest.openHour.sunday || 'Close'}}</span>
+						<div class="form-group"><span class="col-md-5">Monday:</span><span class="col-md-7" editable-text="location.openHour.monday" e-name="name" e-required>{{location.openHour.monday || 'Close'}}</span></div> 
+						<div class="form-group"><span class="col-md-5">Tuesday:</span><span class="col-md-7" editable-text="location.openHour.tuesday" e-name="name" e-required>{{location.openHour.tuesday || 'Close'}}</span></div> 
+						<div class="form-group"><span class="col-md-6">Wednesday:</span><span class="col-md-6" editable-text="location.openHour.wednesday" e-name="name" e-required>{{location.openHour.wednesday || 'Close'}}</span> </div>
+						<div class="form-group"><span class="col-md-6">Thursday:</span><span class="col-md-6" editable-text="location.openHour.thursday" e-name="name" e-required>{{location.openHour.thursday || 'Close'}}</span>  </div>
+						<div class="form-group"><span class="col-md-6">Friday:</span><span class="col-md-6" editable-text="location.openHour.friday" e-name="name" e-required>{{location.openHour.friday || 'Close'}}</span> </div>
+						<div class="form-group"><span class="col-md-6">Saturday:</span><span class="col-md-6" editable-text="location.openHour.saturday" e-name="name" e-required>{{location.openHour.saturday || 'Close'}}</span> </div>
+						<div class="form-group"><span class="col-md-6">Sunday:</span><span class="col-md-6" editable-text="location.openHour.sunday" e-name="name" e-required>{{location.openHour.sunday || 'Close'}}</span></div>
 					</div>
 					<br/>
-					Delivery Time : {{currentRest.deliveryHour }}
-					{{currentRest.deliveryNote}}
-				<div align="right" data-ng-hide="isCus">
+					Delivery Time : <span editable-text="location.deliveryHour" e-name="name" e-required >{{location.deliveryHour }}</span>
+					<br>Note : <span editable-text="location.deliveryNote" e-name="name" e-required >{{location.deliveryNote}}</span>
+				<div align="right" data-ng-show="isAdmin()">
 					<!-- button to show form -->
 					<button type="button" class="btn btn-default" data-ng-click="restBasicInfo.$show()" data-ng-show="!restBasicInfo.$visible">Edit</button>
 					<!-- buttons to submit / cancel form -->

@@ -141,6 +141,7 @@
               controller: modalController,
               scope: modalScope,
               element: modalElement,
+              backdrop: false,
               close: closeDeferred.promise
             };
 

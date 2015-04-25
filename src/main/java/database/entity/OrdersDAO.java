@@ -23,12 +23,12 @@ public class OrdersDAO {
 		final int restId = Integer.parseInt(tokenizer.nextToken());
 		final int custId = Integer.parseInt(tokenizer.nextToken());
 		Customer c;
-		Restaurant r;
+		RestaurantLocation r = null;
 		if(order!=null){
 			
 			if(restId!=0){
-				 r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restId).getResultList().get(0);
-				order.setRestaurant(r);
+			//	 r = (Restaurant) em.createNamedQuery("RestaurantLocation.findById").setParameter("id",  restId).getResultList().get(0);
+				order.setRestaurantLocation(r);
 			}
 			if(custId!=0){
 				 c = (Customer) em.createNamedQuery("Customer.findById").setParameter("id",  custId).getResultList().get(0);
@@ -46,7 +46,7 @@ public class OrdersDAO {
 			}
 			em.persist(order);
 			
-			email.sendEmail(r.get, "New Order ", body);
+			///email.sendEmail(r.get, "New Order ", body);
 			return order;
 		}
 		return null;

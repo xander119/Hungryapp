@@ -79,8 +79,14 @@ services.factory('AuthService', function($resource) {
 		});
 	});
 	services.factory('MenuService',function($resource){
-		return $resource('/Hungryapp/rest/admin',null,{
-			
+		return $resource('/Hungryapp/rest/menus',null,{
+			createMenu : {
+				url : 'rest/menus/createMenu/:restId',
+				method : 'POST',
+				params : {
+					restId : '@restId'
+				}
+			}
 		});
 	});
 	services.factory('OrderService',function($resource){
@@ -129,6 +135,13 @@ services.factory('AuthService', function($resource) {
 					managerid : '@managerid'
 				}
 			},
+			createLocations : {
+				url : 'rest/restaurants/createRestaurantLocation/:id',
+				method : 'POST',
+				params : {
+					id : '@id'
+				}
+			},
 			allLocations : {
 				url : 'rest/restaurants/allrestaurant/locations',
 				method : 'GET',
@@ -146,6 +159,18 @@ services.factory('AuthService', function($resource) {
 				method : 'GET',
 				params : {
 					id : '@id'
+				},
+				isArray : true
+			},
+			updateRestaurantById : {
+				url : 'rest/restaurants/updateRestaurant',
+				method : 'PUT'
+			},
+			deleteRestaurantById : {
+				url : 'rest/restaurants/delete/:id',
+				method : 'DELETE',
+				params : {
+					id : '@id'
 				}
 			},
 			getRestaurantByItemId : {
@@ -154,6 +179,14 @@ services.factory('AuthService', function($resource) {
 				params : {
 					id : '@id'
 				}
+			},
+			getRestLocations: {
+				url : 'rest/restaurants/:id/locations',
+				method : 'GET',
+				params : {
+					id : '@id'
+				},
+				isArray : true
 			}
 		});
 	});
@@ -162,6 +195,14 @@ services.factory('AuthService', function($resource) {
 			newMenu : {
 				url : 'rest/menus/createMenu',
 				method : 'POST'
+			},
+			getMenusByRestId : {
+				url : 'rest/menus/restaurant/:id',
+				method : 'GET',
+				params : {
+					id : '@id'
+				},
+				isArray : true
 			}
 			
 		});

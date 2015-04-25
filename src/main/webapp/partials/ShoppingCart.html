@@ -5,48 +5,60 @@
 <div class = "row" style=" margin: 20px;">
 	<div class="col-md-12" >
 	<ngcart-cart></ngcart-cart>
-	<button class="btn btn-primary" style="margin-left: 80%;" data-ng-hide="ngCart.getTotalItems() == 0" data-ng-click = "checkOut()"> <span class="glyphicon glyphicon-eur"></span>Check out</button>
-	
-	</div>
+	<button class="btn btn-primary" ng-click="checkOut()" style="margin-left: 80%" ng-disabled="!ngCart.getTotalItems()" ><span ng-click="checkOut()" class="glyphicon glyphicon-euro">Check-Out </span></button>
 </div>
 <hr>
 
 
 	<div class="row" data-ng-show="checkOutClicked" style="margin-left: 25px;">
-		<div class="col-md-12" >
-			<h4>Select delivery Address:</h4>
-			<form editable-form name="addressForm" data-ng-submit="saveAddress(address)" data-ng-repeat="address in cusAddresses ">
-				<label class="checkbox"> <input type="checkbox" name="checkAddres" data-ng-model="address.checked">
-				</label>
-				<div>
-					<span class="title">Line 1: </span> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty' }}</span>
+			<div class="col-md-12">
+				<h4>Select delivery Address:</h4>
+				<div data-ng-repeat="address in cusAddresses track by $index">
+				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px" >
+					<h5>Address {{$index+1}}:</h5>
+					
+					<div class="form-group">
+						<label class="control-label">House: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty' }}</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Street: </label> <span editable-text="address.line2" e-name="line2" e-required>{{address.line2 || 'empty' }}</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Region: </label> <span editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty' }}</span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">County: </label> <span editable-select="address.county" e-name="county"
+							e-ng-options="county.area for county in counties"
+						> {{address.county ||'Not set'}} </span>
+					</div>
+					<div class="form-group" align="right">
+						Select: <input type="checkbox" name="checkAddress"  data-ng-model="address.check">
+					</div>
+					<div>
+						<!-- button to show form -->
+						<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
+						<!-- buttons to submit / cancel form -->
+						<span ng-show="addressForm.$visible">
+							<button type="submit" class="btn btn-primary" data-ng-disabled="addressForm.$waiting">Save</button>
+							<button type="button" class="btn btn-default" data-ng-disabled="addressForm.$waiting" data-ng-click="addressForm.$cancel()">Cancel</button>
+						</span>
+					</div>
+				</form>
 				</div>
-				<div>
-					<span class="title">Line 2: </span> <span editable-text="address.line2" e-name="line2" e-required>{{address.line2 || 'empty' }}</span>
+				
+				<div class="row">
+					<div class="col-md-12" style="margin: 20px;">
+					<button type="submit" class="btn btn-primary" ng-click="newAddressForm()">Add New Address</button>
+					<div align="right" >
+					<label>Select payment type: <select data-ng-model="selectedType" data-ng-options="payments.name for payments in payments"></select>
+					</label>
+					<button class="btn btn-primary" data-ng-disabled="muladdressSelected() || selectedType == null || noaddressSelected()" data-ng-click="processedCheckout()">Processed</button>
+					</div>
+					</div>
 				</div>
-				<div>
-					<span class="title">Line 3: </span> <span editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty' }}</span>
-				</div>
-				<div>
-					<span class="title">County: </span> <span editable-text="address.county" e-name="county" e-required>{{address.county || 'empty' }}</span>
-				</div>
-
-
-				<div>
-					<!-- button to show form -->
-					<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
-					<!-- buttons to submit / cancel form -->
-					<span ng-show="addressForm.$visible">
-						<button type="submit" class="btn btn-primary" data-ng-disabled="addressForm.$waiting">Save</button>
-						<button type="button" class="btn btn-default" data-ng-disabled="addressForm.$waiting" data-ng-click="addressForm.$cancel()">Cancel</button>
-					</span>
-				</div>
-			</form>
-			<label>Select payment type:
-			<select data-ng-model="selectedType" data-ng-options="payments.name for payments in payments"></select> 
-			</label>
-			<button   class="btn btn-primary" data-ng-click="processedCheckout()">Processed</button></div>
-			<div style="margin-left: 40%"><ngcart-checkout service="{{selectedType.type}}" settings="payPalSettings"></ngcart-checkout></div>
+			</div>
+			<!--  <div style="margin-left: 40%"><ngcart-checkout service="{{selectedType.type}}" settings="payPalSettings"></ngcart-checkout></div>-->
+			
 		</div>		
 	</div>
 
@@ -106,11 +118,18 @@
     </table>
 
 
+	</div>
 
 </script>
 
 
-<script type="text/ng-template" id="template/ngCart/checkout.html"><div ng-if="service=='paypal'">
+<script type="text/ng-template" id="template/ngCart/checkout.html">
+
+<div ng-if="service=='custom' || service == 'log'">
+    <button class="btn btn-primary" ng-click="checkout()" ng-disabled="!ngCart.getTotalItems()" ><span ng-click="checkOut()" class="glyphicon glyphicon-euro">Proceed </span></button>
+</div>
+
+<div ng-if="service=='paypal'">
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" ng-show="ngCart.getTotalItems()">
         <input type="hidden" name="cmd" value="_xclick">
         <input type="hidden" name="business" value="alexwang119@yahoo.com">

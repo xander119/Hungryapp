@@ -1,0 +1,91 @@
+<div class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Set Open Hours :</h4>
+			</div>
+			<div class="modal-body">
+				<form name="openhourSetting" class="form-horizontal" style="margin-left: 30px;">
+					<div class="form-group form-inline" >
+						
+							<input toggle-checkbox id="monday" name="monday" data-ng-model="openHours.monday" type="checkbox" data-toggle="toggle" data-width="80" checked
+								data-on="Mon." data-off="Mon."> 
+								<input type="time" data-ng-disabled="!openHours.monday" style="margin-left: 2cm;" class="form-control "
+								data-ng-model="openHours.mondayStart" id="mondayStart" name="mondayStart"/> 
+								<label> ~ </label> 
+								<input type="time" data-ng-disabled="!openHours.monday" class="form-control " data-ng-model="openHours.mondayEnd"id="mondayEnd" name="mondayEnd"
+							/>
+					</div>
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="tuesday" name="tuesday" data-ng-model="openHours.tuesday" type="checkbox" checked data-width="80"
+							data-toggle="toggle" data-on="Tue." data-off="Tue."
+						> <input type="time" data-ng-disabled="!openHours.tuesday" style="margin-left: 2cm;" class="form-control"
+							data-ng-model="openHours.tuesdayStart" id="tuesdayStart" name="tuesdayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.tuesday" class="form-control" data-ng-model="openHours.tuesdayEnd"
+							id="tuesdayEnd" name="tuesdayEnd"
+						/>
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="wednesday" name="wednesday" data-ng-model="openHours.wednesday" type="checkbox" checked data-width="80"
+							data-toggle="toggle" data-on="Wed." data-off="Wed."
+						> <input type="time" data-ng-disabled="!openHours.wednesday" style="margin-left: 2cm;" data-ng-model="openHours.wednesdayStart"
+							class="form-control" id="wednesdayStart" name="wednesdayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.wednesday" data-ng-model="openHours.wednesdayEnd" class="form-control"
+							id="wednesdayEnd" name="wednesdayEnd"
+						/>
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="thursday" name="thursday" data-ng-model="openHours.thursday" type="checkbox" checked data-width="80"
+							data-toggle="toggle" data-on="Thu." data-off="Thu."
+						> <input type="time" data-ng-disabled="!openHours.thursday" style="margin-left: 2cm;" data-ng-model="openHours.thursdayStart"
+							class="form-control" id="thursdayStart" name="thursdayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.thursday" data-ng-model="openHours.thursdayEnd" class="form-control"
+							id="thursdayEnd" name="thursdayEnd"
+						/>
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox checked id="friday" name="friday" data-ng-model="openHours.friday" type="checkbox" data-checked data-width="80"
+							data-toggle="toggle" data-on="Fri." data-off="Fri."
+						> <input type="time" data-ng-disabled="!openHours.friday" style="margin-left: 2cm;" data-ng-model="openHours.fridayStart" class="form-control"
+							id="fridayStart" name="fridayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.friday" data-ng-model="openHours.fridayEnd" class="form-control"
+							id="fridayEnd" name="fridayEnd"
+						/>
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox checked id="satuday" name="satuday" data-ng-model="openHours.satuday" type="checkbox" data-width="80"
+							data-toggle="toggle" data-on="Sat." data-off="Sat."
+						> <input type="time" data-ng-disabled="!openHours.satuday" style="margin-left: 2cm;" data-ng-model="openHours.saturdayStart"
+							class="form-control" id="satudayStart" name="satudayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.satuday" data-ng-model="openHours.saturdayEnd" class="form-control"
+							id="satudayEnd" name="satudayEnd"
+						/>
+					</div>
+
+					<div class="form-group form-inline ">
+						<input toggle-checkbox id="sunday" name="sunday" data-ng-model="openHours.sunday" type="checkbox" checked data-width="80" data-toggle="toggle"
+							data-on="Sun." data-off="Sun."
+						> <input type="time" data-ng-disabled="!openHours.sunday" style="margin-left: 2cm;" data-ng-model="openHours.sundayStart" class="form-control"
+							id="sundayStart" name="sundayStart"
+						/> <label> ~ </label> <input type="time" data-ng-disabled="!openHours.sunday" data-ng-model="openHours.sundayEnd" class="form-control"
+							id="sundayEnd" name="sundayEnd"
+						/>
+					</div>
+
+					<div ng-show="restaurantDetailsForm.openHour.$dirty ">
+						<small class="text-warning" ng-show="restaurantDetailsForm.openHour.$error.required">Your input is required.</small>
+
+					</div>
+					<div class="form-group" align="right" style="margin-right: 15px;">
+						<button class="btn btn-primary" data-ng-click="saveSettings()">Save</button>
+						<button type="button" class="btn btn-default" data-ng-click="close('Cancel')" data-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
