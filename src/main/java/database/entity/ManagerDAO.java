@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.google.gson.Gson;
+
 
 @Stateless
 @LocalBean
@@ -60,7 +60,6 @@ public class ManagerDAO {
 		}
 		List<Manager> managers = em.createNamedQuery("Manager.findManagerByEmailOrUsername").setParameter("credential", credential).getResultList();
 		
-		Gson gson = new Gson();
 		//+ "\"id\":" "{\"result\":\"success\","  +
 		return managers.get(0);
 		//return  gson.toJson(managers.get(0));

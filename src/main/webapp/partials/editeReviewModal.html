@@ -1,0 +1,24 @@
+<div class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Edit Review:</h4>
+			</div>
+			<div class="modal-body">
+				<form name="reviewForm"  class="form" data-ng-submit="save()" class="col-md-12" novalidate>
+					<div class="form-group">
+						<rating ng-model="review.rate" max="max" readonly="false" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+						<span class="label" ng-show="overStar">{{percent}}%</span>
+					</div>
+					<div class="form-group">
+						<textarea data-ng-model="review.comment" class="form-control" placeholder="Comment here ..." title="Review"></textarea>
+					</div>
+					<div class="form-group" align="right">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<button type="button" class="btn btn-default" data-ng-click="close('Cancel')" data-dismiss="modal">Skip</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

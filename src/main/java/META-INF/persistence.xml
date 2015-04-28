@@ -12,8 +12,9 @@
 	    <class>database.entity.Orders_Items</class>
 	    <class>database.entity.Restaurant</class>
 	    <class>database.entity.RestaurantLocation</class>
+	    <class>database.entity.Review</class>
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 		</properties>
 	</persistence-unit>

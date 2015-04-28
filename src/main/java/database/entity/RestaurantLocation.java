@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,10 +17,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Entity implementation class for Entity: RestaruantLocation
@@ -27,12 +31,14 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  */
 @NamedQueries({
 		@NamedQuery(name = "RestaurantLocation.findOrders", query = "Select o from Orders o where o.restaurantLocation.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.findReviews", query = "Select o from Review o where o.restaurantLocation.id = :id"),
 		@NamedQuery(name = "RestaurantLocation.findLocations", query = "Select o from RestaurantLocation o where o.restaurant.id = :id"),
 		@NamedQuery(name = "RestaurantLocation.findAll", query = " Select o from RestaurantLocation o "),
-		//@NamedQuery(name = "RestaurantLocation.findActivated", query = " Select o from RestaurantLocation o ")
-		
+		@NamedQuery(name = "RestaurantLocation.findById", query = " Select o from RestaurantLocation o where o.id = :id"),
+		@NamedQuery(name = "RestaurantLocation.deleteById", query = " delete from RestaurantLocation o where o.id = :id")
 		})
 @Entity
+@XmlRootElement
 public class RestaurantLocation implements Serializable {
 
 	@Id
@@ -44,6 +50,7 @@ public class RestaurantLocation implements Serializable {
 	private String email;
 	private Double longitude;
 	@OneToOne(mappedBy="restaurantLocation",cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonManagedReference("openhour")
 	private OpenHour openHour;
 
@@ -52,8 +59,14 @@ public class RestaurantLocation implements Serializable {
 
 	private String deliveryNote;
 	@OneToMany(mappedBy = "restaurantLocation", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JsonManagedReference("orders")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonManagedReference("restaurantLocation_orders")
 	private Set<Orders> orders ;
+	@Column(nullable=true)
+	@OneToMany(mappedBy="restaurantLocation",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonManagedReference("restaurant_review")
+	private Set<Review> reviews;
 	@ManyToOne
 	@JsonBackReference("location")
 	@JoinColumn(name="restaurant_id")
@@ -155,6 +168,14 @@ public class RestaurantLocation implements Serializable {
 
 	public void setOrders(Set<Orders> orders) {
 		this.orders = orders;
+	}
+
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 

@@ -1,0 +1,41 @@
+<div class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">Edit location:</h4>
+			</div>
+			<div class="modal-body">
+				<form name="locationForm" class="form" data-ng-submit="save()" style="margin: 20px;" novalidate>
+					<div align="center" style="margin-top: 20px;">
+						<div class="form-group">
+							<label class="col-md-3 control-label ">Telephone/Mobile: </label><input style="width: 50%;" class="form-control" ng-model="tempLoc.telephone"
+								placeholder="Telephone/Mobile" required="required"
+							>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label ">Email: </label> <input style="width: 50%;" class=" form-control" ng-model="tempLoc.email"
+								placeholder="Email" required="required"
+							>
+						</div>
+						<div class="form-group">
+							<label class=" col-md-3 control-label">Address: </label>
+							<textarea style="width: 50%;" cols="9" rows="2" data-ng-model="tempLoc.address" class="form-control" placeholder="Restaurant address"
+								required="required" required="required"
+							>
+							</textarea>
+
+						</div>
+						<div class="form-group">
+							<button class="btn btn-info right" data-ng-click="locateAddr()">Locate on map</button>
+						</div>
+						<div class="form-group">
+							<map class="modal-map" center="current-location" zoom-control="true" zoom="13">
+								<marker id="restPosition" position="current-location" animation="DROP" draggable="true" on-dragend="updateMarker()"></marker>
+							</map>
+						</div>
+						<div class="form-group" align="right">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<button type="button" class="btn btn-default" data-ng-click="close('Cancel')" data-dismiss="modal">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

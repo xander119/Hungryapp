@@ -4,6 +4,7 @@
 			<progressbar class="progress-striped active" max="100"
 				value="progress" type="info"> <i>{{progress}}</i></progressbar>
 		</div>
+		
 	</div>
 	<div class="row" align="justify" style="margin-left: 30px;">
 		<form id="restaurantDetailsForm" name="restaurantDetailsForm"
@@ -13,7 +14,7 @@
 					Name : </label>
 				<div class="col-md-3" style="margin-left: 25px;">
 					<input type="text" ng-model="res.name" class="form-control"
-						name="name" placeholder="Name" required />
+						name="name" placeholder="Name" required autofocus/>
 					<div ng-show="restaurantDetailsForm.name.$dirty">
 						<small class="text-warning"
 							ng-show="restaurantDetailsForm.name.$error.required">Your
@@ -64,8 +65,8 @@
 					</span>
 						<label class="control-label" style="margin-left: 30px">Menu note : </label>
 						<input class="form-control" style="margin-left: 25px" type="text" data-ng-model="menu.note" >
-					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 20px;" data-ng-click="addMenuItem(menu)" title="Add New Item"><span class=" glyphicon glyphicon-plus"></span></button>
-					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 5px;" data-ng-click="deleteAMenu(menu)" title="Delete This Menu"><span class=" glyphicon glyphicon-minus"></span></button>
+					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 20px;" data-ng-click="addMenuItem(menu)" tooltip-placement="right" tooltip="Add New Item" ><span class=" glyphicon glyphicon-plus"></span></button>
+					<button class="btn btn-sm btn-primary" style="position: relative;margin-left: 5px;" data-ng-click="deleteAMenu(menu)" tooltip-placement="right" tooltip="Delete This Menu" ><span class=" glyphicon glyphicon-minus"></span></button>
 				</div>
 
 				<div class="list-group form-group" align="center" >
@@ -77,12 +78,12 @@
 						<input class="form-control " type="text" data-ng-model="item.description" placeholder="Item Description" required="required" >
 						<label class="control-label " style="margin-left: 35px;">Price:    </label>
 						<input class="form-control " type="number" data-ng-model="item.price" min="0" placeholder="Item Price" required="required" >
-						<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(menu,item)" title="Delete This Item"><span class=" glyphicon glyphicon-minus"></span></button>
+						<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(menu,item)" tooltip-placement="right" tooltip="Delete this Item" ><span class=" glyphicon glyphicon-minus"></span></button>
 					</div>
 				</div>
 				
 			</form>
-			<button class="btn btn-primary" data-ng-click="addMenuForm()"><span class=" glyphicon glyphicon-plus-sign" ></span> More Menu</button>
+			<button class="btn btn-primary" data-ng-click="addMenuForm()"><span class=" glyphicon glyphicon-plus-sign" ></span> Add Menu</button>
 			<button class="btn btn-primary" data-ng-click="progress=75" style="margin-left: 30px;">Skip </button>
 			<button class="btn btn-primary" data-ng-click="saveMenus()" >Save </button>
 		</div>
@@ -180,7 +181,8 @@
 		<div data-ng-show="progress==100">
 			<div class="row">
 				<h4>Do you want to activate restaurant now ? </h4>
-				<button class="btn btn-link" style="color: black;" data-ng-click="activeRest()" value="Put My restaurant to the Market">Put My restaurant to the Market</button>
+				<button class="btn btn-link" style="color: black;" data-ng-click="activeRest()" >Put My restaurant to the Market</button>
+				<button class="btn btn-primary"  data-ng-click="finish()">Finish</button>
 			</div>
 		</div>
 		

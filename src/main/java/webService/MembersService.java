@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import database.entity.Address;
 import database.entity.Customer;
 import database.entity.CustomerDAO;
+import database.entity.Review;
 
 @Path("/members")
 @Stateless
@@ -52,6 +53,17 @@ public class MembersService {
 			return Response.status(200).entity(c).build();
 		}
 		return Response.status(500).entity("Error").build();
+	}
+	
+	@POST
+	@Path("/saveReview/{custid}/{locationId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response saveReview(@Context HttpHeaders hHeaders,Review r,@PathParam("custid")int userid,@PathParam("locationId")int locationId) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"customer"})), hHeaders)){
+			return Response.status(200).entity(customerDao.saveReview(r, userid, locationId)).build();
+		}
+		
+		return Response.status(401).entity("Unauthorized").build();
 	}
 	
 	@GET
@@ -101,7 +113,19 @@ public class MembersService {
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
-	
+	@DELETE
+	@Path("/deleteReview/{reviewId}")
+	public Response deleteReview(@Context HttpHeaders hHeaders, @PathParam("reviewId")int reviewId) {
+		Review result = null;
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"customer"})), hHeaders)){
+			result = customerDao.deleteReview(reviewId);
+			if(result !=null)
+				return Response.status(200).entity(result).build();
+			else
+				return Response.status(404).entity(result + "No Review found.").build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
 	@PUT
 	@Path("/updateInfo")
 	@Consumes(MediaType.APPLICATION_JSON)

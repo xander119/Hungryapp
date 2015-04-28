@@ -23,6 +23,7 @@ import database.entity.Menu;
 import database.entity.Restaurant;
 import database.entity.RestaurantDAO;
 import database.entity.RestaurantLocation;
+import database.entity.Review;
 
 @Path("/restaurants")
 @Stateless
@@ -62,7 +63,14 @@ public class RestaurantService {
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
-
+	@PUT
+	@Path("/updateRestaurantlocation/{restId}")
+	public Response updateRestaurantInfo(@Context HttpHeaders hHeaders,RestaurantLocation r,@PathParam("restId") int restId) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+			return Response.status(200).entity( restaurantDao.updateLocationForRest(r,restId)).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
 	@GET
 	@Path("/{id}")
 	public Restaurant getRestaurantById(@PathParam("id") int id) {
@@ -85,7 +93,13 @@ public class RestaurantService {
 		return Response.status(401).entity("Unauthorized").build();
 
 	}
+	
+	@GET
+	@Path("/{id}/reviews")
+	public List<Review> getRestaurantReviewsById(@PathParam("id") int id) {
+		return restaurantDao.getRestaurantReviewsById(id);
 
+	}
 	@GET
 	@Path("/{id}/menus")
 	public List<Menu> getRestaurantMenusById(@PathParam("id") int id) {
@@ -121,11 +135,23 @@ public class RestaurantService {
 
 	}
 	@DELETE
+	@Path("/deleteLocation/{locationid}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response deletelocation(@Context HttpHeaders hHeaders,@PathParam("locationid") int locationid) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+			restaurantDao.deleteARestaurantLocation(locationid);
+			return Response.status(200).entity("{ \"result\": \"Deleted\"}" ).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+		
+	}
+	@DELETE
 	@Path("/delete/{restaurantid}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response deleteARestaurant(@Context HttpHeaders hHeaders,@PathParam("restaurantid") int restaurantid) {
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
 			restaurantDao.deleteARestaurant(restaurantid);
-			return Response.status(200).entity("Deleted").build();
+			return Response.status(200).entity("{ \"result\": \"Deleted\"}" ).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 		

@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class Emailsender {
 	private final String username = "hungryappgroup@gmail.com";
-	private final String password = "19921109";
+	private final String password = "wang921109";
 	private final String from = "hungryappgroup@gmail.com";
 	private final String host = "smtp.gmail.com";
 	private final  Session session ;

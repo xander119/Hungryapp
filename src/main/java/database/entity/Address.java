@@ -33,7 +33,7 @@ public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@OneToMany(mappedBy="address",fetch=FetchType.EAGER)
-	@JsonManagedReference("order-address")
+	@JsonManagedReference("order_address")
 	private Set<Orders> orders ;
 	public Address() {
 		super();

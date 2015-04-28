@@ -33,10 +33,7 @@ public class MenuDAO {
 					for(Item i : m.getItems()){
 						i.setMenu(m);
 					}
-				
 			}
-			
-			
 			try {
 				m = em.merge(m);
 				em.flush();
@@ -52,28 +49,59 @@ public class MenuDAO {
 		return null;
 	}
 
-	public Menu updateMenu(Menu menu) {
+	public Menu updateMenu(Menu m, int restId) {
 		// TODO Auto-generated method stub
-		return em.merge(menu);
+		Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id", restId).getResultList().get(0);
+		if(m!=null){
+			
+			m.setRestaurant(r);
+			if(m.getItems()!=null){
+				for(Item i : m.getItems()){
+					i.setMenu(m);
+				}
+			
+		}
+		try {
+			m = em.merge(m);
+			em.flush();
+			
+		} catch (EntityExistsException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+			
+		}
+		return m;
+	}
+	return null;
 	}
 
-	public Menu getMenuById(int menuid) {
-		// TODO Auto-generated method stub
-		return em.find(Menu.class, menuid);
-	}
-
+	
 	public void deleteMenu(int menuid) {
 		// TODO Auto-generated method stub
-		Menu removeMenu =getMenuById(menuid);
-		if(removeMenu!=null){
-			em.remove(removeMenu);
-		}
+		
+			System.out.println(em.createNamedQuery("Menu.deleteById").setParameter("id", menuid).executeUpdate());
+		
 	}
 
 	public List<Menu> getMenuByRestId(int restid) {
 		// TODO Auto-generated method stub
 		List<Menu> m = em.createNamedQuery("Menu.findByRestId").setParameter("id", restid).getResultList();
 		return m;
+	}
+
+	public void deleteItem(int itemId) {
+		// TODO Auto-generated method stub
+		int i = em.createNamedQuery("Item.deleteById").setParameter("id", itemId).executeUpdate();
+		
+			System.out.println("Removed Item" + i);
+		
+		
+	}
+
+	public Menu getMenuById(int menuid) {
+		// TODO Auto-generated method stub
+		return (Menu) em.createNamedQuery("Menu.findById").setParameter("id", menuid).getResultList().get(0);
 	}
 
 }

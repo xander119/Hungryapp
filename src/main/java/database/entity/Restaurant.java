@@ -1,21 +1,29 @@
 package database.entity;
 
-import database.entity.RestaurantLocation;
-
 import java.io.Serializable;
-import java.lang.Integer;
-import java.lang.String;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 
@@ -30,11 +38,12 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 		@NamedQuery(name = "Restaurant.findActivated", query = "Select l from Restaurant o inner join o.locations l where o.status = 'active' and l.restaurant.id = o.id"),
 		@NamedQuery(name = "Restaurant.findAllLocations", query = "Select o from Restaurant o"),
 		@NamedQuery(name = "Restaurant.findRestByLocationId", query = "Select o,r from RestaurantLocation r inner join r.restaurant o where r.restaurant.id = o.id and r.id = :id"),
-		@NamedQuery(name = "Restaurant.findByItemId", query = "Select distinct r.id from Item i inner join i.menu m join m.restaurant r where r.id= :id")
-		
+		@NamedQuery(name = "Restaurant.findByItemId", query = "Select distinct r.id from Item i inner join i.menu m join m.restaurant r where r.id= :id"),
+		@NamedQuery(name = "Restaurant.deleteById", query = "delete  from Restaurant r where r.id= :id" )
 })
 @Entity
 @XmlRootElement
+
 public class Restaurant implements Serializable {
 
 	@Id
@@ -45,6 +54,7 @@ public class Restaurant implements Serializable {
 	private String type;
 	
 	@ManyToOne
+	
 	@JoinColumn(name="generalManager_id",updatable=false)
 	@JsonBackReference("restaurant-manager")
 	private Manager generalManager;
@@ -52,10 +62,15 @@ public class Restaurant implements Serializable {
 	@Column(columnDefinition="LONGBLOB")
 	private byte[] logo;
 	private String description;
-	@OneToMany(mappedBy="restaurant",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="restaurant",fetch = FetchType.EAGER,cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	 @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	@JsonManagedReference("location")
 	private Set<RestaurantLocation> locations;
-	@OneToMany(mappedBy="restaurant", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	
+	@OneToMany(mappedBy="restaurant",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	@JsonManagedReference("restaurant-menu")
 	private Set<Menu> menus;
 

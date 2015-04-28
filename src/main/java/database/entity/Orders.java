@@ -2,10 +2,9 @@ package database.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,22 +12,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 /**
  * Entity implementation class for Entity: Orders
  *
  */
-@NamedQuery(name="Orders.getAllOrders",query="select o from Orders o")
+@NamedQueries({
+@NamedQuery(name="Orders.getAllOrders",query="select o from Orders o"),
+@NamedQuery(name="Orders.findById",query="select o from Orders o where o.id = :id"),
+@NamedQuery(name="Orders.getPendingOrders",query="select o from Orders o where o.isAccpected = 'pending' and o.customer.userid = :id")
+
+})
 
 @Entity
 @XmlRootElement
+
 public class Orders implements Serializable {
 
 	@Id
@@ -36,26 +46,27 @@ public class Orders implements Serializable {
 	private int id;
 	private String orderedDate;
 	private double totalPrice;
-	@Convert(converter=BooleanToYNStringConverter.class)
-	@Column(nullable=false)
-	private boolean isComplete;
+	private String isComplete;
 	private String completeTime;
+	private String isAccpected;
+	private String paymentType;
 	@ManyToOne
 	@JoinColumn(name="restaurantLocation_id")
-	@JsonBackReference("orders")
+	@JsonBackReference("restaurantLocation_orders")
 	private RestaurantLocation restaurantLocation;
 	@ManyToOne
 	@JoinColumn(name="customer_userid")
-	@JsonBackReference("customer")
+	@JsonBackReference("customer_orders")
 	private Customer customer;
 	@ManyToOne
 	@JoinColumn(name="address_id")
-	@JsonBackReference("order-address")
+	@JsonBackReference("order_address")
 	private Address address ;
 	
 	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JsonManagedReference("order_ordersitems")
-	private List<Orders_Items> orderItems ;
+//	@JsonManagedReference("order_ordersitems")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Set<Orders_Items> orderItems ;
 
 	private static final long serialVersionUID = 1L;
 
@@ -112,13 +123,6 @@ public class Orders implements Serializable {
 		this.customer = customer;
 	}
 
-	public boolean isComplete() {
-		return isComplete;
-	}
-
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
-	}
 
 //	public List<Item> getItems() {
 //		return items;
@@ -130,11 +134,11 @@ public class Orders implements Serializable {
 
 	
 
-	public List<Orders_Items> getOrderItems() {
+	public Set<Orders_Items> getOrderItems() {
 		return orderItems;
 	}
 
-	public void setOrderItems(List<Orders_Items> orderItems) {
+	public void setOrderItems(Set<Orders_Items> orderItems) {
 		this.orderItems = orderItems;
 	}
 
@@ -153,6 +157,40 @@ public class Orders implements Serializable {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+
+
+
+	public String getIsComplete() {
+		return isComplete;
+	}
+
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
+	}
+
+	public String getIsAccpected() {
+		return isAccpected;
+	}
+
+	public void setIsAccpected(String isAccpected) {
+		this.isAccpected = isAccpected;
+	}
+
+//	@Override
+//	public String toString() {
+//		return "Orders [orderedDate=" + orderedDate + ", totalPrice="
+//				+ totalPrice + ", isComplete=" + isComplete + ", paymentType="
+//				+ paymentType + ", restaurantLocation=" + restaurantLocation
+//				+ ", address=" + address + ", orderItems=" + orderItems + "]";
+//	}
 
 	
 	

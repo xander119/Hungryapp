@@ -2,8 +2,6 @@ package webService;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,7 +19,6 @@ import javax.ws.rs.core.Response;
 
 import database.entity.Menu;
 import database.entity.MenuDAO;
-import database.entity.Restaurant;
 
 @Path("/menus")
 @Stateless
@@ -40,11 +37,11 @@ public class MenusServices {
 		return Response.status(401).entity("Unauthorized").build();
 	}
 	@PUT
-	@Path("/updateMenu")
-	public Response updateMenu(@Context HttpHeaders hHeaders,Menu menu) {
+	@Path("/updateMenu/{restId}")
+	public Response updateMenu(@Context HttpHeaders hHeaders,Menu menu,@PathParam("restId")int restId) {
 		//the new menu object should contain reference ID
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
-			return Response.status(200).entity(menuDao.updateMenu(menu)).build();
+			return Response.status(200).entity(menuDao.updateMenu(menu,restId)).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
@@ -60,14 +57,23 @@ public class MenusServices {
 		return Response.status(200).entity(menuDao.getMenuByRestId(restid)).build();
 
 	}
-
+	@DELETE
+	@Path("/deleteItem/{itemId}")
+	public Response deleteItem(@Context HttpHeaders hHeaders,@PathParam("itemId") int itemId){
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+			menuDao.deleteItem(itemId);
+			return Response.status(200).entity("{ \"result\": \"Deleted\"}").build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+		
+	}
 
 	@DELETE
 	@Path("/delete/{menuid}")
 	public Response deleteMenu(@Context HttpHeaders hHeaders,@PathParam("menuid") int menuid){
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
 			menuDao.deleteMenu(menuid);
-			return Response.status(200).entity("Deleted").build();
+			return Response.status(200).entity("{ \"result\": \"Deleted\"}").build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 		

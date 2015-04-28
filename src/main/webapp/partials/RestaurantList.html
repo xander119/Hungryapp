@@ -1,18 +1,23 @@
 <div class="row">
 
 	<div class="row">
-		<div class="col-md-12" style="margin: 15px;">
-			<a href="#home"> Change Location </a>
+		<div class="col-md-12" style="margin-top: 15px;margin-left: 20px;" align="justify">
+			<a href="#home" style="color: highlighttext;font-style: italic;">[ Change Location ]</a>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" style="margin: 20px;">
-			<span> Filter </span>
+		<div class="col-md-4" style="margin: 20px;display: inline;" align="justify">
+		<div class="row">
+		<div class="col-md-6">
+			<input class=" form-control" ng-model="query.type" type="text" placeholder="Filter by Category" autofocus></div>
+			<div class="col-md-5"><input class=" form-control" ng-model="query.name" type="text" placeholder="Filter by Name" ></div>
+			</div>
 		</div>
 	</div>
 	<!-- Filter restaurant by type, rating, populatorty, pricing  -->
-	<div class="row" data-ng-repeat="rest in restaurantList" style="border-bottom: activecaption; border-bottom-style: solid;margin: 12px;" >
-		<div class="col-md-12 restaurant " data-ng-click="toDetails(rest.locations[0].id)">
+	<div ng-show="restaurantList==null"><h3>No result has been found. Please change your Location.</h3></div>
+	<div class="row" align="center" data-ng-repeat="rest in restaurantList | filter : query: strict | orderBy:distance" style="border-bottom: activecaption; border-bottom-style: solid;margin: 12px;" >
+		<div class="col-md-12 restaurant " data-ng-click="toDetails(rest.locations[0].id)" style="height: 130px;" align="left">
 			<div class="col-md-4">Image.</div>
 			<div class="col-md-8">
 				<div class="row">

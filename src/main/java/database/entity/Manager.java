@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Entity implementation class for Entity: Administrator
@@ -37,6 +39,7 @@ public class Manager implements Serializable {
 	@Column(nullable=true)
 	@OneToMany(mappedBy="generalManager",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	@JsonManagedReference("restaurant-manager")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Restaurant> restaurants;
 	private static final long serialVersionUID = 1L;
 

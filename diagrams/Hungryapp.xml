@@ -1,65 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
 	<entity>
-		<entity-name>database.entity.Address</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>146</entity-height>
-		<entity-X-Coordinate>50</entity-X-Coordinate>
-		<entity-Y-Coordinate>50</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>database.entity.Customer</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>386</entity-height>
-		<entity-X-Coordinate>550</entity-X-Coordinate>
-		<entity-Y-Coordinate>53</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>database.entity.Item</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>206</entity-height>
-		<entity-X-Coordinate>288</entity-X-Coordinate>
-		<entity-Y-Coordinate>401</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>database.entity.Manager</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>186</entity-height>
-		<entity-X-Coordinate>742</entity-X-Coordinate>
-		<entity-Y-Coordinate>575</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>database.entity.Menu</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>186</entity-height>
-		<entity-X-Coordinate>50</entity-X-Coordinate>
-		<entity-Y-Coordinate>296</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>database.entity.OpenHour</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>266</entity-height>
-		<entity-X-Coordinate>350</entity-X-Coordinate>
-		<entity-Y-Coordinate>818</entity-Y-Coordinate>
+		<entity-name>database.entity.RestaurantLocation</entity-name>
+		<entity-width>318</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>150</entity-X-Coordinate>
+		<entity-Y-Coordinate>356</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -68,20 +13,31 @@
 	<entity>
 		<entity-name>database.entity.Orders</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>246</entity-height>
-		<entity-X-Coordinate>803</entity-X-Coordinate>
-		<entity-Y-Coordinate>276</entity-Y-Coordinate>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>730</entity-X-Coordinate>
+		<entity-Y-Coordinate>233</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>database.entity.Orders_Items</entity-name>
+		<entity-name>database.entity.Manager</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>584</entity-X-Coordinate>
-		<entity-Y-Coordinate>492</entity-Y-Coordinate>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>-40</entity-X-Coordinate>
+		<entity-Y-Coordinate>248</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.OpenHour</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>249</entity-X-Coordinate>
+		<entity-Y-Coordinate>477</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -90,20 +46,75 @@
 	<entity>
 		<entity-name>database.entity.Restaurant</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>286</entity-height>
-		<entity-X-Coordinate>85</entity-X-Coordinate>
-		<entity-Y-Coordinate>575</entity-Y-Coordinate>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>249</entity-X-Coordinate>
+		<entity-Y-Coordinate>248</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>database.entity.RestaurantLocation</entity-name>
+		<entity-name>database.entity.Address</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>246</entity-height>
-		<entity-X-Coordinate>900</entity-X-Coordinate>
-		<entity-Y-Coordinate>764</entity-Y-Coordinate>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>730</entity-X-Coordinate>
+		<entity-Y-Coordinate>102</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.Item</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>490</entity-X-Coordinate>
+		<entity-Y-Coordinate>111</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.Customer</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>1054</entity-X-Coordinate>
+		<entity-Y-Coordinate>233</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.Orders_Items</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>490</entity-X-Coordinate>
+		<entity-Y-Coordinate>233</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.Menu</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>249</entity-X-Coordinate>
+		<entity-Y-Coordinate>111</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>database.entity.Review</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>30</entity-height>
+		<entity-X-Coordinate>1054</entity-X-Coordinate>
+		<entity-Y-Coordinate>411</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

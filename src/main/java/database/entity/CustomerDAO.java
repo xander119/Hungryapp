@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.google.gson.Gson;
 
 
 
@@ -33,8 +32,8 @@ public class CustomerDAO {
 
 	public boolean createCustomer(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		String registerSuccessBody = "Dear Customer : \n"+"\n\t\tCongratulations You have successfully registered to Hungry. Welcome "+ c.getFirstname() + "! "
-				+"\n\n" + "\t\t\t\t Kind Regards, Hungry Customer service";
-		if(c!=null){
+				+"\n \n \n" + " Kind Regards, Hungry Customer service";
+		{
 			//hash password before store it.
 			String unHshedpassword = c.getPassword();
 			c.setPassword(PasswordHash.createHash(unHshedpassword));
@@ -47,7 +46,7 @@ public class CustomerDAO {
 				return false;
 			}
 		}
-		return false;
+		
 		
 	}
 	
@@ -77,7 +76,7 @@ public class CustomerDAO {
 		
 		boolean correctPass = PasswordHash.validatePassword(password,imputPassword);
 		if(!correctPass){
-			return null;//"{\"result\":\"The password you entered is incorrct.\"}";
+			return null;
 		}
 		List<Customer> customers = em.createNamedQuery("Customer.findCustomerByEmailOrUsername").setParameter("credential", credential).getResultList();
 		
@@ -119,7 +118,6 @@ public class CustomerDAO {
 
 	public String checkLoginUser(String credential) {
 			
-//			return "{\"result\":\"success\"," + gson.toJson(getLoggedUser()).substring(1);
 		
 		return "{\"result\":\"notLogin\"}";
 	}
@@ -154,4 +152,27 @@ public class CustomerDAO {
 		}
 		return a;
 	}
+	
+	public Review saveReview(Review r, int custId,int locationId){
+		Customer c = (Customer) em.createNamedQuery("Customer.findById").setParameter("id", custId).getResultList().get(0);
+		RestaurantLocation rl = (RestaurantLocation) em.createNamedQuery("RestaurantLocation.findById").setParameter("id", locationId).getResultList().get(0);
+		r.setCustomer(c);
+		r.setRestaurantLocation(rl);
+		r = em.merge(r);
+		
+		return r;
+	}
+	
+	public Review deleteReview(int reviewId){
+		Review r  = (Review) em.createNamedQuery("Review.findById").setParameter("id", reviewId).getResultList().get(0);
+		em.remove(r);
+		return r;
+		
+	}
+	
+	
+	
+	
+	
+	
 }

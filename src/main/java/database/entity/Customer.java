@@ -8,9 +8,9 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 
 
@@ -59,13 +59,20 @@ public class Customer implements Serializable {
 	private String secureAnswer;
 	
 	@Column(nullable=true)
-	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
-	@JsonManagedReference("customer")
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonManagedReference("customer_orders")
 	private Set<Orders> orders;
 	@Column(nullable=true)
-	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.REFRESH)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonManagedReference("customer_location")
 	private Set<Address> addresses;
+	@Column(nullable=true)
+	@OneToMany(mappedBy="customer",fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonManagedReference("customer_review")
+	private Set<Review> reviews;
 	private static final long serialVersionUID = 1L;
 
 	public Customer() {
@@ -179,6 +186,14 @@ public class Customer implements Serializable {
 
 	public String getFirstname() {
 		return firstname;
+	}
+
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	public Set<Address> getAddresses() {

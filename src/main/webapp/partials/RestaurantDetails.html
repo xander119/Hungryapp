@@ -1,30 +1,52 @@
 <div class="row">
 	<div class="row">
 		<div class="col-md-1"></div>
-		<div class="col-md-6">
-			<form class="col-md-12 form-inline" editable-form name="editableMenuForm" data-ng-repeat="currentMenu in currentRest.menus"  
-			style="border: black;border-width: thin;border-style: dotted; border-radius:20px; margin: 20px; font-size: medium;  font-style: normal;">
-				<div class="form-group"></div>
+		<div class="col-md-6" >
+		<div data-ng-repeat="currentMenu in currentRest.menus">
+			<form class="col-md-12 form-inline paper-stack " editable-form name="editableMenuForm"   
+			style=" margin: 20px; font-size: medium;  font-style: normal; " onaftersave="saveMenu(currentMenu)" novalidate="novalidate">
+				<div  align="right">
+					<span ng-show="editableMenuForm.$visible" >
+					<button class="btn btn-sm btn-danger" style="position: relative;   margin-top: 10px;" data-ng-click="deleteAMenu(currentMenu)"  tooltip-placement="right" tooltip="Delete This Menu" >
+							<span>X</span>
+						</button>
+					</span>
+				</div>
 				<div >
 					<div class="form-group">
 						<h2>
 							<span editable-text="currentMenu.name" e-name="name" e-required>{{currentMenu.name ||'name'}}</span> Menu
 						</h2>
 						Note : <span editable-text="currentMenu.note" e-name="note">{{currentMenu.note ||'note'}}</span>
+						<span data-ng-show="editableMenuForm.$visible">
+						<button class="btn btn-sm btn-info" type="button" style="position: relative; margin-left: 20px;" data-ng-click="addMenuItem(currentMenu)" tooltip-placement="right" tooltip="Add New Item" >
+							<span class=" glyphicon glyphicon-plus"></span>
+						</button>
+						</span>
+
 					</div>
 					<div class="Info-section">
 						<div class="Info list-inline" ng-repeat="item in currentMenu.items track by $index">
-							{{$index+1}}. <span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required>{{item.name}}</span> 
-							<span class="text-left"  editable-text="item.description" e-name="itemDescription" e-required> {{item.description}}</span><br><div style="margin-left: 200px;"> &euro; <span class="text-right" editable-text="item.price" e-name="itemPrice" e-required>{{item.price}}</span></div>
+							{{$index+1}}. <span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required >{{item.name}}</span> 
+							<span class="text-left"  editable-text="item.description" e-name="itemDescription" e-required> {{item.description}}</span><br>
+							<div style="margin-left: 200px;">
+							 &euro; <span class="text-right" editable-number="item.price" e-name="itemPrice" e-required >{{item.price}}</span>
+							 </div>
 							<!-- show button if user is a customer 
 							ng-show= "if customer is true"-->
+							<span ng-show="editableMenuForm.$visible">
+								<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(currentMenu,item)" tooltip-placement="right" tooltip="Delete this Item"
+									>
+									<span class=" glyphicon glyphicon-minus"></span>
+								</button>
+							</span>
 							<div data-ng-hide="isAdmin()" >
 								<ngcart-addtocart id="{{ item.id }}" name="{{ item.name }}" price="{{ item.price }}" quantity="1" quantity-max="10" data="locationId">Add
 								to cart.</ngcart-addtocart>
 							</div>
 						</div>
 					</div>
-					<div align="right" data-ng-show="isAdmin()" >
+					<div align="right" data-ng-show="isAdmin()" style="margin-bottom: 10px;margin-right: 10px;">
 						<!-- button to show form -->
 						<button type="button" class="btn btn-default" data-ng-click="editableMenuForm.$show()" data-ng-show="!editableMenuForm.$visible">Edit</button>
 						<!-- buttons to submit / cancel form -->
@@ -35,30 +57,33 @@
 					</div>
 				</div>
 			</form>
-			<div data-ng-hide="isAdmin()" class="row">
+			</div>
+			<button data-ng-show="isAdmin()" class="btn btn-primary" data-ng-click="addAMenu()" style="margin-bottom: 20px; margin-top: 15px;"><span class=" glyphicon glyphicon-plus-sign" ></span> Add Menu</button>
+			
+			<div data-ng-hide="isAdmin()" class="row" style="margin-bottom: 20px;">
 			<div class="col-md-12" style="font-size: medium;">
-				<h3>Reviews</h3>
-				<ul>
-
-					<li data-ng-repeat="review in currentRest.reviews">
-						<rating ng-model="review.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
-						<span class="label" >{{review.rate}}</span> <span ng-if="review.rate > 1">Stars</span><span ng-if="review.rate == 1">Star</span>
+				<h3>Reviews :</h3>
+				<div >
+					<div data-ng-repeat="r in currentRest.locations[0].reviews">
+						<rating ng-model="r.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
+						<span class="label" >{{r.rate}}</span> <span ng-if="r.rate > 1">Stars</span><span ng-if="r.rate == 1">Star</span>
 						<br>
-						<div ><span >{{review.body}}</span></div>
+						<div ><span >{{r.comment}}</span></div>
 						<br>
-						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">By ---{{review.author}}</span></div>
-					</li>
-				</ul>
-				<form name="reviewForm" data-ng-submit="addReview()" class="col-md-12" novalidate >
+						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">
+						<a href="" data-ng-click="edit(r)" style="font-style: italic;color: black;" ng-show="r.username == loggedInUser.username">Edit</a>&ensp;{{r.createDate}}&ensp;By---{{r.username}}</span></div>
+					</div>
+				</div>
+				<form name="reviewForm" data-ng-submit="submitReview(review)" class="col-md-12" novalidate >
 
 					<!--  Live Preview -->
-					<div class="form-group" style="margin: 10px;size: 4cm;">
+					<div class="form-group" style="size: 4cm;">
 						<rating ng-model="review.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
 						<span class="label" >{{review.rate}}</span> <span ng-if="review.rate > 1">Stars</span><span ng-if="review.rate == 1">Star</span>
 						<br>
-						<div ><span >{{review.body}}</span></div>
+						<div ><span >{{review.comment}}</span></div>
 						<br>
-						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">By ---{{review.author}}</span></div>
+						<div align="right"><span style="font-size: small;margin-bottom: 15px;margin-top: 9px;">By---{{loggedInUser.username}}</span></div>
 					</div>
 					
 					<div style="border-bottom: buttonshadow;border-bottom-style: ridge;" ></div>
@@ -69,7 +94,7 @@
 						<span class="label"  ng-show="overStar">{{percent}}%</span>
 					</div>
 					<div class="form-group">
-						<textarea data-ng-model="review.body" class="form-control" placeholder="Write a short review of the product..." title="Review"></textarea>
+						<textarea data-ng-model="review.comment" class="form-control" placeholder="Comment here ..." title="Review"></textarea>
 					</div>
 					<div class="form-group">
 						<input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
@@ -83,9 +108,14 @@
 		<h2><span >{{currentRest.name}}</span></h2>
 				<span >{{currentRest.type}}</span>
 			
-			<form class="col-md-12 form-inline" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px;">
-			
-				Branch : {{location.address}}
+			<form class="col-md-12 form-inline" onaftersave="saveLocation(location)" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px;" >
+				
+				
+				Branch : <span  editable-text="location.address" e-name="name" e-required>{{location.address || 'Address Empty'}}</span>
+				<div align="right" data-ng-show="isAdmin()">
+				<button class="btn btn-md btn-default " type="button" data-ng-click="configLocation(location)">Edit address </button>
+				<button class="btn btn-md btn-danger " type="button" data-ng-click="deleteLocation(location)" tooltip-placement="right" tooltip="Delete this location">X </button>
+				</div>
 				<br>Open Hour :
 				
 					<div class="opentime">

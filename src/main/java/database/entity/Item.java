@@ -2,6 +2,7 @@ package database.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,14 +18,19 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Entity implementation class for Entity: Item
  *
  */
 @NamedQueries({
-@NamedQuery(name = "Item.findById", query = "Select o from Item o where o.id = :id")
+@NamedQuery(name = "Item.findById", query = "Select o from Item o where o.id = :id"),
+@NamedQuery(name = "Item.deleteById", query = "delete  from Item o where o.id = :id")
+
 })
 
 @Entity
@@ -41,7 +47,9 @@ public class Item implements Serializable {
 	
 	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("item_ordersitems")
-	private List<Orders_Items> orderItems ;
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Set<Orders_Items> orderItems ;
 	@ManyToOne
 	@JoinColumn(name="menu_id")
 	@JsonBackReference("item_menu")
@@ -94,11 +102,15 @@ public class Item implements Serializable {
 //	public List<Orders> getOrders() {
 //		return orders;
 //	}
-	public List<Orders_Items> getOrderItems() {
+	public Set<Orders_Items> getOrderItems() {
 		return orderItems;
 	}
-	public void setOrderItems(List<Orders_Items> orderItems) {
+	public void setOrderItems(Set<Orders_Items> orderItems) {
 		this.orderItems = orderItems;
+	}
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", name=" + name + "]";
 	}
    
 }

@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 
@@ -31,6 +33,7 @@ public class OpenHour implements Serializable {
 	private String sunday;
 	@OneToOne
 	@JoinColumn(name="restaurantLocation_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonBackReference("openhour")
 	private RestaurantLocation  restaurantLocation;
 	private static final long serialVersionUID = 1L;

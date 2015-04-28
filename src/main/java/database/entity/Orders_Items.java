@@ -10,6 +10,9 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Entity implementation class for Entity: Orders_Items
@@ -17,21 +20,26 @@ import org.codehaus.jackson.annotate.JsonBackReference;
  */
 @Entity 
 @XmlRootElement
-@Table(name="Orders_Items")
 public class Orders_Items implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	@ManyToOne
-	@JoinColumn(name="order_id",referencedColumnName="id")
-	@JsonBackReference("order_ordersitems")
+	@JoinColumn(name="order_id")
+//	@JsonBackReference("order_ordersitems")
+	@JsonIgnore
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Orders order;
 	
 	@ManyToOne
-	@JoinColumn(name="item_id",referencedColumnName="id")
-	@JsonBackReference("item_ordersitems")
+	@JoinColumn(name="item_id")
+//	@JsonBackReference("item_ordersitems")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Item item;
+	
+	private int quantity;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -61,7 +69,21 @@ public class Orders_Items implements Serializable {
 
 	public void setItem(Item item) {
 		this.item = item;
-	}   
-	
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+//	@Override
+//	public String toString() {
+//		return "Orders_Items [id=" + id + ", order=" + order + ", item=" + item
+//				+ ", quantity=" + quantity + "]";
+//	}   
+//	
    
 }

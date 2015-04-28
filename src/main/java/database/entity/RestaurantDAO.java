@@ -22,11 +22,6 @@ public class RestaurantDAO {
 			Manager m = (Manager) em.createNamedQuery("Manager.findManagerById").setParameter("id",  managerid).getResultList().get(0);
 			r.setGeneralManager(m);
 		}
-//		if(r.getLocations()!=null){
-//			for(RestaurantLocation rl : r.getLocations()){
-//				rl.setRestaurant(r);
-//			}
-//		}
 		if(r.getMenus()!=null){
 			for(Menu menu : r.getMenus()){
 				menu.setRestaurant(r);
@@ -35,10 +30,7 @@ public class RestaurantDAO {
 				}
 			}
 		}
-//		if(r.getOpenHour()!=null){
-//				r.getOpenHour().setRestaurant(r);
-//		}
-		System.out.println(r.toString());
+		
 		r = em.merge(r);
 		return r;
 
@@ -47,26 +39,37 @@ public class RestaurantDAO {
 	public RestaurantLocation createLocationForRest(RestaurantLocation rl,int restaurantId){
 		if(restaurantId!=0){
 			Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restaurantId).getResultList().get(0);
-			System.out.println(restaurantId);
 			if(r!=null){
-				System.out.println(r.getName());
 				rl.setRestaurant(r);
 			}
 		}
 		if(rl.getOpenHour()!=null){
 			rl.getOpenHour().setRestaurantLocation(rl);
 		}
-		System.out.println(rl.toString());
+		
 		em.persist(rl);
 		em.flush();
 		return rl;
 		
 	}
-
+	public RestaurantLocation updateLocationForRest(RestaurantLocation rl,int restaurantId){
+		if(restaurantId!=0){
+			Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id",  restaurantId).getResultList().get(0);
+			if(r!=null){
+				rl.setRestaurant(r);
+			}
+		}
+		if(rl.getOpenHour()!=null){
+			rl.getOpenHour().setRestaurantLocation(rl);
+		}
+		
+		em.merge(rl);
+		return rl;
+		
+	}
 	public Restaurant update(Restaurant r) {
 		// TODO Auto-generated method stub
-//		Restaurant rest = (Restaurant) em.createNamedQuery("Restaurant.findById").setParameter("id", r.getId()).getResultList().get(0);
-//		r.setGeneralManager(rest.getGeneralManager());
+
 
 		return em.merge(r);
 	}
@@ -101,7 +104,9 @@ public class RestaurantDAO {
 
 	public void deleteARestaurant(int restaurantid) {
 		// TODO Auto-generated method stub
-		em.remove(em.find(Restaurant.class, restaurantid));
+		em.createNamedQuery("Restaurant.deleteById").setParameter("id", restaurantid).executeUpdate();
+		//em.flush();
+		System.out.println("deleted" + restaurantid);
 		
 	}
 	public List<Restaurant> getRestaurantByLocationId(int id){
@@ -121,5 +126,18 @@ public class RestaurantDAO {
 		// TODO Auto-generated method stub
 		Restaurant r = (Restaurant) em.createNamedQuery("Restaurant.findByItemId").setParameter("id",  itemId).getResultList().get(0);
 		return r;
+	}
+
+
+	public List<Review> getRestaurantReviewsById(int id) {
+		// TODO Auto-generated method stub
+		List<Review> r = (List<Review>) em.createNamedQuery("RestaurantLocation.findReviews").setParameter("id",  id).getResultList();
+		return r;
+	}
+
+	public void deleteARestaurantLocation(int locationid) {
+		// TODO Auto-generated method stub
+		em.createNamedQuery("RestaurantLocation.deleteById").setParameter("id", locationid).executeUpdate();
+		System.out.println("deleted" + locationid);
 	}
 }
