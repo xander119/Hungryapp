@@ -56,9 +56,17 @@ public class OrderService {
 	}
 	@GET
 	@Path("/pendingOrders/{custId}")
-	public Response getPendingOrders(@PathParam("custId") int custId,@Context HttpHeaders hHeaders){
+	public Response getPendingOrdersByCustomerId(@PathParam("custId") int custId,@Context HttpHeaders hHeaders){
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin","customer"})), hHeaders)){
-			return  Response.status(200).entity(ordersDao.getPendingOrders(custId)).build();
+			return  Response.status(200).entity(ordersDao.getPendingOrdersByCustomerId(custId)).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
+	@GET
+	@Path("/pendingOrders/{locationId}")
+	public Response getPendingOrdersByRestaurantLocation(@PathParam("locationId") int locationId,@Context HttpHeaders hHeaders){
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin","customer"})), hHeaders)){
+			return  Response.status(200).entity(ordersDao.getPendingOrdersByRestaurantLocation(locationId)).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}

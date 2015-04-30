@@ -1,5 +1,6 @@
 package database.entity;
 
+import java.io.File;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -15,9 +16,10 @@ import javax.persistence.PersistenceContext;
 public class RestaurantDAO {
 	@PersistenceContext
 	EntityManager em;
-
+	private String  filePath = "C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo";
 	public Restaurant createRestaurant(Restaurant r, int managerid) {
 		// TODO Auto-generated method stub#
+		
 		if(managerid!=0){
 			Manager m = (Manager) em.createNamedQuery("Manager.findManagerById").setParameter("id",  managerid).getResultList().get(0);
 			r.setGeneralManager(m);
@@ -139,5 +141,11 @@ public class RestaurantDAO {
 		// TODO Auto-generated method stub
 		em.createNamedQuery("RestaurantLocation.deleteById").setParameter("id", locationid).executeUpdate();
 		System.out.println("deleted" + locationid);
+	}
+
+	public File uploadLogo(File logo) {
+		// TODO Auto-generated method stub
+		
+		return null;
 	}
 }

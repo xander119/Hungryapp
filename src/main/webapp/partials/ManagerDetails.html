@@ -1,13 +1,12 @@
 <div class="row " style="margin: 15px;">
 	<div class="col-md-12">
 		<ul class="nav nav-pills nav-justified" style="padding-top: 15px;">
-			<li data-ng-class="{active:isActiveTab(1)}" data-ng-init="onClickTab(1)"><a href data-ng-click="onClickTab(1)">Profiles</a></li>
-			<li data-ng-class="{active:isActiveTab(2)}"><a href data-ng-click="onClickTab(2)">Restaurants</a></li>
+			<li data-ng-class="{active:isActiveTab(1)}" ><a href data-ng-click="onClickTab(1)">Profiles</a></li>
+			<li data-ng-class="{active:isActiveTab(2)}" data-ng-init="onClickTab(2)"><a href data-ng-click="onClickTab(2)">Restaurants</a></li>			
 		</ul>
 	</div>
 
 	<div data-ng-show="isActiveTab(1)" align="justify">
-
 		<form class="col-md-12 form-inline" editable-form name="editableForm" style="margin: 20px">
 			<div class="form-group">
 				<h3>
@@ -61,8 +60,8 @@
 				</accordion>
 			</div>
 		</div>
-		<div style="margin: 20px">
-			<a href="#newRestaurant" style="margin-left: 8px;">Start new ?</a>
+		<div style="margin: 20px" align="right"	>
+			<button class="btn btn-default" ng-click="newRest()" style="margin-left: 8px;" >Start new ?</button>
 		</div>
 	</div>
 </div>

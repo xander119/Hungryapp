@@ -16,8 +16,11 @@
 				<div data-ng-repeat="address in cusAddresses track by $index">
 				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px" >
 					<h5>Address {{$index+1}}:</h5>
-					
-					<div class="form-group">
+						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger "
+								style="margin-left: 50%;" data-ng-click="deleteAddressForm(address)"
+							>X</button></span>
+
+						<div class="form-group">
 						<label class="control-label">House: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty' }}</span>
 					</div>
 					<div class="form-group">

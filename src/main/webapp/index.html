@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Hungry?</title>
-<meta name="author" content="Zechen">
+<meta name="Zechen Wang" content="Hungry Web app">
 
 
 
@@ -21,9 +21,9 @@
     
 </head>
 
-<body data-ng-app="Hungryapp" style="background-image: url('img/mainBackGround1.jpg');" >
+<body data-ng-app="Hungryapp" style="background-repeat: no-repeat; background: fixed;background-image: url('img/mainBackGround1.jpg'); 	" >
 
-	<div class="navbar navbar-static-top navbar-default navbar-inverse" data-ng-controller="IndexController">
+	<nav class="navbar navbar-default navbar-fixed-top  navbar-inverse" data-ng-controller="IndexController">
 		<div class="navbar-header">
 			<a class="navbar-brand" style="font-size: xx-large;font-family: 'Lobster', cursive;" href="#/">Hungry?</a>
 		</div>
@@ -57,8 +57,8 @@
 			<li data-ng-show="notLoggedIn()"  style="margin-right: 10px;"><a href="#login">Log in / Sign in</a></li>
 			<li data-ng-hide="notLoggedIn()" style="margin-right: 10px;" ><a href="" data-ng-click="Logout()">Logout</a></li>
 		</ul>
-	</div>
-	<div class="container">
+	</nav>
+	<div class="container" style="margin-top:70px;">
 		<div  data-ng-view></div>
 	</div>
 	
@@ -93,12 +93,15 @@
 <script src= "lib/ngStorage.js"></script>
 <script src= "lib/ngFacebook.js"></script>
 <script src= "lib/angular-modal-service.js"></script>
+<script src="lib/ng-file-upload-shim.min.js"></script>
+<script src="lib/ng-file-upload.min.js"></script>
 
 <script src="js/app.js"></script>
 <script src="lib/xeditable.js"></script>
 <script src="js/controller.js"></script>
 <script src="js/service.js"></script>
 <script src="js/directive.js"></script>
+
 
 
 </html>

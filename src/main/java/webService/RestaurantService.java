@@ -1,8 +1,14 @@
 package webService;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,7 +23,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import database.entity.Menu;
 import database.entity.Restaurant;
@@ -35,6 +46,8 @@ public class RestaurantService {
 	@EJB
 	private RequestInterceptor interceptor;
 	
+	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "C://JBOSS/jboss-as-7.1.1.Final/standalone/deployments/Hungryapp.war/img";
+	//http://examples.javacodegeeks.com/enterprise-java/rest/resteasy/resteasy-file-upload-example/
 	@POST
 	@Path("/createRestaurant/{managerid}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -44,6 +57,89 @@ public class RestaurantService {
 		}
 		return Response.status(401).entity("Unauthorized").build();
 	}
+	
+	
+
+	@POST
+	@Path("/updloadLogo")
+	@Consumes("multipart/form-data")
+	public Response uploadFile( MultipartFormDataInput  input,@Context HttpHeaders hHeaders) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+		String fileName = "";
+
+		Map<String, List<InputPart>> formParts = input.getFormDataMap();
+
+		List<InputPart> inPart = formParts.get("file");
+
+		for (InputPart inputPart : inPart) {
+
+			 try {
+
+				// Retrieve headers, read the Content-Disposition header to obtain the original name of the file
+				MultivaluedMap<String, String> headers = inputPart.getHeaders();
+				fileName = parseFileName(headers);
+
+				// Handle the body of that part with an InputStream
+				InputStream istream = inputPart.getBody(InputStream.class,null);
+
+				fileName = SERVER_UPLOAD_LOCATION_FOLDER + fileName;
+
+				saveFile(istream,fileName);
+
+			  } catch (IOException e) {
+				e.printStackTrace();
+			  }
+
+			}
+
+                String output = "File saved to server location : " + fileName;
+
+		return Response.status(200).entity(output).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
+
+	// Parse Content-Disposition header to get the original file name
+	private String parseFileName(MultivaluedMap<String, String> headers) {
+
+		String[] contentDispositionHeader = headers.getFirst("Content-Disposition").split(";");
+
+		for (String name : contentDispositionHeader) {
+
+			if ((name.trim().startsWith("filename"))) {
+
+				String[] tmp = name.split("=");
+
+				String fileName = tmp[1].trim().replaceAll("\"","");
+
+				return fileName;
+			}
+		}
+		return "randomName";
+	}
+
+	// save uploaded file to a defined location on the server
+	private void saveFile(InputStream uploadedInputStream,
+		String serverLocation) {
+
+		try {
+			OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			outpuStream = new FileOutputStream(new File(serverLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				outpuStream.write(bytes, 0, read);
+			}
+			outpuStream.flush();
+			outpuStream.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	
 	@POST
 	@Path("/createRestaurantLocation/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -94,12 +190,7 @@ public class RestaurantService {
 
 	}
 	
-	@GET
-	@Path("/{id}/reviews")
-	public List<Review> getRestaurantReviewsById(@PathParam("id") int id) {
-		return restaurantDao.getRestaurantReviewsById(id);
-
-	}
+	
 	@GET
 	@Path("/{id}/menus")
 	public List<Menu> getRestaurantMenusById(@PathParam("id") int id) {
@@ -121,11 +212,11 @@ public class RestaurantService {
 		return restaurantDao.getAllLocations();
 
 	}
-//	@GET
-//	@Path("/restaurantByLocationId/{locationid}")
-//	public Restaurant getRestaurantByLocationId(@PathParam("locationid") int locationid){
-//		return restaurantDao.getRestaurantByLocationId(locationid);
-//	}
+	@GET
+	@Path("/restaurantByLocationId/{locationid}")
+	public List<Restaurant> getRestaurantByLocationId(@PathParam("locationid") int locationid){
+		return restaurantDao.getRestaurantByLocationId(locationid);
+	}
 
 	@GET
 	@Path("/{id}/locations")

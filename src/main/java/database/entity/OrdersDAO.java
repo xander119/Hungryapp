@@ -46,7 +46,7 @@ public class OrdersDAO {
 					oi.setOrder(order);
 					int itemId = oi.getItem().getId();
 					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
-					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
+//					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
 					oi.setItem(item);
 				}
 			}
@@ -56,15 +56,15 @@ public class OrdersDAO {
 			order.setIsAccpected("pending");
 			em.persist(order);
 			em.flush();
-			
-			String orderDetails = "Payment type: "+ order.getPaymentType() + "\nOrder Date: "+ order.getOrderedDate() + "\nItems: \n" + itemList.toString();
-			String body = "\n New Order from Hungry: \n \n "
-					+ orderDetails
-					+ "\n\n\n accpect: "
-					+ " http://localhost:8080/Hungryapp/rest/order/accpectOrder/"
-					+ order.getId() + "\n\n\n Decline: ";
-			
-			email.sendEmail(r.getEmail(), "New Order ", body);
+//			
+//			String orderDetails = "Payment type: "+ order.getPaymentType() + "\nOrder Date: "+ order.getOrderedDate() + "\nItems: \n" + itemList.toString();
+//			String body = "\n New Order from Hungry: \n \n "
+//					+ orderDetails
+//					+ "\n\n\n accpect: "
+//					+ " http://localhost:8080/Hungryapp/rest/order/accpectOrder/"
+//					+ order.getId() + "\n\n\n Decline: ";
+//			
+//			email.sendEmail(r.getEmail(), "New Order ", body);
 			return order;
 		}
 		return null;
@@ -75,7 +75,7 @@ public class OrdersDAO {
 		
 		return em.find(Orders.class, orderid);
 	}
-	public List<Orders> getPendingOrders(int custId) {
+	public List<Orders> getPendingOrdersByCustomerId(int custId) {
 		// TODO Auto-generated method stub
 		
 		List<Orders> orders;
@@ -107,5 +107,11 @@ public class OrdersDAO {
 		o.setIsAccpected("accpected");
 		em.merge(o);
 		return o;
+	}
+
+	public List<Orders> getPendingOrdersByRestaurantLocation(int locationId) {
+		
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,19 +1,21 @@
-<div class=row >
-<div id="home" name ="home">
-
-	<div class="google-map ">
-		<map  center="current-location" zoom=13  draggable="true" style="display: block; height: 100%;" >
-			<!-- <marker  id="myLocation" position="[34,55]"   on-click="showInfoWindow(event, 'currentLocationInfo')"
-				animation="DROP" draggable="true" on-dragend="getRList()" /> 
-				<info-window id="currentLocationInfo" visible-on-marker="myLocation">
-				<div>
-					<span>I'm here.{{markLat}},{{markLng}}</span>
-					<br> <a href="#restaurantDetails" >Near me</a> 
-				</div> 
-			</info-window>
-				-->
-			<custom-control position="TOP_RIGHT" index="1" on-click="backToMe()"><button class="btn btn-success"> Back to Me</button></custom-control>
-		</map>
-	</div>
+<div class="row">
+	<div id="home" name="home">
+		<div class="google-map ">
+			<map center="current-location" zoom=13 draggable="true" style="display: block; height: 100%;">
+			<div data-ng-repeat="location in locations" data-ng-show="isAdmin()">
+				<marker  id="{{location.address}}" position="{{location.latitude}},{{location.longitude}}"   
+					on-click="showInfoWindow(event, 'restLoc')" animation="DROP" draggable="false"></marker>
+				<info-window id="restLoc"  >
+					<div align="center">
+						<span>{{location.address}}</span> <br> <a href="" data-ng-click="edit(location.id)">Edit</a>
+					</div>
+					</info-window>
+					
+			</div>
+				<custom-control position="TOP_RIGHT" index="1" on-click="backToMe()">
+				<button class="btn btn-success" style="margin-top: 5px;">Back to Me</button>
+				</custom-control>
+			</map>
+		</div>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 
 
 	var Hungryapp = angular.module('Hungryapp', [ 'xeditable','app.routeConfig',
-			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart','ngFacebook','angularModalService']);
+			'app.service', 'app.controllers', 'app.directives', 'ui.bootstrap','ngMap','ngCart','ngFacebook','angularModalService','ngFileUpload']);
 	
 	var route = angular.module('app.routeConfig', [ 'ngRoute' ]);
 	Hungryapp.run(function(editableOptions,$rootScope,$location,$cookieStore) {
@@ -91,13 +91,25 @@
 		  return decorateFilter;
 		}]);
 	
-	Hungryapp.config(function($facebookProvider,$httpProvider){
+	Hungryapp.config(function($facebookProvider,$httpProvider,$compileProvider,$sceProvider){
 		$facebookProvider.setAppId('1003791322978682');
-		 $httpProvider.interceptors.push('myInterceptor');
+		
+//		 var oldWhiteList = $compileProvider.imgSrcSanitizationWhitelist();
+		 var currentImgSrcSanitizationWhitelist = $compileProvider.imgSrcSanitizationWhitelist();
+	        var newImgSrcSanitizationWhiteList = currentImgSrcSanitizationWhitelist.toString().slice(0,-1)
+	        + '|chrome-extension:'
+	        +currentImgSrcSanitizationWhitelist.toString().slice(-1);
+
+	        console.log("Changing imgSrcSanitizationWhiteList from "+currentImgSrcSanitizationWhitelist+" to "+newImgSrcSanitizationWhiteList);
+//	        $compileProvider.imgSrcSanitizationWhitelist(newImgSrcSanitizationWhiteList);
 	})
 
-	route.config([ '$routeProvider', function($routeProvider) {
-		
+	route.config([ '$routeProvider','$httpProvider','$compileProvider','$sceProvider', function($routeProvider,$httpProvider,$compileProvider,$sceProvider) {
+		 $httpProvider.interceptors.push('myInterceptor');
+		 $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|file):\/\/\/\C:\/JBOSS\/jboss-as-7\.1\.1\.Final\/standalone\/deployments\/RestLogo\/[a-z]*[A-Z]*\.[a-z]*/);
+		 $compileProvider.imgSrcSanitizationWhitelist(/(https?|ftp|mailto|chrome-extension|file):/);
+//		 $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file):|data:image\//);
+		// $sceProvider.enabled(false);
 		$routeProvider.when('/login', {
 			templateUrl : 'partials/UserLogin.html',
 			controller : 'LoginController'
@@ -127,6 +139,9 @@
 		}).when('/newRestaurant',{
 			templateUrl : 'partials/RestaurantCreate.html',
 			controller : 'restaurantCreateCtrl'
+		}).when('/newBranch',{
+			templateUrl : 'partials/RestLocationCreate.html',
+			controller : 'BranchCreateCtrl'
 		}).when('/restaurantList',{
 			templateUrl : 'partials/RestaurantList.html',
 			controller : 'restListCtrl'

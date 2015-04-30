@@ -58,9 +58,7 @@ public class Restaurant implements Serializable {
 	@JoinColumn(name="generalManager_id",updatable=false)
 	@JsonBackReference("restaurant-manager")
 	private Manager generalManager;
-	@Lob
-	@Column(columnDefinition="LONGBLOB")
-	private byte[] logo;
+	private String logo;
 	private String description;
 	@OneToMany(mappedBy="restaurant",fetch = FetchType.EAGER,cascade=CascadeType.ALL)
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -112,13 +110,7 @@ public class Restaurant implements Serializable {
 		this.type = type;
 	}
 
-	public byte[] getLogo() {
-		return logo;
-	}
-
-	public void setLogo(byte[] logo) {
-		this.logo = logo;
-	}
+	
 
 	public Manager getGeneralManager() {
 		return generalManager;
@@ -161,11 +153,19 @@ public class Restaurant implements Serializable {
 		this.description = description;
 	}
 
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
 	@Override
 	public String toString() {
 		return "Restaurant [id=" + id + ", name=" + name + ", status=" + status
 				+ ", type=" + type + ", generalManager=" + generalManager
-				+ ", logo=" + Arrays.toString(logo) + ", " 
+				+ ", logo=" + logo + ", " 
 				+ ", locations=" + locations + ", menus=" + menus + "]";
 	}
 	

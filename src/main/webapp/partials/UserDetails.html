@@ -2,10 +2,10 @@
 
 	<div class="col-md-12">
 		<div class="col-md-12">
-			<ul class="nav nav-pills nav-justified" style="padding-top: 15px;">
-				<li data-ng-class="{active:isActiveTab(1)}" data-ng-init="onClickTab(1)"><a href data-ng-click="onClickTab(1)">Profiles</a></li>
-				<li data-ng-class="{active:isActiveTab(2)}"><a href="" data-ng-click="onClickTab(2)">My Orders</a></li>
-				<li data-ng-class="{active:isActiveTab(3)}"><a href="" data-ng-click="onClickTab(3)">Deliver Address</a></li>
+			<ul class="nav nav-tabs nav-justified" style="padding-top: 15px;">
+				<li data-ng-class="{active:isActiveTab(1)}" data-ng-init="onClickTab(1)"><a href=""   data-ng-click="onClickTab(1)">Profiles</a></li>
+				<li data-ng-class="{active:isActiveTab(2)}"><a href=""  data-ng-click="onClickTab(2)">My Orders</a></li>
+				<li data-ng-class="{active:isActiveTab(3)}"><a href=""  data-ng-click="onClickTab(3)">Deliver Address</a></li>
 			</ul>
 		</div>
 
@@ -16,39 +16,39 @@
 						<img alt="140x140" src="http://lorempixel.com/140/140/" />
 					</div>
 					<div class="row">
-						<button class="btn-link">Change pic</button>
+						<button class="btn-link" style="color: white;" >Change pic</button>
 					</div>
 
 				</div>
 
-				<div class="col-md-9 form-inline" style="padding-right: 10px; padding-bottom: 10px">
+				<div class="col-md-9 form-inline" style="padding-right: 10px; padding-bottom: 10px; color: black;">
 
 					<div class="form-group">
 						<h2>
-							<a href="" editable-text="currentUser.username" e-name="username" required>{{currentUser.username ||'username'}}</a>
+							<a href="" style="color: white;" editable-text="currentUser.username" e-name="username" required>{{currentUser.username ||'username'}}</a>
 						</h2>
 					</div>
 					<div class="Info-section">
 						<div class="Info ">
-							<span class="list-group-item-text Info-item-title">First name :</span> <a href="" editable-text="currentUser.firstname" e-name="firstname"
+							<span class="list-group-item-text Info-item-title">First name :</span> <a href="" style="color: white;" editable-text="currentUser.firstname" e-name="firstname"
 								required
 							>{{currentUser.firstname ||'empty'}}</a>
 						</div>
 						<div class="Info">
-							<span class="list-group-item-text Info-item-title">Last name :</span> <a href="" editable-text="currentUser.surname" e-name="surname"
+							<span class="list-group-item-text Info-item-title">Last name :</span> <a href="" style="color: white;" editable-text="currentUser.surname" e-name="surname"
 								e-required
 							>{{currentUser.surname ||'empty'}}</a>
 						</div>
 						<div class="Info">
-							<span class="list-group-item-text Info-item-title">Email :</span> <a href="" editable-text="currentUser.email" e-name="email" e-required>{{currentUser.email
+							<span class="list-group-item-text Info-item-title">Email :</span> <a href="" style="color: white;" editable-text="currentUser.email" e-name="email" e-required>{{currentUser.email
 								||'empty'}}</a>
 						</div>
 						<div class="Info">
-							<span class="list-group-item-text Info-item-title">Mobile :</span> <a editable-text="currentUser.mobile" e-name="mobile">{{currentUser.mobile
+							<span class="list-group-item-text Info-item-title">Mobile :</span> <a style="color: white;" href="" editable-text="currentUser.mobile" e-name="mobile">{{currentUser.mobile
 								||'empty'}}</a>
 						</div>
 						<div class="Info">
-							<span class="list-group-item-text Info-item-title">Date of Birth:</span> <a editable-date="currentUser.dateOfBrith" e-name="dateOfBrith">
+							<span class="list-group-item-text Info-item-title">Date of Birth:</span> <a style="color: white;" href="" editable-date="currentUser.dateOfBrith" e-name="dateOfBrith">
 								{{(currentUser.dateOfBrith | date : "dd/MM/yyyy") || 'empty'}}</a>
 						</div>
 						<div class="Info">
@@ -68,9 +68,8 @@
 						<!-- buttons to submit / cancel form -->
 						<span>
 							<button type="submit" class="btn btn-primary" ng-click="updateUser(currentUser)">Save</button>
-							<button type="button" class="btn btn-default" ng-click="enabled=false">Cancel</button>
+							<button type="button" class="btn btn-default" data-ng-click="enabled=false">Cancel</button>
 						</span>
-
 					</div>
 				</div>
 			</div>
@@ -79,8 +78,9 @@
 
 		<div data-ng-show="isActiveTab(2)">
 			<div class="row">
-				<div class="list-group col-md-12" style="padding-left: 15px">
-					<a href class="list-group-item active">Order History</a>
+				<div class="list-group col-md-12" style="padding-left: 25px">
+				<h3 style="font-style: italic;">Order History :</h3>
+					
 					<div class="list-group-item" data-ng-hide="historyOrders=null">You have no orders yet.</div>
 					<div class="list-group-item" data-ng-repeat="order in historyOrders">{{order.orderedDate}}</div>
 				</div>
@@ -90,11 +90,11 @@
 		<div data-ng-show="isActiveTab(3)">
 			<div class="row" style="margin: 20px">
 			<h4>Deliver Addresses: </h4>
-				<div class="col-md-5" data-ng-repeat="address in cusAddresses track by $index">
+				<div class="col-md-5" style="border-radius: 15px 50px; background-color: #E8EEE8;" data-ng-repeat="address in cusAddresses track by $index">
 					
-					<form editable-form name="addressForm" onaftersave="saveAddress(address)"style="margin-top: 10px" >
+					<form  editable-form name="addressForm" onaftersave="saveAddress(address)"style="margin-top: 10px" >
 						<h5>Address {{$index+1}}:</h5>
-						<span ng-show="addressForm.$visible"><button data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger " style="margin-left: 90%;"  data-ng-click="deleteAddressForm(address)">X</button></span>
+						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger " style="margin-left: 90%;"  data-ng-click="deleteAddressForm(address)">X</button></span>
 						<div class="form-group">
 							<label class=" control-label">Line 1: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty'
 								}}</span>
@@ -104,7 +104,7 @@
 								}}</span>
 						</div>
 						<div class="form-group">
-							<label class=" control-label">Line 3: </label> <span editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty'
+							<label class=" control-label">Line 3: </label> <span  editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty'
 								}}</span>
 						</div>
 						<div class="form-group">

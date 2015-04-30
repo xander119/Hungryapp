@@ -106,9 +106,14 @@
 		<div class="col-sm-1"></div>
 		<div class="col-md-4" style="margin-bottom: 20px;">
 		<h2><span >{{currentRest.name}}</span></h2>
-				<span >{{currentRest.type}}</span>
+		<span data-ng-show="currentRest.status == null" data-ng-click="publish(currentRest)" class="glyphicon glyphicon-globe" tooltip="Publish this Restaurant" tooltip-placement="right"></span>
+		<span data-ng-show="currentRest.status == 'active'" data-ng-click="deactivate(currentRest)" class="glyphicon glyphicon-off" tooltip="Deactivate this Restaurant" tooltip-placement="right"></span>
 			
-			<form class="col-md-12 form-inline" onaftersave="saveLocation(location)" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px;" >
+			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{currentRest.logo}}">
+			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{image}}" >
+				<br><span >{{currentRest.type}}</span>
+			
+			<form  class="col-md-12 form-inline" onaftersave="saveLocation(location)" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px; border-bottom: 10px;" >
 				
 				
 				Branch : <span  editable-text="location.address" e-name="name" e-required>{{location.address || 'Address Empty'}}</span>
@@ -138,8 +143,11 @@
 						<button type="submit" class="btn btn-primary" ng-disabled="restBasicInfo.$waiting">Save</button>
 						<button type="button" class="btn btn-default" ng-disabled="restBasicInfo.$waiting" data-ng-click="restBasicInfo.$cancel()">Cancel</button>
 					</span>
+					
 				</div>
 			</form>
+			
+			<div align="right" style="margin: 15px; "><button type="button" class="btn btn-default" data-ng-click="newLocation()" >New Branch</button></div>
 		</div>
 	</div>
 	<!--  Review Form -->
