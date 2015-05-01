@@ -59,85 +59,85 @@ public class RestaurantService {
 	}
 	
 	
-//
-//	@POST
-//	@Path("/updloadLogo")
-//	@Consumes("multipart/form-data")
-//	public Response uploadFile( MultipartFormDataInput  input,@Context HttpHeaders hHeaders) {
-//		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
-//		String fileName = "";
-//
-//		Map<String, List<InputPart>> formParts = input.getFormDataMap();
-//
-//		List<InputPart> inPart = formParts.get("file");
-//
-//		for (InputPart inputPart : inPart) {
-//
-//			 try {
-//
-//				// Retrieve headers, read the Content-Disposition header to obtain the original name of the file
-//				MultivaluedMap<String, String> headers = inputPart.getHeaders();
-//				fileName = parseFileName(headers);
-//
-//				// Handle the body of that part with an InputStream
-//				InputStream istream = inputPart.getBody(InputStream.class,null);
-//
-//				fileName = SERVER_UPLOAD_LOCATION_FOLDER + fileName;
-//
-//				saveFile(istream,fileName);
-//
-//			  } catch (IOException e) {
-//				e.printStackTrace();
-//			  }
-//
-//			}
-//
-//                String output = "File saved to server location : " + fileName;
-//
-//		return Response.status(200).entity(output).build();
-//		}
-//		return Response.status(401).entity("Unauthorized").build();
-//	}
-//
-//	// Parse Content-Disposition header to get the original file name
-//	private String parseFileName(MultivaluedMap<String, String> headers) {
-//
-//		String[] contentDispositionHeader = headers.getFirst("Content-Disposition").split(";");
-//
-//		for (String name : contentDispositionHeader) {
-//
-//			if ((name.trim().startsWith("filename"))) {
-//
-//				String[] tmp = name.split("=");
-//
-//				String fileName = tmp[1].trim().replaceAll("\"","");
-//
-//				return fileName;
-//			}
-//		}
-//		return "randomName";
-//	}
-//
-//	// save uploaded file to a defined location on the server
-//	private void saveFile(InputStream uploadedInputStream,
-//		String serverLocation) {
-//
-//		try {
-//			OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
-//			int read = 0;
-//			byte[] bytes = new byte[1024];
-//
-//			outpuStream = new FileOutputStream(new File(serverLocation));
-//			while ((read = uploadedInputStream.read(bytes)) != -1) {
-//				outpuStream.write(bytes, 0, read);
-//			}
-//			outpuStream.flush();
-//			outpuStream.close();
-//		} catch (IOException e) {
-//
-//			e.printStackTrace();
-//		}
-//	}
+
+	@POST
+	@Path("/updloadLogo")
+	@Consumes("multipart/form-data")
+	public Response uploadFile( MultipartFormDataInput  input,@Context HttpHeaders hHeaders) {
+		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin"})), hHeaders)){
+		String fileName = "";
+
+		Map<String, List<InputPart>> formParts = input.getFormDataMap();
+
+		List<InputPart> inPart = formParts.get("file");
+
+		for (InputPart inputPart : inPart) {
+
+			 try {
+
+				// Retrieve headers, read the Content-Disposition header to obtain the original name of the file
+				MultivaluedMap<String, String> headers = inputPart.getHeaders();
+				fileName = parseFileName(headers);
+
+				// Handle the body of that part with an InputStream
+				InputStream istream = inputPart.getBody(InputStream.class,null);
+
+				fileName = SERVER_UPLOAD_LOCATION_FOLDER + fileName;
+
+				saveFile(istream,fileName);
+
+			  } catch (IOException e) {
+				e.printStackTrace();
+			  }
+
+			}
+
+                String output = "File saved to server location : " + fileName;
+
+		return Response.status(200).entity(output).build();
+		}
+		return Response.status(401).entity("Unauthorized").build();
+	}
+
+	// Parse Content-Disposition header to get the original file name
+	private String parseFileName(MultivaluedMap<String, String> headers) {
+
+		String[] contentDispositionHeader = headers.getFirst("Content-Disposition").split(";");
+
+		for (String name : contentDispositionHeader) {
+
+			if ((name.trim().startsWith("filename"))) {
+
+				String[] tmp = name.split("=");
+
+				String fileName = tmp[1].trim().replaceAll("\"","");
+
+				return fileName;
+			}
+		}
+		return "randomName";
+	}
+
+	// save uploaded file to a defined location on the server
+	private void saveFile(InputStream uploadedInputStream,
+		String serverLocation) {
+
+		try {
+			OutputStream outpuStream = new FileOutputStream(new File(serverLocation));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			outpuStream = new FileOutputStream(new File(serverLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				outpuStream.write(bytes, 0, read);
+			}
+			outpuStream.flush();
+			outpuStream.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
 
 	
 	@POST

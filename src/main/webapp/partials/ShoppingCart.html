@@ -14,7 +14,7 @@
 			<div class="col-md-12">
 				<h4>Select delivery Address:</h4>
 				<div data-ng-repeat="address in cusAddresses track by $index">
-				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px;border-radius: 15px 50px; background-color: #E8EEE8; margin-left: 20px;" >
+				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px" >
 					<h5>Address {{$index+1}}:</h5>
 						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger "
 								style="margin-left: 50%;" data-ng-click="deleteAddressForm(address)"
@@ -39,7 +39,7 @@
 					</div>
 					<div>
 						<!-- button to show form -->
-						<button type="button" class="btn btn-default" style="margin-bottom: 10px;margin-left: 20px;" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
+						<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
 						<!-- buttons to submit / cancel form -->
 						<span ng-show="addressForm.$visible">
 							<button type="submit" class="btn btn-primary" data-ng-disabled="addressForm.$waiting">Save</button>
@@ -60,7 +60,7 @@
 					</div>
 				</div>
 			</div>
-			<!--  <div style="margin-left: 40%"><ngcart-checkout service="{{selectedType.type}}" settings="payPalSettings"></ngcart-checkout></div>-->
+			 <div style="margin-left: 40%"><ngcart-checkout service="{{selectedType.type}}" settings="payPalSettings"></ngcart-checkout></div>
 			
 		</div>		
 	</div>

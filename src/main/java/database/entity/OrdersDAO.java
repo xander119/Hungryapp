@@ -18,7 +18,7 @@ public class OrdersDAO {
 
 	private Emailsender email = new Emailsender();
 	
-	public Orders createOrder(Orders order, int locationId,int custId,int addressId,int itemId) {
+	public Orders createOrder(Orders order, int locationId,int custId,int addressId) {
 		// TODO Auto-generated method stub
 		Customer c;
 		RestaurantLocation r = null;
@@ -40,32 +40,25 @@ public class OrdersDAO {
 				a = (Address) em.createNamedQuery("Address.findById").setParameter("id", addressId).getResultList().get(0);
 				order.setAddress(a);
 			}
-			Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
-			order.getItems().add(item);
-//			if(order.getOrderItems()!=null)
-//			{
-//				for(Orders_Items oi : order.getOrderItems()){
-//					oi.setOrders(order);
-//					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
-////					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
-//					oi.setItem(item);
-//				}
-//			}
+			
+//			
+			if(order.getOrderItems()!=null)
+			{
+				for(Orders_Items oi : order.getOrderItems()){
+					oi.setOrder(order);
+					int itemId = oi.getItem().getId();
+					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
+//					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
+					oi.setItem(item);
+				}
+			}
 			System.out.println(order.getPaymentType());
 			String dateString = new SimpleDateFormat("dd/MM/yy/HH/mm").format(new Date());
 			order.setOrderedDate(dateString);
 			order.setIsAccpected("pending");
 			em.persist(order);
 			em.flush();
-//			
-//			String orderDetails = "Payment type: "+ order.getPaymentType() + "\nOrder Date: "+ order.getOrderedDate() + "\nItems: \n" + itemList.toString();
-//			String body = "\n New Order from Hungry: \n \n "
-//					+ orderDetails
-//					+ "\n\n\n accpect: "
-//					+ " http://localhost:8080/Hungryapp/rest/order/accpectOrder/"
-//					+ order.getId() + "\n\n\n Decline: ";
-//			
-//			email.sendEmail(r.getEmail(), "New Order ", body);
+
 			return order;
 		}
 		return null;

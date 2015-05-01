@@ -9,6 +9,7 @@
 	    <class>database.entity.Menu</class>
 	    <class>database.entity.OpenHour</class>
 	    <class>database.entity.Orders</class>
+	    <class>database.entity.Orders_Items</class>
 	    <class>database.entity.Restaurant</class>
 	    <class>database.entity.RestaurantLocation</class>
 	    <class>database.entity.Review</class>

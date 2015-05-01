@@ -31,11 +31,11 @@ public class OrderService {
 	private RequestInterceptor interceptor;
 	
 	@POST
-	@Path("/createOrder/{locationId}-{custId}-{addressId}-{itemId}")
+	@Path("/createOrder/{locationId}-{custId}-{addressId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response newOrder(Orders order,@PathParam("locationId") int locationId,@PathParam("custId") int custId,@PathParam("addressId") int addressId,@PathParam("itemId") int itemId,@Context HttpHeaders hHeaders){
+	public Response newOrder(Orders order,@PathParam("locationId") int locationId,@PathParam("custId") int custId,@PathParam("addressId") int addressId,@Context HttpHeaders hHeaders){
 		if(interceptor.process(new HashSet<String>(Arrays.asList(new String[]{"admin","customer"})), hHeaders)){
-			return Response.status(200).entity( ordersDao.createOrder(order,locationId,custId,addressId, itemId)).build();
+			return Response.status(200).entity( ordersDao.createOrder(order,locationId,custId,addressId)).build();
 		}
 		return Response.status(401).entity("Unauthorized").build();
 		

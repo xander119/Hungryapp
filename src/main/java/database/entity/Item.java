@@ -52,13 +52,17 @@ public class Item implements Serializable {
 //	@JsonManagedReference("item_ordersitems")
 //	@OnDelete(action = OnDeleteAction.CASCADE)
 //	private Set<Orders_Items> orderItems ;
+
+	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JsonManagedReference("item_ordersitems")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Set<Orders_Items> orderItems ;
+
 	@ManyToOne
 	@JoinColumn(name="menu_id")
 	@JsonBackReference("item_menu")
 	private Menu menu;
-	@ManyToMany(mappedBy="items")
-	@JsonSerialize(using=SimpleOrdersSerializer.class)
-	private Set<Orders> orders = new HashSet<Orders>();
 	
 	
 	
@@ -108,11 +112,11 @@ public class Item implements Serializable {
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + "]";
 	}
-	public Set<Orders> getOrders() {
-		return orders;
+	public Set<Orders_Items> getOrderItems() {
+		return orderItems;
 	}
-	public void setOrders(Set<Orders> orders) {
-		this.orders = orders;
+	public void setOrderItems(Set<Orders_Items> orderItems) {
+		this.orderItems = orderItems;
 	}
-   
+	
 }

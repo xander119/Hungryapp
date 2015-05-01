@@ -15,16 +15,18 @@
 					data-ng-show="loginform.$dirty">
 					<span
 						data-ng-show="loginform.credential.$error.required || loginform.password.$error.required"></span>
+
 				</div>
 				<p>Welcome: {{credential}}</p>
 				<span>{{status}}</span>
-				<form  id="loginform" name="loginform" class="form-horizontal" role="form" novalidate>
+				<form  id="loginform"
+					name="loginform" class="form-horizontal" role="form" novalidate>
 					<p class=text-warning>{{status.result}}</p>
 					<div style="margin-bottom: 25px" class="input-group">
-						<span class="input-group-addon">
-							<i class="glyphicon glyphicon-user"></i>
-						</span> 
-						<input data-ng-model="credential" id="login-credential" type="text" class="form-control" name="usernameOrEmail"
+						<span class="input-group-addon"><i
+							class="glyphicon glyphicon-user"></i></span> <input
+							data-ng-model="credential" id="login-credential" type="text"
+							class="form-control" name="usernameOrEmail"
 							placeholder="Username or Email" required autofocus/>
 
 					</div>

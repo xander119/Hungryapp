@@ -3,15 +3,20 @@
  */
 var control = angular.module('app.controllers', [ 'ngCookies' ]);
 
-control.controller('restListCtrl',
-		['$scope','$location','$cookieStore','$sce','DataService','RestaurantServices',
-		 function($scope,$location,$cookieStore,$sce,DataService,RestaurantServices){
-			
-			
+
+//Update restaurant details, Menus and Locations in restaurantDetails Controller
+//jackson infinite loop ERROR in restful service
+
+
+
+
+control.controller('restListCtrl',['$scope','$location','$cookieStore','$sce','DataService','RestaurantServices',function($scope,$location,$cookieStore,$sce,DataService,RestaurantServices){
 	var locationidList = $cookieStore.get('RestaurantNearMe');
 	
 	
 	$scope.restaurantList = [];
+	var pathprefix = 'C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo/';
+	 $sce.trustAsResourceUrl.bind(pathprefix);
 	console.log($sce.isEnabled());
 	var getAverageRate = function(reviews){
 		var sum =0;
@@ -28,16 +33,10 @@ control.controller('restListCtrl',
 				var location = restAndLoc[1];
 				 restaurant.locations =[];
 				restaurant.locations.push(location);
-				var avageRate = 0;
-				
-				avageRate = getAverageRate(location.reviews);
+				console.log(restaurant);
+				var avageRate = getAverageRate(location.reviews);
 				restaurant.distance = locationAndDist.distance;
 				restaurant.rate = avageRate;
-				if(location.reviews.length == 0){
-					restaurant.rate = 0;
-				}
-				console.log(restaurant);
-				
 				//restaurant.logo = pathprefix + restaurant.logo;
 				if($scope.restaurantList.indexOf(restaurant) == -1){
 					$scope.restaurantList.push(restaurant);
@@ -182,7 +181,7 @@ control.controller('shoppingCartCtrl',['$scope','ngCart','$cookieStore','$locati
 		console.log(orders);
 		//customer, billing address , items, restaurant location;
 		orders.forEach(function(order){
-			var associateId = order.locationId+'-'+custId +'-'+addressId + '-' + itemId;
+			var associateId = order.locationId+'-'+custId +'-'+addressId;
 			order.paymentType = $scope.selectedType.type;
 			
 			delete order.locationId;
@@ -191,7 +190,7 @@ control.controller('shoppingCartCtrl',['$scope','ngCart','$cookieStore','$locati
 			});
 		})
 		ngCart.empty();
-		$location.path('/placeOrder')
+		$location.path('/Home')
 	};
 
 }]);
@@ -293,25 +292,8 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 	$scope.newLocation = function(){
 		$location.path('newBranch');
 	}
-	$scope.getRestaurantForCus =function() {
-		$scope.locationId = $cookieStore.get('RestDetails');
-		RestaurantServices.getRestaurantByLocaId({
-			id : $cookieStore.get('RestDetails')
-		}, function(data) {
-			console.log(data);
-			data.forEach(function(restAndLoc) {
-				var restaurant = restAndLoc[0];
-				var location = restAndLoc[1];
-				restaurant.locations = [];
-				restaurant.locations.push(location);
-				$scope.currentRest = restaurant;
-				$scope.currentRest.logo = $sce.trustAsResourceUrl(path
-						+ data.logo);
-				console.log($scope.currentRest.logo);
-			})
-		});
-	}
-	$scope.hoveringOver = function(value) {
+	
+	 $scope.hoveringOver = function(value) {
 		    $scope.overStar = value;
 		    $scope.percent = 100 * (value / $scope.max);
 		  };
@@ -325,7 +307,19 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 		});
 		
 	}else{
-		$scope.getRestaurantForCus();
+		$scope.locationId = $cookieStore.get('RestDetails');
+		RestaurantServices.getRestaurantByLocaId({id: $cookieStore.get('RestDetails')},function(data){
+			console.log(data);
+			data.forEach(function(restAndLoc){
+				var restaurant = restAndLoc[0];
+				var location = restAndLoc[1];
+				 restaurant.locations =[];
+				restaurant.locations.push(location);
+				$scope.currentRest = restaurant;
+				$scope.currentRest.logo = $sce.trustAsResourceUrl(path + data.logo);
+				 console.log(  $scope.currentRest.logo);
+			})
+		});
 		//getCustomer by reviews 
 	}
 
@@ -405,21 +399,6 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 		}, function(data) {
 			alert(data);
 			console.log(data);
-		});
-		RestaurantServices.getRestaurantByLocaId({
-			id : $cookieStore.get('RestDetails')
-		}, function(data) {
-			console.log(data);
-			data.forEach(function(restAndLoc) {
-				var restaurant = restAndLoc[0];
-				var location = restAndLoc[1];
-				restaurant.locations = [];
-				restaurant.locations.push(location);
-				$scope.currentRest = restaurant;
-				$scope.currentRest.logo = $sce.trustAsResourceUrl(path
-						+ data.logo);
-				console.log($scope.currentRest.logo);
-			})
 		});
 	};
 	$scope.saveLocation= function(location){
@@ -538,7 +517,8 @@ control.controller('oHModalCtrl',['$scope','$element','close', function($scope,$
 		close({openHours: $scope.openHours}, 500);
 	}
 	 $scope.close = function(result) {
-		 close(result, 500); 
+		 close(result, 500); // close, but give 500ms for bootstrap to
+								// animate
 	 };
 
 	}]);

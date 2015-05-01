@@ -41,6 +41,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @XmlRootElement
+
 public class Orders implements Serializable {
 
 	@Id
@@ -65,16 +66,13 @@ public class Orders implements Serializable {
 	@JsonBackReference("order_address")
 	private Address address ;
 	
-//	@OneToMany(mappedBy = "orders",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JsonManagedReference("order_ordersitems")
-//	@OnDelete(action = OnDeleteAction.CASCADE)
-//	private Set<Orders_Items> orderItems ;
-	
-	@ManyToMany
-	 @JoinTable(name="orders_items",joinColumns=@JoinColumn(name = "orders_fk"),
-	 inverseJoinColumns=@JoinColumn(name = "item_fk"))
+	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("order_ordersitems")
-	private Set<Item> items = new HashSet<Item>();
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Set<Orders_Items> orderItems ;
+	
+	
+	
 	
 	private static final long serialVersionUID = 1L;
 
@@ -170,6 +168,14 @@ public class Orders implements Serializable {
 		this.isComplete = isComplete;
 	}
 
+	public Set<Orders_Items> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(Set<Orders_Items> orderItems) {
+		this.orderItems = orderItems;
+	}
+
 	public String getIsAccpected() {
 		return isAccpected;
 	}
@@ -178,13 +184,7 @@ public class Orders implements Serializable {
 		this.isAccpected = isAccpected;
 	}
 
-	public Set<Item> getItems() {
-		return items;
-	}
 
-	public void setItems(Set<Item> items) {
-		this.items = items;
-	}
 
 //	@Override
 //	public String toString() {

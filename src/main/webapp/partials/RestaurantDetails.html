@@ -29,13 +29,13 @@
 						<div class="Info list-inline" ng-repeat="item in currentMenu.items track by $index">
 							{{$index+1}}. <span class="list-group-item-text text-left" editable-text="item.name" e-name="itemName" e-required >{{item.name}}</span> 
 							<span class="text-left"  editable-text="item.description" e-name="itemDescription" e-required> {{item.description}}</span><br>
-							<div style="margin-left: 80%; " >
-							 &euro; <span class="text-right" e-style="width: 80%" editable-number="item.price" e-name="itemPrice" e-required >{{item.price}}</span>
+							<div style="margin-left: 200px;">
+							 &euro; <span class="text-right" editable-number="item.price" e-name="itemPrice" e-required >{{item.price}}</span>
 							 </div>
 							<!-- show button if user is a customer 
 							ng-show= "if customer is true"-->
 							<span ng-show="editableMenuForm.$visible">
-								<button class="btn btn-sm btn-danger" data-ng-click="deleteMenuItem(currentMenu,item)" tooltip-placement="right" tooltip="Delete this Item"
+								<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(currentMenu,item)" tooltip-placement="right" tooltip="Delete this Item"
 									>
 									<span class=" glyphicon glyphicon-minus"></span>
 								</button>
@@ -105,14 +105,12 @@
 		</div>
 		<div class="col-sm-1"></div>
 		<div class="col-md-4" style="margin-bottom: 20px;">
-		<div class="row" style="margin-top: 35px;">
-			<div class="col-md-9"><span style="font-size: x-large;">{{currentRest.name}}</span></div>
-				<div class="col-md-3" align="justify" style="margin-top: 15px;" data-ng-show="isAdmin()">
-				<span style="" data-ng-show="currentRest.status == null" data-ng-click="publish(currentRest)" class="glyphicon glyphicon-globe" tooltip="Publish this Restaurant" tooltip-placement="right"></span>
-				<span style="" data-ng-show="currentRest.status == 'active'" data-ng-click="deactivate(currentRest)" class="glyphicon glyphicon-off" tooltip="Deactivate this Restaurant" tooltip-placement="right"></span>
-			</div>
-		</div>
+		<h2><span >{{currentRest.name}}</span></h2>
+		<span data-ng-show="currentRest.status == null" data-ng-click="publish(currentRest)" class="glyphicon glyphicon-globe" tooltip="Publish this Restaurant" tooltip-placement="right"></span>
+		<span data-ng-show="currentRest.status == 'active'" data-ng-click="deactivate(currentRest)" class="glyphicon glyphicon-off" tooltip="Deactivate this Restaurant" tooltip-placement="right"></span>
 			
+			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{currentRest.logo}}">
+			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{image}}" >
 				<br><span >{{currentRest.type}}</span>
 			
 			<form  class="col-md-12 form-inline" onaftersave="saveLocation(location)" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px; border-bottom: 10px;" >
@@ -137,7 +135,7 @@
 					<br/>
 					Delivery Time : <span editable-text="location.deliveryHour" e-name="name" e-required >{{location.deliveryHour }}</span>
 					<br>Note : <span editable-text="location.deliveryNote" e-name="name" e-required >{{location.deliveryNote}}</span>
-				<div align="right" data-ng-show="isAdmin()" style="margin-bottom: 15px; ">
+				<div align="right" data-ng-show="isAdmin()">
 					<!-- button to show form -->
 					<button type="button" class="btn btn-default" data-ng-click="restBasicInfo.$show()" data-ng-show="!restBasicInfo.$visible">Edit</button>
 					<!-- buttons to submit / cancel form -->
@@ -147,10 +145,9 @@
 					</span>
 					
 				</div>
-				<div style="border-bottom: buttonshadow;border-bottom-style: ridge;" ></div>
 			</form>
 			
-			<div data-ng-show="isAdmin()" align="right" style="margin: 25px; "><button type="button" class="btn btn-default" data-ng-click="newLocation()" >New Branch</button></div>
+			<div align="right" style="margin: 15px; "><button type="button" class="btn btn-default" data-ng-click="newLocation()" >New Branch</button></div>
 		</div>
 	</div>
 	<!--  Review Form -->
