@@ -18,7 +18,7 @@ public class OrdersDAO {
 
 	private Emailsender email = new Emailsender();
 	
-	public Orders createOrder(Orders order, int locationId,int custId,int addressId) {
+	public Orders createOrder(Orders order, int locationId,int custId,int addressId,int itemId) {
 		// TODO Auto-generated method stub
 		Customer c;
 		RestaurantLocation r = null;
@@ -43,8 +43,7 @@ public class OrdersDAO {
 			if(order.getOrderItems()!=null)
 			{
 				for(Orders_Items oi : order.getOrderItems()){
-					oi.setOrder(order);
-					int itemId = oi.getItem().getId();
+					oi.setOrders(order);
 					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
 //					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
 					oi.setItem(item);

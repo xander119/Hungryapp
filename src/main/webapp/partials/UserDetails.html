@@ -90,28 +90,28 @@
 		<div data-ng-show="isActiveTab(3)">
 			<div class="row" style="margin: 20px">
 			<h4>Deliver Addresses: </h4>
-				<div class="col-md-5" style="border-radius: 15px 50px; background-color: #E8EEE8;" data-ng-repeat="address in cusAddresses track by $index">
+				<div class="col-md-5" style="border-radius: 15px 50px; background-color: #E8EEE8; margin-left: 20px;" data-ng-repeat="address in cusAddresses track by $index">
 					
 					<form  editable-form name="addressForm" onaftersave="saveAddress(address)"style="margin-top: 10px" >
 						<h5>Address {{$index+1}}:</h5>
 						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger " style="margin-left: 90%;"  data-ng-click="deleteAddressForm(address)">X</button></span>
 						<div class="form-group">
-							<label class=" control-label">Line 1: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty'
+							<label class=" control-label">Line 1: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || ''
 								}}</span>
 						</div>
 						<div class="form-group">
-							<label class=" control-label">Line 2: </label> <span editable-text="address.line2" e-name="line2" e-required>{{address.line2 || 'empty'
+							<label class=" control-label">Line 2: </label> <span editable-text="address.line2" e-name="line2" e-required>{{address.line2 || ''
 								}}</span>
 						</div>
 						<div class="form-group">
-							<label class=" control-label">Line 3: </label> <span  editable-text="address.line3" e-name="line3" e-required>{{address.line3 || 'empty'
+							<label class=" control-label">Line 3: </label> <span  editable-text="address.line3" e-name="line3" >{{address.line3 || ''
 								}}</span>
 						</div>
 						<div class="form-group">
 							<label class=" control-label">County: </label> <span editable-select="address.county"
 								e-name="county" e-ng-options="county.area for county in counties"> {{address.county ||'Not set'}} </span>
 						</div>
-						<div>
+						<div style="margin-left: 50%; margin-bottom: 15px;'">
 							<!-- button to show form -->
 							<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
 							<!-- buttons to submit / cancel form -->

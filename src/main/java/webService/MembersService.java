@@ -47,8 +47,7 @@ public class MembersService {
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response  register(Customer c) throws NoSuchAlgorithmException, InvalidKeySpecException{
-		//register and log in (log in in AngularJS)
-		//return null if customer already exist validate existing email and userName
+
 		if(customerDao.createCustomer(c)){
 			return Response.status(200).entity(c).build();
 		}

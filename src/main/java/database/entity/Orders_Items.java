@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,6 +21,7 @@ import org.hibernate.annotations.OnDeleteAction;
  */
 @Entity 
 @XmlRootElement
+
 public class Orders_Items implements Serializable {
 
 	@Id
@@ -27,16 +29,15 @@ public class Orders_Items implements Serializable {
 	private Integer id;
 	@ManyToOne
 	@JoinColumn(name="order_id")
-//	@JsonBackReference("order_ordersitems")
-	@JsonIgnore
+	@JsonBackReference("order_ordersitems")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Orders order;
+	private Orders orders;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="item_id")
-//	@JsonBackReference("item_ordersitems")
+	@JsonBackReference("item_ordersitems")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
 	private Item item;
 	
 	private int quantity;
@@ -55,13 +56,14 @@ public class Orders_Items implements Serializable {
 		this.id = id;
 	}
 
-	public Orders getOrder() {
-		return order;
+	public Orders getOrders() {
+		return orders;
 	}
 
-	public void setOrder(Orders order) {
-		this.order = order;
+	public void setOrders(Orders orders) {
+		this.orders = orders;
 	}
+
 
 	public Item getItem() {
 		return item;

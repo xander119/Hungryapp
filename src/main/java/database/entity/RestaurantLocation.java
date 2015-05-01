@@ -61,6 +61,7 @@ public class RestaurantLocation implements Serializable {
 	@OneToMany(mappedBy = "restaurantLocation", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonManagedReference("restaurantLocation_orders")
+	@JsonIgnore
 	private Set<Orders> orders ;
 	@Column(nullable=true)
 	@OneToMany(mappedBy="restaurantLocation",fetch=FetchType.EAGER,cascade = CascadeType.ALL)

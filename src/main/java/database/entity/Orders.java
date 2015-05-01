@@ -38,7 +38,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @XmlRootElement
-
 public class Orders implements Serializable {
 
 	@Id
@@ -63,8 +62,8 @@ public class Orders implements Serializable {
 	@JsonBackReference("order_address")
 	private Address address ;
 	
-	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JsonManagedReference("order_ordersitems")
+	@OneToMany(mappedBy = "orders",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JsonManagedReference("order_ordersitems")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Orders_Items> orderItems ;
 
