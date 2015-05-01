@@ -1,6 +1,7 @@
 package database.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -20,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -45,14 +48,19 @@ public class Item implements Serializable {
 	private String description;
 	private double price;
 	
-	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JsonManagedReference("item_ordersitems")
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Set<Orders_Items> orderItems ;
+//	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+//	@JsonManagedReference("item_ordersitems")
+//	@OnDelete(action = OnDeleteAction.CASCADE)
+//	private Set<Orders_Items> orderItems ;
 	@ManyToOne
 	@JoinColumn(name="menu_id")
 	@JsonBackReference("item_menu")
 	private Menu menu;
+	@ManyToMany(mappedBy="items")
+	@JsonSerialize(using=SimpleOrdersSerializer.class)
+	private Set<Orders> orders = new HashSet<Orders>();
+	
+	
 	
 	
 	private static final long serialVersionUID = 1L;
@@ -95,21 +103,16 @@ public class Item implements Serializable {
 	public void setMenu(Menu menu) {
 		this.menu = menu;
 	}
-//	public void setOrders(List<Orders> orders) {
-//		this.orders = orders;
-//	}
-//	public List<Orders> getOrders() {
-//		return orders;
-//	}
-	public Set<Orders_Items> getOrderItems() {
-		return orderItems;
-	}
-	public void setOrderItems(Set<Orders_Items> orderItems) {
-		this.orderItems = orderItems;
-	}
+	
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + "]";
+	}
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
 	}
    
 }

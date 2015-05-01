@@ -1,6 +1,7 @@
 package database.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -62,11 +65,17 @@ public class Orders implements Serializable {
 	@JsonBackReference("order_address")
 	private Address address ;
 	
-	@OneToMany(mappedBy = "orders",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+//	@OneToMany(mappedBy = "orders",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+//	@JsonManagedReference("order_ordersitems")
+//	@OnDelete(action = OnDeleteAction.CASCADE)
+//	private Set<Orders_Items> orderItems ;
+	
+	@ManyToMany
+	 @JoinTable(name="orders_items",joinColumns=@JoinColumn(name = "orders_fk"),
+	 inverseJoinColumns=@JoinColumn(name = "item_fk"))
 	@JsonManagedReference("order_ordersitems")
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Set<Orders_Items> orderItems ;
-
+	private Set<Item> items = new HashSet<Item>();
+	
 	private static final long serialVersionUID = 1L;
 
 	public Orders() {
@@ -123,23 +132,9 @@ public class Orders implements Serializable {
 	}
 
 
-//	public List<Item> getItems() {
-//		return items;
-//	}
-//
-//	public void setItems(List<Item> items) {
-//		this.items = items;
-//	}
 
 	
 
-	public Set<Orders_Items> getOrderItems() {
-		return orderItems;
-	}
-
-	public void setOrderItems(Set<Orders_Items> orderItems) {
-		this.orderItems = orderItems;
-	}
 
 	public RestaurantLocation getRestaurantLocation() {
 		return restaurantLocation;
@@ -181,6 +176,14 @@ public class Orders implements Serializable {
 
 	public void setIsAccpected(String isAccpected) {
 		this.isAccpected = isAccpected;
+	}
+
+	public Set<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
 	}
 
 //	@Override

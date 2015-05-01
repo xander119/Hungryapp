@@ -40,15 +40,17 @@ public class OrdersDAO {
 				a = (Address) em.createNamedQuery("Address.findById").setParameter("id", addressId).getResultList().get(0);
 				order.setAddress(a);
 			}
-			if(order.getOrderItems()!=null)
-			{
-				for(Orders_Items oi : order.getOrderItems()){
-					oi.setOrders(order);
-					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
-//					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
-					oi.setItem(item);
-				}
-			}
+			Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
+			order.getItems().add(item);
+//			if(order.getOrderItems()!=null)
+//			{
+//				for(Orders_Items oi : order.getOrderItems()){
+//					oi.setOrders(order);
+//					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
+////					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
+//					oi.setItem(item);
+//				}
+//			}
 			System.out.println(order.getPaymentType());
 			String dateString = new SimpleDateFormat("dd/MM/yy/HH/mm").format(new Date());
 			order.setOrderedDate(dateString);
