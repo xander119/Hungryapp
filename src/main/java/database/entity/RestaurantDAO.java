@@ -120,6 +120,7 @@ public class RestaurantDAO {
 	public List<RestaurantLocation> getAllLocations() {
 		// TODO Auto-generated method stub
 		List<RestaurantLocation> results = em.createNamedQuery("Restaurant.findActivated").getResultList();
+		
 		return (List<RestaurantLocation>) results;
 	}
 	

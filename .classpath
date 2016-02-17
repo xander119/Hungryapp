@@ -38,5 +38,14 @@
 	<classpathentry kind="lib" path="C:/JBOSS/jboss-as-7.1.1.Final/modules/org/hibernate/main/hibernate-core-4.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="C:/JBOSS/jboss-as-7.1.1.Final/modules/org/codehaus/jackson/jackson-mapper-asl/main/jackson-mapper-asl-1.9.2.jar"/>
 	<classpathentry kind="lib" path="C:/JBOSS/jboss-as-7.1.1.Final/modules/org/codehaus/jackson/jackson-jaxrs/main/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ZeChen/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="com.google.code.gson"/>
+			<attribute name="maven.artifactId" value="gson"/>
+			<attribute name="maven.version" value="2.2.4"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -56,7 +56,6 @@ public class Item implements Serializable {
 	@OneToMany(mappedBy="item",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("item_ordersitems")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
 	private Set<Orders_Items> orderItems ;
 
 	@ManyToOne

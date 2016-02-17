@@ -7,7 +7,7 @@
 	</div>
 
 	<div data-ng-show="isActiveTab(1)" align="justify">
-		<form class="col-md-12 form-inline" editable-form name="editableForm" style="margin: 20px">
+		<form class="col-md-12 form-inline" editable-form onaftersave="updateManager()" name="editableForm" style="margin: 20px">
 			<div class="form-group">
 				<h3>
 					<span editable-text="currentManager.name" e-name="username" e-required>{{currentManager.name || 'Name'}}</span>
@@ -18,8 +18,7 @@
 					<span class="list-group-item-text">Email :</span> <span editable-text="currentManager.email" e-name="email" e-required>{{currentManager.email}}</span>
 				</div>
 			</div>
-		</form>
-		<div align="right">
+			<div align="right">
 			<!-- button to show form -->
 			<button type="button" class="btn btn-default" data-ng-click="editableForm.$show()" data-ng-show="!editableForm.$visible">Edit</button>
 			<!-- buttons to submit / cancel form -->
@@ -28,6 +27,8 @@
 				<button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">Cancel</button>
 			</span>
 		</div>
+		</form>
+		
 	</div>
 
 
@@ -42,7 +43,7 @@
 								<button style="margin-left: 80%;" class="btn btn-danger" ng-click="deleteRestaurant(Restaurant.id)">Delete</button>
 						</accordion-heading>
 					<div class="row">
-							<div class="col-md-4">IMAGE.</div>
+							<div class="col-md-4"></div>
 								<div class="col-md-4">
 								<div class="row">Description : {{Restaurant.description}}</div>
 								<div class="row">Type : {{Restaurant.type}}</div>

@@ -182,7 +182,15 @@ services.factory('AuthService', function($resource) {
 				params : {
 					id : '@id'
 				}
+			},
+			updateManager : {
+				url : 'rest/admin/update/:id',
+				method : 'PUT',
+				params : {
+					id : '@id'
+				}
 			}
+			
 			
 		});
 	});

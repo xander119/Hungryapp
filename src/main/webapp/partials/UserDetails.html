@@ -12,12 +12,7 @@
 		<div data-ng-show="isActiveTab(1)">
 			<div class="row " style="margin-left: 15px;">
 				<div class="col-md-3 " style="margin-top: 15px;">
-					<div class="row">
-						<img alt="140x140" src="http://lorempixel.com/140/140/" />
-					</div>
-					<div class="row">
-						<button class="btn-link" style="color: white;" >Change pic</button>
-					</div>
+					
 
 				</div>
 
@@ -82,7 +77,8 @@
 				<h3 style="font-style: italic;">Order History :</h3>
 					
 					<div class="list-group-item" data-ng-hide="historyOrders=null">You have no orders yet.</div>
-					<div class="list-group-item" data-ng-repeat="order in historyOrders">{{order.orderedDate}}</div>
+					<div class="list-group-item" data-ng-repeat="order in historyOrders"> Date : {{order[0]}}, </div>
+					
 				</div>
 			</div>
 		</div>
@@ -90,12 +86,12 @@
 		<div data-ng-show="isActiveTab(3)">
 			<div class="row" style="margin: 20px">
 			<h4>Deliver Addresses: </h4>
-				<div class="col-md-5" style="border-radius: 15px 50px; background-color: #E8EEE8;" data-ng-repeat="address in cusAddresses track by $index">
+				<div class="col-md-5" style="border-radius: 15px 50px; background-color: #E8EEE8; margin-left: 20px;" data-ng-repeat="address in cusAddresses track by $index">
 					
 					<form  editable-form name="addressForm" onaftersave="saveAddress(address)"style="margin-top: 10px" >
 						<h5>Address {{$index+1}}:</h5>
 						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger " style="margin-left: 90%;"  data-ng-click="deleteAddressForm(address)">X</button></span>
-						<div class="form-group">
+						<div class="form-group" >
 							<label class=" control-label">Line 1: </label> <span editable-text="address.line1" e-name="line1" e-required>{{address.line1 || 'empty'
 								}}</span>
 						</div>
@@ -111,7 +107,7 @@
 							<label class=" control-label">County: </label> <span editable-select="address.county"
 								e-name="county" e-ng-options="county.area for county in counties"> {{address.county ||'Not set'}} </span>
 						</div>
-						<div>
+						<div style="margin-left: 50%; margin-bottom: 15px;">
 							<!-- button to show form -->
 							<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
 							<!-- buttons to submit / cancel form -->

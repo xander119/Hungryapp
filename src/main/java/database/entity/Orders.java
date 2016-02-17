@@ -34,8 +34,9 @@ import org.hibernate.annotations.OnDeleteAction;
  */
 @NamedQueries({
 @NamedQuery(name="Orders.getAllOrders",query="select o from Orders o"),
-@NamedQuery(name="Orders.findById",query="select o from Orders o where o.id = :id"),
-@NamedQuery(name="Orders.getPendingOrders",query="select o from Orders o where o.isAccpected = 'pending' and o.customer.userid = :id")
+@NamedQuery(name="Orders.findById",query="select o.orderedDate,o.paymentType,o.customer.userid,o.restaurantLocation.id,o.address.id from Orders o where o.id = :id"),
+@NamedQuery(name="Orders.getPendingOrders",query="select o.orderedDate,o.paymentType,o.customer.userid,o.restaurantLocation.id,o.address.id from Orders o where o.isAccpected = 'pending' and o.customer.userid = :id"),
+@NamedQuery(name="Orders.findItemInOrderById",query="select oi.item from Orders_Items oi where oi.order.id = :id")
 
 })
 
@@ -64,7 +65,7 @@ public class Orders implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="address_id")
 	@JsonBackReference("order_address")
-	private Address address ;
+	private Address address;
 	
 	@OneToMany(mappedBy = "order",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference("order_ordersitems")

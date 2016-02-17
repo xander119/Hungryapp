@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+
 @Stateless
 @LocalBean
 @SuppressWarnings("unchecked")
@@ -18,7 +19,7 @@ public class OrdersDAO {
 
 	private Emailsender email = new Emailsender();
 	
-	public Orders createOrder(Orders order, int locationId,int custId,int addressId) {
+	public Orders createOrder(Orders order, int locationId,int custId,int addressId, int itemId2) {
 		// TODO Auto-generated method stub
 		Customer c;
 		RestaurantLocation r = null;
@@ -48,15 +49,18 @@ public class OrdersDAO {
 					oi.setOrder(order);
 					int itemId = oi.getItem().getId();
 					Item item = (Item) em.createNamedQuery("Item.findById").setParameter("id",  itemId).getResultList().get(0);
-//					itemList.append("\n"+item.getName() + "\t " + item.getPrice());
+					itemList.append(item.getName() + "\t \t ID: " + item.getId() + "\t \t \t \t Quantity: " + oi.getQuantity());
 					oi.setItem(item);
 				}
 			}
+			
 			System.out.println(order.getPaymentType());
 			String dateString = new SimpleDateFormat("dd/MM/yy/HH/mm").format(new Date());
 			order.setOrderedDate(dateString);
 			order.setIsAccpected("pending");
-			em.persist(order);
+			//em.persist(order);
+			String body = itemList + "\n \n" + "Customer is waiting for Delivery.\n\n";
+			email.sendEmail(r.getEmail(), "New Order", body);
 			em.flush();
 
 			return order;
@@ -64,22 +68,28 @@ public class OrdersDAO {
 		return null;
 	}
 
-	public Orders getOrderById(int orderid) {
+	public Object getOrderById(int orderid) {
 		// TODO Auto-generated method stub
-		
-		return em.find(Orders.class, orderid);
-	}
-	public List<Orders> getPendingOrdersByCustomerId(int custId) {
-		// TODO Auto-generated method stub
-		
-		List<Orders> orders;
-		try {
-			orders = em.createNamedQuery("Orders.getPendingOrders").setParameter("id", custId).getResultList();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return null;
+		List<Object> o = (List<Object>) em.createNamedQuery("Orders.findById").setParameter("id", orderid).getResultList();
+		List<Item> i = (List<Item>) em.createNamedQuery("Orders.findItemInOrderById").setParameter("id", orderid).getResultList();
+		System.out.println(i.size());
+		for (Item item : i ){
+			System.out.println(item.getName());
 		}
-		return orders;
+		if(o!=null){
+		
+			return o.get(0);
+		}
+				
+		return null;
+	}
+	public List<Object> getPendingOrdersByCustomerId(int custId) {
+		// TODO Auto-generated method stub
+		
+		List<Object> o;
+		o = em.createNamedQuery("Orders.getPendingOrders").setParameter("id", custId).getResultList();
+		
+		return o;
 	}
 
 

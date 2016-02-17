@@ -14,10 +14,10 @@
 			<div class="col-md-12">
 				<h4>Select delivery Address:</h4>
 				<div data-ng-repeat="address in cusAddresses track by $index">
-				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px" >
+				<form class="col-md-4" editable-form name="addressForm" onaftersave="saveAddress(address)" style="margin-top: 10px ;border-radius: 15px 50px; background-color: #E8EEE8; margin-left: 20px;" >
 					<h5>Address {{$index+1}}:</h5>
 						<span ng-show="addressForm.$visible"><button type="button" data-ng-disabled="addressForm.$waiting" class="btn btn-xs btn-danger "
-								style="margin-left: 50%;" data-ng-click="deleteAddressForm(address)"
+								style="margin-left: 80%;" data-ng-click="deleteAddressForm(address)"
 							>X</button></span>
 
 						<div class="form-group">
@@ -37,7 +37,7 @@
 					<div class="form-group" align="right">
 						Select: <input type="checkbox" name="checkAddress"  data-ng-model="address.check">
 					</div>
-					<div>
+					<div style="margin-bottom: 10px;margin-left: 20px;">
 						<!-- button to show form -->
 						<button type="button" class="btn btn-default" ng-click="addressForm.$show()" ng-show="!addressForm.$visible">Edit</button>
 						<!-- buttons to submit / cancel form -->
@@ -55,7 +55,7 @@
 					<div align="right" >
 					<label>Select payment type: <select data-ng-model="selectedType" data-ng-options="payments.name for payments in payments"></select>
 					</label>
-					<button class="btn btn-primary" data-ng-disabled="muladdressSelected() || selectedType == null || noaddressSelected()" data-ng-click="processedCheckout()">Processed</button>
+					<button ng-hide="selectedType.type=='paypal'" class="btn btn-primary" data-ng-disabled="muladdressSelected() || selectedType == null || noaddressSelected()" data-ng-click="processedCheckout()">Processed</button>
 					</div>
 					</div>
 				</div>

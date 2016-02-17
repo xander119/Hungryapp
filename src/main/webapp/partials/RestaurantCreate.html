@@ -23,20 +23,18 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<div ngf-drop ngf-select ng-model="files" class="drop-box" ngf-drag-over-class="dragover" ngf-multiple="false" ngf-allow-dir="true"
-					accept="image/*"
-				>Drop image here or click to upload</div>
-				<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+			
 			</div>
 			<div class="form-group">
 
 				<label for="type" class="col-md-3 control-label">Description : </label>
 				<div class="col-md-3" style="margin-left: 25px;">
-					<textarea cols="40" rows="5" type="text" ng-model="res.description" class="form-control" name="description" placeholder="Restaurant description"
+					<textarea cols="40" rows="5" type="text" ng-model="res.description" ng-maxlength="200" class="form-control" name="description" placeholder="Restaurant description"
 						required
 					></textarea>
-					<div ng-show="restaurantDetailsForm.type.$dirty ">
-						<small class="text-warning" ng-show="restaurantDetailsForm.type.$error.required">Your input is required.</small>
+					<div ng-show="restaurantDetailsForm.description.$dirty ">
+						<small class="text-warning" ng-show="restaurantDetailsForm.description.$error.required">Your input is required.</small>
+						<small class="text-warning" ng-show="restaurantDetailsForm.description.$error.maxlength">You have entered more than 200 characters</small>
 					</div>
 				</div>
 
@@ -161,14 +159,14 @@
 					<button ng-disabled="restaurantLocationForm.$invalid" class="btn btn-primary" ng-click="saveAddress()">Save this Address</button>
 				</div>
 			</form>
-			<form class="form-group form-inline" ng-repeat = "resLoc in restaurantLocations">
+			<form style="border-radius: 25px;border: 2px solid #8AC007;" class="form-group form-inline col-md-6 "  ng-repeat = "resLoc in restaurantLocations">
 					<br>Contact Number : {{resLoc.telephone}} 
 					<br>Email : {{resLoc.email}} 
 					<br>Address: 
 					<br> &nbsp; {{resLoc.address}} 
 					<br>Delivery Hour : {{resLoc.deliveryHour}} 
 					<br>Delivery Note : {{resLoc.deliveryNote}}
-					<br> Opening Hours : {{resLoc.openHour.monday || 'close'}}
+					<br> Opening Hours :
 					<br>Monday : {{resLoc.openHour.monday  || 'Close'}} 
 					<br>Tuesday :{{resLoc.openHour.tuesday || 'Close'}} 
 					<br>Wednesday : {{resLoc.openHour.wednesday || 'Close'}} 

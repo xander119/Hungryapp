@@ -35,7 +35,7 @@
 							<!-- show button if user is a customer 
 							ng-show= "if customer is true"-->
 							<span ng-show="editableMenuForm.$visible">
-								<button class="btn btn-sm btn-primary" data-ng-click="deleteMenuItem(currentMenu,item)" tooltip-placement="right" tooltip="Delete this Item"
+								<button class="btn btn-sm btn-danger" data-ng-click="deleteMenuItem(currentMenu,item)" tooltip-placement="right" tooltip="Delete this Item"
 									>
 									<span class=" glyphicon glyphicon-minus"></span>
 								</button>
@@ -64,7 +64,7 @@
 			<div class="col-md-12" style="font-size: medium;">
 				<h3>Reviews :</h3>
 				<div >
-					<div data-ng-repeat="r in currentRest.locations[0].reviews">
+					<div data-ng-repeat="r in reviews">
 						<rating ng-model="r.rate" max="max" readonly="true" on-hover="hoveringOver(value)" ></rating>
 						<span class="label" >{{r.rate}}</span> <span ng-if="r.rate > 1">Stars</span><span ng-if="r.rate == 1">Star</span>
 						<br>
@@ -105,12 +105,13 @@
 		</div>
 		<div class="col-sm-1"></div>
 		<div class="col-md-4" style="margin-bottom: 20px;">
-		<h2><span >{{currentRest.name}}</span></h2>
-		<span data-ng-show="currentRest.status == null" data-ng-click="publish(currentRest)" class="glyphicon glyphicon-globe" tooltip="Publish this Restaurant" tooltip-placement="right"></span>
-		<span data-ng-show="currentRest.status == 'active'" data-ng-click="deactivate(currentRest)" class="glyphicon glyphicon-off" tooltip="Deactivate this Restaurant" tooltip-placement="right"></span>
-			
-			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{currentRest.logo}}">
-			<img style="height: 100px;width: 100px;" alt="LOGO Error" ng-src="{{image}}" >
+		<div class="row" style="margin-top: 35px;">
+			<div class="col-md-9"><span style="font-size: x-large;">{{currentRest.name}}</span></div>
+				<div class="col-md-3" align="justify" style="margin-top: 15px;" data-ng-show="isAdmin()">
+				<span style="" data-ng-show="currentRest.status == 'null'|| currentRest.status == null" data-ng-click="publish(currentRest);currentRest.status = 'active'" class="glyphicon glyphicon-globe" tooltip="Publish this Restaurant" tooltip-placement="right"></span>
+				<span style="" data-ng-show="currentRest.status == 'active'" data-ng-click="deactivate(currentRest);currentRest.status = 'null'" class="glyphicon glyphicon-off" tooltip="Deactivate this Restaurant" tooltip-placement="right"></span>
+			</div>
+		</div>
 				<br><span >{{currentRest.type}}</span>
 			
 			<form  class="col-md-12 form-inline" onaftersave="saveLocation(location)" editable-form name="restBasicInfo" data-ng-repeat = "location in currentRest.locations" style="font-size: medium;margin-top: 15px; border-bottom: 10px;" >
@@ -135,7 +136,7 @@
 					<br/>
 					Delivery Time : <span editable-text="location.deliveryHour" e-name="name" e-required >{{location.deliveryHour }}</span>
 					<br>Note : <span editable-text="location.deliveryNote" e-name="name" e-required >{{location.deliveryNote}}</span>
-				<div align="right" data-ng-show="isAdmin()">
+				<div align="right" data-ng-show="isAdmin()"  style="margin-bottom: 15px; ">
 					<!-- button to show form -->
 					<button type="button" class="btn btn-default" data-ng-click="restBasicInfo.$show()" data-ng-show="!restBasicInfo.$visible">Edit</button>
 					<!-- buttons to submit / cancel form -->
@@ -147,7 +148,7 @@
 				</div>
 			</form>
 			
-			<div align="right" style="margin: 15px; "><button type="button" class="btn btn-default" data-ng-click="newLocation()" >New Branch</button></div>
+			<div data-ng-show="isAdmin()" align="right" style="margin: 15px; "><button type="button" class="btn btn-default" data-ng-click="newLocation()" >New Branch</button></div>
 		</div>
 	</div>
 	<!--  Review Form -->

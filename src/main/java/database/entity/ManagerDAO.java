@@ -97,4 +97,12 @@ public class ManagerDAO {
 		}
 		return null;
 	}
+
+	public Manager udpateAdmin(Manager m,int id) {
+		// TODO Auto-generated method stub
+		m.setId(id);
+		em.merge(m);
+		
+		return m;
+	}
 }

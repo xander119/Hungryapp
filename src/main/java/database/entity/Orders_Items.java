@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -27,17 +26,15 @@ public class Orders_Items implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	@ManyToOne
-	@JoinColumn(name="order_id")
+	@JoinColumn(name="order_id",referencedColumnName="id")
 	@JsonBackReference("order_ordersitems")
-	
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Orders order;
-	;
+	
 	@ManyToOne
-	@JoinColumn(name="item_id")
+	@JoinColumn(name="item_id",referencedColumnName="id")
 	@JsonBackReference("item_ordersitems")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	
 	private Item item;
 	
 	private int quantity;

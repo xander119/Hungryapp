@@ -6,26 +6,32 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4" style="margin: 20px;display: inline;" align="justify">
-		<div class="row">
-		<div class="col-md-6">
-					
-						<input class=" form-control " data-ng-model="query.type" type="text" placeholder="Filter by Category" autofocus>
-					
-						<input class=" form-control " data-ng-model="query.name" type="text" placeholder="Filter by Name" >
-					
-						<a href="" class="  " data-ng-click = "sort = 'rate' ;reverse=!reverse "><span ng-if="sort == rate">Lowest Rate</span><span ng-if="sort != rate">Highest Rate</span></a>  
-						<a href="" class="  " data-ng-click="sort = 'distance';reverse=!reverse"><span ng-if="sort == distance">Farest</span><span ng-if="sort != rate">Nearest</span></a>  
-					
-				</div>
+		<div class="col-md-12" style="margin: 20px;display: inline;" align="justify">
+			<div class="col-md-3">
+
+				<input class=" form-control " data-ng-model="query.type" type="text" placeholder="Filter by Category" autofocus>
+			</div>
+			<div class="col-md-3">
+				<input class=" form-control " data-ng-model="query.name" type="text" placeholder="Filter by Name">
+			</div>
+			<div class="col-md-3"style=""  >	
+				<button class="btn btn-default" data-toggle="button" type="button" data-ng-click="sort = 'rate';reverse=!reverse; ">
+				<span >Sort Rate</span>
+				</button >
+			</div>
+				<div class="col-md-3"style=""  >	
+				<button class="btn btn-default" data-toggle="button" type="button" data-ng-click="sort = 'distance';reverse=!reverse; ">
+				<span >Sort Distance</span>
+				</button >
+			</div>
 		</div>
 	</div>
+		<hr width="90%" >
 	<!-- Filter restaurant by type, rating, populatorty, pricing  -->
 	<div ng-show="restaurantList==null"><h3>No result has been found. Please change your Location.</h3></div>
 	<div class="row" align="center" data-ng-repeat="rest in restaurantList | filter : query: strict | orderBy:sort:reverse" style="border-bottom: activecaption; border-bottom-style: solid;margin: 12px;" >
 		<div class="col-md-12 restaurant " data-ng-click="toDetails(rest.locations[0].id)" style="height: 130px;" align="left">
-			<div class="col-md-4"><img alt="LOGO Error" data-ng-src="{{rest.logo}}"></div>
-			<div class="col-md-8">
+				<div class="col-md-8">
 				<div class="row">
 					<div class="col-md-4">
 						<h4>{{rest.name}}</h4>

@@ -15,8 +15,6 @@ control.controller('restListCtrl',['$scope','$location','$cookieStore','$sce','D
 	
 	
 	$scope.restaurantList = [];
-	var pathprefix = 'C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo/';
-	 $sce.trustAsResourceUrl.bind(pathprefix);
 	console.log($sce.isEnabled());
 	var getAverageRate = function(reviews){
 		var sum =0;
@@ -33,10 +31,14 @@ control.controller('restListCtrl',['$scope','$location','$cookieStore','$sce','D
 				var location = restAndLoc[1];
 				 restaurant.locations =[];
 				restaurant.locations.push(location);
-				console.log(restaurant);
-				var avageRate = getAverageRate(location.reviews);
+				var avageRate = 0;
+				avageRate = getAverageRate(location.reviews);
 				restaurant.distance = locationAndDist.distance;
 				restaurant.rate = avageRate;
+				if(location.reviews.length == 0){
+					restaurant.rate = 0;
+				}
+				console.log(restaurant);
 				//restaurant.logo = pathprefix + restaurant.logo;
 				if($scope.restaurantList.indexOf(restaurant) == -1){
 					$scope.restaurantList.push(restaurant);
@@ -161,7 +163,7 @@ control.controller('shoppingCartCtrl',['$scope','ngCart','$cookieStore','$locati
 					orders.forEach(function(order){
 						if (order.locationId == locationId){
 							order.totalPrice = order.totalPrice +( item.getQuantity() * item.getPrice());
-							order.orderItems.push({id:itemId,quantity:item.getQuantity()});
+							order.orderItems.push({quantity:item.getQuantity(),item:{id:itemId}});
 						}
 					})
 					break;
@@ -181,16 +183,21 @@ control.controller('shoppingCartCtrl',['$scope','ngCart','$cookieStore','$locati
 		console.log(orders);
 		//customer, billing address , items, restaurant location;
 		orders.forEach(function(order){
-			var associateId = order.locationId+'-'+custId +'-'+addressId;
+			var associateId = order.locationId+'-'+custId +'-'+addressId + '-' + itemId;
 			order.paymentType = $scope.selectedType.type;
 			
 			delete order.locationId;
 			console.log(order);
 			OrderService.createOrder({associateId:associateId},order,function(data){
 			});
+			
 		})
+		
 		ngCart.empty();
-		$location.path('/Home')
+		if($scope.selectedType.type == "cash"){
+			$location.path('/Home')
+		}
+		
 	};
 
 }]);
@@ -273,8 +280,7 @@ control.controller('editeLocationModelC',['$scope','$cookieStore','$element','cl
 
 control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','ModalService','MemberService','RestaurantServices','MenuService','$sce', function($scope,$cookieStore,$location,ModalService,MemberService,RestaurantServices,MenuService,$sce){
 
-	var path = 'C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo/';
-	$scope.image = $sce.trustAsResourceUrl('http://s14.postimg.org/xaj8thl33/0279.png');
+	
 	 
 	 $scope.trustSrc = function(src) {
 		    return $sce.trustAsResourceUrl(src);
@@ -292,7 +298,24 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 	$scope.newLocation = function(){
 		$location.path('newBranch');
 	}
-	
+	$scope.getRestaurantForCus =function() {
+		$scope.locationId = $cookieStore.get('RestDetails');
+		RestaurantServices.getRestaurantByLocaId({
+			id : $cookieStore.get('RestDetails')
+		}, function(data) {
+			console.log(data);
+			data.forEach(function(restAndLoc) {
+				var restaurant = restAndLoc[0];
+				var location = restAndLoc[1];
+				restaurant.locations = [];
+				restaurant.locations.push(location);
+				$scope.currentRest = restaurant;
+				$scope.reviews = location.reviews;
+				
+				console.log($scope.currentRest.logo);
+			})
+		});
+	}
 	 $scope.hoveringOver = function(value) {
 		    $scope.overStar = value;
 		    $scope.percent = 100 * (value / $scope.max);
@@ -302,24 +325,10 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 		  RestaurantServices.getRest({id:$cookieStore.get('RestDetails')},function(data){
 			console.log(data);
 			$scope.currentRest = data;
-			$scope.currentRest.logo = $sce.trustAsResourceUrl('C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo/test.png');
-			 console.log( $sce.trustAsResourceUrl('C:/JBOSS/jboss-as-7.1.1.Final/standalone/deployments/RestLogo/test.png'));
 		});
 		
 	}else{
-		$scope.locationId = $cookieStore.get('RestDetails');
-		RestaurantServices.getRestaurantByLocaId({id: $cookieStore.get('RestDetails')},function(data){
-			console.log(data);
-			data.forEach(function(restAndLoc){
-				var restaurant = restAndLoc[0];
-				var location = restAndLoc[1];
-				 restaurant.locations =[];
-				restaurant.locations.push(location);
-				$scope.currentRest = restaurant;
-				$scope.currentRest.logo = $sce.trustAsResourceUrl(path + data.logo);
-				 console.log(  $scope.currentRest.logo);
-			})
-		});
+		$scope.getRestaurantForCus();
 		//getCustomer by reviews 
 	}
 
@@ -382,6 +391,8 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 			});
 	};
 	$scope.submitReview = function(review){
+		if ($cookieStore.get('loggedInUser') !== undefined || $cookieStore.get('loggedInUser') != null ) {
+
 		var d = new Date();
 		
 		var date = d.getDate();
@@ -391,15 +402,39 @@ control.controller('restDetailsCtrl',['$scope','$cookieStore','$location','Modal
 		var hour = d.getHours() ;
 		var min = d.getMinutes() ;
 		review.createDate = hour + ':'+min+' '+date+'/'+month+'/'+year;
-		review.username = $scope.loggedInUser.username;
-		//$scope.currentRest.locations[0].reviews.push(review);
 		
-		MemberService.saveReview({custId : $scope.loggedInUser.id, locationId : $scope.currentRest.locations[0].id},review,function(data) {
-			console.log('Review saved.' + data.name);
-		}, function(data) {
-			alert(data);
-			console.log(data);
-		});
+		//$scope.currentRest.locations[0].reviews.push(review);
+		console.log($scope.loggedInUser);
+			review.username = $scope.loggedInUser.username;
+			MemberService.saveReview({
+				custId : $scope.loggedInUser.id,
+				locationId : $scope.currentRest.locations[0].id
+			}, review, function(data) {
+				console.log('Review saved.' + data.name);
+			}, function(data) {
+				alert(data);
+				console.log(data);
+			});
+			RestaurantServices.getRestaurantByLocaId({
+				id : $cookieStore.get('RestDetails')
+			}, function(data) {
+				console.log(data);
+				data.forEach(function(restAndLoc) {
+					var restaurant = restAndLoc[0];
+					var location = restAndLoc[1];
+					restaurant.locations = [];
+					restaurant.locations.push(location);
+					$scope.currentRest = restaurant;
+					
+					console.log($scope.currentRest.logo);
+				})
+			});
+			$scope.reviews.push(review);
+			$scope.review ={};
+			
+		}else{
+			alert('Log in Required.')
+		}
 	};
 	$scope.saveLocation= function(location){
 		console.log(location);
@@ -635,8 +670,8 @@ control.controller('BranchCreateCtrl',
 						alert(data);
 					});
 				})
-				$scope.progress = $scope.progress + 25;
-			}
+				$location.path('/restaurantDetails');
+				}
 			
 			$scope.deleteAddr = function(restLoc){
 				var index=$scope.restaurantLocations.indexOf(restLoc);
@@ -1008,10 +1043,18 @@ control.controller('managerDetailsCtrl', [ '$scope', '$location', '$cookieStore'
 	};
 
 	$scope.restaurantOwn = AdminService.getRestaurantOwn({ id  :  $cookieStore.get('loggedInUser').id  },function(data){
+		$scope.restaurantOwn= data;
+		$scope.restaurantOwn.forEach(function(restaurant){
+			if(restaurant.status == 'null'){
+				restaurant.status = 'Not active'
+			}
+		})
 	});
 	$scope.currentManager = AdminService.getManager({ id :  $cookieStore.get('loggedInUser').id  }, function(data){
 	});
 
+	
+	
 	//$scope.restaurantOwn = restaurants;
 	$scope.editRestaurant = function(RestaurantId){
 //		if($cookieStore.get('RestDetails') !== undefined || $cookieStore.get('RestDetails') != null){
@@ -1030,6 +1073,15 @@ control.controller('managerDetailsCtrl', [ '$scope', '$location', '$cookieStore'
 		})
 		$window.location.reload();
 	};
+	$scope.updateManager = function(){
+		var basic = $cookieStore.get('basicAuth');
+		var decoded = Base64.decode(basic).split(":");
+
+		var encoded = Base64.encode($scope.currentManager.name + ':' + decoded[1]);
+		$cookieStore.put('basicAuth',encoded);
+
+		$scope.currentManager = AdminService.updateManager({id:$cookieStore.get('loggedInUser').id},$scope.currentManager);
+	}
 	
 	console.log($scope.currentManager);
 	console.log($scope.restaurantOwn);
@@ -1090,7 +1142,6 @@ control.controller('userdetailsCtrl', [ '$scope','Base64', 'DataService', '$cook
 		var basic = $cookieStore.get('basicAuth');
 		var decoded = Base64.decode(basic).split(":");
 
-//		$cookieStore.remove('basicAuth');
 		var encoded = Base64.encode($scope.currentUser.username + ':' + decoded[1]);
 		$cookieStore.put('basicAuth',encoded);
 
@@ -1307,8 +1358,10 @@ control.controller(
 					 $scope.error = "Geolocation is not supported by this browser.";
 				 }
 			 } ;
+			if(!$scope.isAdmin()){
+				 $scope.getCurrLoc();
+			}
 			
-			 $scope.getCurrLoc();
 			 $scope.backToMe = function(){
 				 $scope.map.panTo($scope.currlatlng);
 				 $scope.map.setZoom(13);
@@ -1404,34 +1457,7 @@ control.controller('LoginController', ['$scope','$location', '$window','$cookieS
 		$scope.credential = decoded[0];
 		$scope.password = decoded[1];
 	}
-	//	};
-//	function checkDB(){
-//	var result = false;
-//	$facebook.api("/me").then( 
-//	function(response) {
-	//LOCAL STORAGE
-//	MemberService.getUserByEmail({email : response.email}, function(data){
-//	if (data.result === "success") {
-//	var loggedInUser = {
-//	username : data.username,
-//	id : data.userid,
-//	role : 'customer'
-//	}
-//	$cookieStore.put('loggedInUser', loggedInUser);
-//	$cookieStore.put('basicAuth', basAuth);
-//	result = true;
-//	}
-//	});
-//	console.log('User Detail recived.');
-//	console.log(response);
-//	},
-//	function(err) {
-//	console.log("Please log in");
-//	});
-//	return result;
-//	};
-//	 if ($location.protocol() != 'https')
-//	        $window.location.href = $location.absUrl().replace('http', 'https');
+	
 	$scope.login = function(credential, password) {
 		
 		var basAuth = Base64.encode(credential+':'+password);
